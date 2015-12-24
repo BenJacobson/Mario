@@ -20,7 +20,6 @@ public class World {
 		return instance;
 	}
 
-	private final double radToDeg = 180 / (22.0/7.0);
 	private int offset = 0;
 	private Image groundImage = initGroundImage();
 	private List<Pos> ground = initGround();
