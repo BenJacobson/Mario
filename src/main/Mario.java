@@ -102,7 +102,7 @@ public class Mario {
 		return null;
 	}
 
-	private void updateRunFrame() {
+	private void setRunFrame() {
 		if ( frameState == FrameState.JUMP ) {
 			// do nothing because you can't run in the air
 			return;
@@ -112,7 +112,13 @@ public class Mario {
 				frameState != FrameState.RUN3 && frameState != FrameState.RUN4 ) {
 			// start running frames
 			frameState = FrameState.RUN1;
-		} else {
+		}
+	}
+
+	private void updateRunFrame() {
+		 if ( frameState == FrameState.RUN1 || frameState == FrameState.RUN2 ||
+				 frameState == FrameState.RUN3 || frameState == FrameState.RUN4 ) {
+
 			numberOfPasses++;
 
 			if ( numberOfPasses > passesBetweenFrames ) {
@@ -183,6 +189,25 @@ public class Mario {
 		currentPos.move(vector);
 
 		handleCollisions();
+
+		checkDead();
+	}
+
+	private void checkDead() {
+		if ( currentPos.getY() > 250*MarioNes.PIXEL_SCALE ) {
+			dead();
+		}
+	}
+
+	private void dead() {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException ex) {
+			// move on
+		}
+		currentPos.set(100,100);
+		World.getInstance().resetOffset();
+		frameState = FrameState.STAND;
 	}
 
 	private void handleCollisions() {
@@ -209,16 +234,19 @@ public class Mario {
 	private void updateVector() {
 		if ( movingLeft ) {
 			vector.moveLeft();
+			setRunFrame();
 			updateRunFrame();
 		} else if ( movingRight ) {
 			vector.moveRight();
+			setRunFrame();
 			updateRunFrame();
 		} else {
 			vector.reduceSpeed();
+			updateRunFrame();
 		}
 		vector.gravity();
 
-		if ( vector.getDx() == 0 ) {
+		if ( vector.getDx() == 0 && canJumpAgain ) {
 			frameState = FrameState.STAND;
 		}
 	}

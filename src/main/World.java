@@ -86,8 +86,8 @@ public class World {
 		offset += add;
 	}
 
-	public int getOffset() {
-		return offset;
+	public void resetOffset() {
+		offset = 0;
 	}
 
 	public void draw(Graphics2D g2) {

@@ -2,7 +2,7 @@ package main;
 
 public class Vector {
 
-	private double genSpeed = .5;
+	private double genSpeed = .166667*MarioNes.PIXEL_SCALE;
 
 	private double dx = 0;
 	private double dy = 0;
@@ -24,7 +24,7 @@ public class Vector {
 	}
 
 	public void jump() {
-		dy = -20;
+		dy = -genSpeed*42;
 	}
 
 	public void moveRight() {
@@ -40,10 +40,10 @@ public class Vector {
 	}
 
 	public void reduceSpeed() {
-		if ( dx >= genSpeed*2) {
-			dx -= genSpeed*2;
-		} else if ( dx <= -genSpeed*2) {
-			dx += genSpeed*2;
+		if ( dx >= genSpeed) {
+			dx -= genSpeed;
+		} else if ( dx <= -genSpeed) {
+			dx += genSpeed;
 		} else {
 			dx = 0;
 		}
