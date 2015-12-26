@@ -2,6 +2,8 @@ package main;
 
 public class Vector {
 
+	private double genSpeed = .5;
+
 	private double dx = 0;
 	private double dy = 0;
 
@@ -26,30 +28,30 @@ public class Vector {
 	}
 
 	public void moveRight() {
-		if ( dx < 8 ) {
-			dx += 1;
+		if ( dx < genSpeed*16 ) {
+			dx += genSpeed;
 		}
 	}
 
 	public void moveLeft() {
-		if ( dx > -8 ) {
-			dx -= 1;
+		if ( dx > -genSpeed*16 ) {
+			dx -= genSpeed;
 		}
 	}
 
 	public void reduceSpeed() {
-		if ( dx >= 1) {
-			dx -= 1;
-		} else if ( dx <= -1) {
-			dx += 1;
+		if ( dx >= genSpeed*2) {
+			dx -= genSpeed*2;
+		} else if ( dx <= -genSpeed*2) {
+			dx += genSpeed*2;
 		} else {
 			dx = 0;
 		}
 	}
 
 	public void gravity() {
-		if ( dy < 12 ) {
-			dy += 1;
+		if ( dy < genSpeed*24 ) {
+			dy += genSpeed*2;
 		}
 	}
 
