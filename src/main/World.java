@@ -20,25 +20,32 @@ public class World {
 	}
 
 	private int offset = 0;
+	private final int block_width = 16;
+	private final int block_height = 16;
+
 	private final String imageFolder = "lib" + File.separator + "pic" + File.separator;
-	private final Image groundImage = GameCanvas.initFrame(imageFolder + "block_ground.png");
-	private List<Pos> ground = initGround();
+	private final Image pipeTopImage = GameCanvas.initFrame(imageFolder + "pipe_top.png");
+	private final Image pipeBottomImage = GameCanvas.initFrame(imageFolder + "pipe_bottom.png");
+
+	private List<Block> blocks = initBlocks();
 
 
-	private List<Pos> initGround() {
-		List<Pos> ground = new ArrayList<>();
+	private List<Block> initBlocks() {
+		List<Block> block = new ArrayList<>();
 
 		char[][] map = getMap();
 
 		for ( int y = 0; y < map.length; y++ ) {
 			for ( int x = 0; x < map[y].length; x++ ) {
 				if ( map[y][x] == 'g' ) {
-					ground.add(new Pos(x * groundImage.getWidth(null), (205 - y * 16) * MarioNes.PIXEL_SCALE));
+					block.add(new Ground(new Pos(x * block_width*MarioNes.PIXEL_SCALE, (205 - y * block_height) * MarioNes.PIXEL_SCALE)));
+				} else if ( map[y][x] == 't' ) {
+
 				}
 			}
 		}
 
-		return ground;
+		return block;
 	}
 
 	private char[][] getMap() {
@@ -80,8 +87,8 @@ public class World {
 	}
 
 	public void draw(Graphics2D g2) {
-		for ( Pos pos : ground ) {
-			g2.drawImage(groundImage, pos.getX()-offset, pos.getY(), groundImage.getWidth(null), groundImage.getHeight(null), null);
+		for ( Block block : blocks) {
+			block.draw(g2, offset);
 		}
 	}
 
@@ -113,18 +120,17 @@ public class World {
 
 		Rectangle2D.Double inputRect = new Rectangle2D.Double(pos.getX(), pos.getY(), width, height);
 
-		List<Pos> topHit = null;
-		List<Pos> bottomHit = null;
-		List<Pos> leftHit = null;
-		List<Pos> rightHit = null;
+		List<Block> topHit = null;
+		List<Block> bottomHit = null;
+		List<Block> leftHit = null;
+		List<Block> rightHit = null;
 
 		// find the blocks that are hit
-		for ( Pos block : ground ) {
-			block = block.copy(-offset, 0);
-			if ( block.getX() > -100 && block.getX() < 256*MarioNes.PIXEL_SCALE ) {
-				if ( inputRect.intersects(block.getX(), block.getY(), groundImage.getWidth(null), groundImage.getHeight(null)) ) {
+		for ( Block block : blocks ) {
+			if ( block.getX(offset) > -100 && block.getX(offset) < 256*MarioNes.PIXEL_SCALE ) {
+				if ( inputRect.intersects( block.getRect(offset) ) ) {
 
-					switch ( getSide(pos.copy(width/2, height/2), block.copy(groundImage.getWidth(null)/2, groundImage.getHeight(null)/2), vector) ) {
+					switch ( getSide(pos.copy(width/2, height/2), block.getCenter(offset), vector) ) {
 						case TOP:
 							if ( topHit == null ) {topHit = new LinkedList<>();}
 							topHit.add(block);
@@ -148,48 +154,48 @@ public class World {
 
 		// prevent wall standing
 		if ( topHit != null && topHit.size() > 0 && leftHit != null && leftHit.size() > 0 ) {
-			for (Pos block : leftHit ) {
-				topHit.removeIf(p -> p.getX() == block.getX() && p.getY() > block.getY() );
+			for (Block block : leftHit ) {
+				topHit.removeIf(p -> p.getX(offset) == block.getX(offset) && p.getY() > block.getY() );
 			}
 		}
 
 		if ( topHit != null && topHit.size() > 0 && rightHit != null && rightHit.size() > 0 ) {
-			for (Pos block : rightHit ) {
-				topHit.removeIf(p -> p.getX() == block.getX() && p.getY() > block.getY() );
+			for (Block block : rightHit ) {
+				topHit.removeIf(p -> p.getX(offset) == block.getX(offset) && p.getY() > block.getY() );
 			}
 		}
 
 		if ( bottomHit != null && bottomHit.size() > 0 && leftHit != null && leftHit.size() > 0 ) {
-			for (Pos block : leftHit ) {
-				bottomHit.removeIf(p -> p.getX() == block.getX() && p.getY() < block.getY() );
+			for (Block block : leftHit ) {
+				bottomHit.removeIf(p -> p.getX(offset) == block.getX(offset) && p.getY() < block.getY() );
 			}
 		}
 
 		if ( bottomHit != null && bottomHit.size() > 0 && rightHit != null && rightHit.size() > 0 ) {
-			for (Pos block : rightHit ) {
-				bottomHit.removeIf(p -> p.getX() == block.getX() && p.getY() < block.getY() );
+			for (Block block : rightHit ) {
+				bottomHit.removeIf(p -> p.getX(offset) == block.getX(offset) && p.getY() < block.getY() );
 			}
 		}
 
 		// do the collision logic of the blocks according to how they were hit
 		if ( topHit != null && topHit.size() > 0 ) {
-			Pos block = topHit.get(0);
+			Block block = topHit.get(0);
 			pos.moveDown(block.getY() - pos.getY() - height);
 			vector.hitY();
 		}
 		if ( bottomHit != null && bottomHit.size() > 0 ) {
-			Pos block = bottomHit.get(0);
-			pos.moveDown(block.getY() + groundImage.getHeight(null) - pos.getY());
+			Block block = bottomHit.get(0);
+			pos.moveDown(block.getY() + block.getHeight() - pos.getY());
 			vector.hitY();
 		}
 		if ( leftHit != null && leftHit.size() > 0 ) {
-			Pos block = leftHit.get(0);
-			pos.moveRight(block.getX() - pos.getX() - width);
+			Block block = leftHit.get(0);
+			pos.moveRight(block.getX(offset) - pos.getX() - width);
 			vector.hitX();
 		}
 		if ( rightHit != null && rightHit.size() > 0 ) {
-			Pos block = rightHit.get(0);
-			int move = block.getX() + groundImage.getWidth(null) - pos.getX();
+			Block block = rightHit.get(0);
+			int move = block.getX(offset) + block.getWidth() - pos.getX();
 			pos.moveRight(move);
 			vector.hitX();
 		}
