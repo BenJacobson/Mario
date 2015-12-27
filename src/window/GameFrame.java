@@ -1,6 +1,7 @@
-package main;
+package window;
 
-import sun.util.calendar.BaseCalendar;
+import mario.Mario;
+import main.MarioNes;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -12,6 +13,7 @@ import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
+// window the surrounds the game
 public class GameFrame extends JFrame {
 
 	private GameCanvas gameCanvas = new GameCanvas();
@@ -28,7 +30,7 @@ public class GameFrame extends JFrame {
 
 		setKeyListener();
 
-		setSize(256*MarioNes.PIXEL_SCALE,230*MarioNes.PIXEL_SCALE);
+		setSize(256* MarioNes.PIXEL_SCALE,230*MarioNes.PIXEL_SCALE);
 		setResizable(false);
 
 		setLocation();

@@ -1,7 +1,10 @@
 package main;
 
+import window.GameFrame;
+
 import java.awt.*;
 
+// starts the main frame of game
 public class MarioNes {
 
 	public static int PIXEL_SCALE = 4;

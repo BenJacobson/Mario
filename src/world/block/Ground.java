@@ -1,9 +1,13 @@
-package main;
+package world.block;
+
+import window.GameCanvas;
+import mechanics.Pos;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
 
+// a ground block
 public class Ground implements Block {
 
 	Pos pos;
