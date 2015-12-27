@@ -1,4 +1,12 @@
-package main;
+package world;
+
+import main.*;
+import mechanics.Pos;
+import mechanics.Side;
+import mechanics.Vector;
+import window.GameCanvas;
+import world.block.Block;
+import world.block.Ground;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
@@ -38,7 +46,7 @@ public class World {
 		for ( int y = 0; y < map.length; y++ ) {
 			for ( int x = 0; x < map[y].length; x++ ) {
 				if ( map[y][x] == 'g' ) {
-					block.add(new Ground(new Pos(x * block_width*MarioNes.PIXEL_SCALE, (205 - y * block_height) * MarioNes.PIXEL_SCALE)));
+					block.add(new Ground(new Pos(x * block_width* MarioNes.PIXEL_SCALE, (205 - y * block_height) * MarioNes.PIXEL_SCALE)));
 				} else if ( map[y][x] == 't' ) {
 
 				}
