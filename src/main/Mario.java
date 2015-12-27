@@ -28,16 +28,18 @@ public class Mario {
 	private int numberOfPasses = 0;
 
 	private FrameState frameState = FrameState.STAND;
-	private final Image stand_frame = initFrame("mario_stand.png");
-	private final Image jump_frame = initFrame("mario_jump.png");
-	private final Image stand_frame_back = initFrame("mario_stand_back.png");
-	private final Image jump_frame_back = initFrame("mario_jump_back.png");
-	private final Image run_frame_13 = initFrame("mario_run_13.png");
-	private final Image run_frame_13_back = initFrame("mario_run_13_back.png");
-	private final Image run_frame_2 = initFrame("mario_run_2.png");
-	private final Image run_frame_2_back = initFrame("mario_run_2_back.png");
-	private final Image run_frame_4 = initFrame("mario_run_4.png");
-	private final Image run_frame_4_back = initFrame("mario_run_4_back.png");
+
+	private final String imageFolder = "lib" + File.separator + "pic" + File.separator;
+	private final Image stand_frame = GameCanvas.initFrame(imageFolder + "mario_stand.png");
+	private final Image jump_frame = GameCanvas.initFrame(imageFolder + "mario_jump.png");
+	private final Image stand_frame_back = GameCanvas.initFrame(imageFolder + "mario_stand_back.png");
+	private final Image jump_frame_back = GameCanvas.initFrame(imageFolder + "mario_jump_back.png");
+	private final Image run_frame_13 = GameCanvas.initFrame(imageFolder + "mario_run_13.png");
+	private final Image run_frame_13_back = GameCanvas.initFrame(imageFolder + "mario_run_13_back.png");
+	private final Image run_frame_2 = GameCanvas.initFrame(imageFolder + "mario_run_2.png");
+	private final Image run_frame_2_back = GameCanvas.initFrame(imageFolder + "mario_run_2_back.png");
+	private final Image run_frame_4 = GameCanvas.initFrame(imageFolder + "mario_run_4.png");
+	private final Image run_frame_4_back = GameCanvas.initFrame(imageFolder + "mario_run_4_back.png");
 
 	public static int LEFT = 37;
 	public static int RIGHT = 39;
@@ -45,18 +47,6 @@ public class Mario {
 
 
 	private Mario() {}
-
-	private Image initFrame(String fileName) {
-		final String filePath = "lib" + File.separator + "pic" + File.separator + fileName;
-		try {
-			Image frame = ImageIO.read(new File(filePath));
-			return frame.getScaledInstance(frame.getWidth(null)*MarioNes.PIXEL_SCALE, frame.getHeight(null)*MarioNes.PIXEL_SCALE, 0);
-		} catch (IOException e) {
-			System.out.println("Could not load " + filePath);
-			System.exit(0);
-			return null;
-		}
-	}
 
 	private Image getCurrentFrame() {
 

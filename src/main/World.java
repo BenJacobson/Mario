@@ -1,6 +1,5 @@
 package main;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.io.*;
@@ -21,20 +20,10 @@ public class World {
 	}
 
 	private int offset = 0;
-	private Image groundImage = initGroundImage();
+	private final String imageFolder = "lib" + File.separator + "pic" + File.separator;
+	private final Image groundImage = GameCanvas.initFrame(imageFolder + "block_ground.png");
 	private List<Pos> ground = initGround();
 
-	private Image initGroundImage() {
-		final String filePath = "lib" + File.separator + "pic" + File.separator + "ground.png";
-		try {
-			Image frame = ImageIO.read(new File(filePath));
-			return frame.getScaledInstance(frame.getWidth(null)*MarioNes.PIXEL_SCALE, frame.getHeight(null)*MarioNes.PIXEL_SCALE, 0);
-		} catch (IOException e) {
-			System.out.println("Could not load " + filePath);
-			System.exit(0);
-			return null;
-		}
-	}
 
 	private List<Pos> initGround() {
 		List<Pos> ground = new ArrayList<>();
@@ -96,24 +85,28 @@ public class World {
 		}
 	}
 
-	private Side getSide(Pos shape, Pos block) {
+	private Side getSide(Pos shape, Pos block, Vector vector) {
 
 		int upDown = shape.getY() - block.getY();
 		int leftRight = shape.getX() - block.getX();
 
 		if ( Math.abs(upDown) >= Math.abs(leftRight) ) {
-			if ( upDown > 0 ) {
+			// top or bottom hit
+			if ( upDown > 0 && vector.getDy() < 0 ) {
 				return Side.BOTTOM;
-			} else {
+			} else if ( upDown < 0 && vector.getDy() > 0 ) {
 				return Side.TOP;
 			}
 		} else {
-			if ( leftRight > 0 ) {
+			// left of right hit
+			if ( leftRight > 0 && vector.getDx() < 0 ) {
 				return Side.RIGHT;
-			} else {
+			} else if ( leftRight < 0 && vector.getDx() > 0 ) {
 				return Side.LEFT;
 			}
 		}
+
+		return Side.NONE;
 	}
 
 	public boolean collision(Pos pos, int width, int height, Vector vector) {
@@ -125,12 +118,13 @@ public class World {
 		List<Pos> leftHit = null;
 		List<Pos> rightHit = null;
 
+		// find the blocks that are hit
 		for ( Pos block : ground ) {
 			block = block.copy(-offset, 0);
 			if ( block.getX() > -100 && block.getX() < 256*MarioNes.PIXEL_SCALE ) {
 				if ( inputRect.intersects(block.getX(), block.getY(), groundImage.getWidth(null), groundImage.getHeight(null)) ) {
 
-					switch ( getSide(pos.copy(width/2, height/2), block.copy(groundImage.getWidth(null)/2, groundImage.getHeight(null)/2)) ) {
+					switch ( getSide(pos.copy(width/2, height/2), block.copy(groundImage.getWidth(null)/2, groundImage.getHeight(null)/2), vector) ) {
 						case TOP:
 							if ( topHit == null ) {topHit = new LinkedList<>();}
 							topHit.add(block);
@@ -177,6 +171,7 @@ public class World {
 			}
 		}
 
+		// do the collision logic of the blocks according to how they were hit
 		if ( topHit != null && topHit.size() > 0 ) {
 			Pos block = topHit.get(0);
 			pos.moveDown(block.getY() - pos.getY() - height);
@@ -199,6 +194,7 @@ public class World {
 			vector.hitX();
 		}
 
+		// this return tells if there were any top collisions, this is used to say if you can jump again
 		return topHit != null && topHit.size() > 0;
 	}
 }

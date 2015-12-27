@@ -1,7 +1,10 @@
 package main;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 
 public class GameCanvas extends JComponent {
 
@@ -31,6 +34,17 @@ public class GameCanvas extends JComponent {
 
 	private void drawMario(Graphics2D g2) {
 		Mario.getInstance().draw(g2);
+	}
+
+	public static Image initFrame(String filePath) {
+		try {
+			Image frame = ImageIO.read(new File(filePath));
+			return frame.getScaledInstance(frame.getWidth(null)*MarioNes.PIXEL_SCALE, frame.getHeight(null)*MarioNes.PIXEL_SCALE, 0);
+		} catch (IOException e) {
+			System.out.println("Could not load " + filePath);
+			System.exit(0);
+			return null;
+		}
 	}
 
 }
