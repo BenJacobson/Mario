@@ -1,20 +1,17 @@
 package world;
 
+import enemy.Enemy;
 import main.*;
 import mechanics.Pos;
 import mechanics.Side;
 import mechanics.Vector;
 import window.GameCanvas;
-import world.block.Block;
-import world.block.Ground;
+import world.block.*;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
-import java.io.*;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Scanner;
 
 public class World {
 
@@ -28,63 +25,14 @@ public class World {
 	}
 
 	private int offset = 0;
-	private final int block_width = 16;
-	private final int block_height = 16;
+	public static final int block_width = 16;
+	public static final int block_height = 16;
 
-	private final String imageFolder = "lib" + File.separator + "pic" + File.separator;
-	private final Image pipeTopImage = GameCanvas.initFrame(imageFolder + "pipe_top.png");
-	private final Image pipeBottomImage = GameCanvas.initFrame(imageFolder + "pipe_bottom.png");
+	private final Image pipeTopImage = GameCanvas.initFrame(GameCanvas.imageFolder + "pipe_top.png");
+	private final Image pipeBottomImage = GameCanvas.initFrame(GameCanvas.imageFolder + "pipe_bottom.png");
 
-	private List<Block> blocks = initBlocks();
-
-
-	private List<Block> initBlocks() {
-		List<Block> block = new ArrayList<>();
-
-		char[][] map = getMap();
-
-		for ( int y = 0; y < map.length; y++ ) {
-			for ( int x = 0; x < map[y].length; x++ ) {
-				if ( map[y][x] == 'g' ) {
-					block.add(new Ground(new Pos(x * block_width* MarioNes.PIXEL_SCALE, (205 - y * block_height) * MarioNes.PIXEL_SCALE)));
-				} else if ( map[y][x] == 't' ) {
-
-				}
-			}
-		}
-
-		return block;
-	}
-
-	private char[][] getMap() {
-
-		String fileName = "lib" + File.separator + "world" + File.separator + "1-1.dat";
-		Scanner mapScan = null;
-
-		try {
-			mapScan = new Scanner(new BufferedInputStream(new FileInputStream(new File(fileName))));
-		} catch (IOException ex) {
-			System.out.println("Cannot load map 1-1");
-			System.exit(0);
-		}
-
-		List<char[]> linesList = new LinkedList<>();
-
-		while ( mapScan.hasNextLine() ) {
-			char[] line = mapScan.nextLine().toCharArray();
-			linesList.add(line);
-		}
-
-		char[][] map = new char[linesList.size()][];
-		int index = linesList.size() - 1;
-
-		for ( char[] line : linesList ) {
-			map[index] = line;
-			index--;
-		}
-
-		return map;
-	}
+	private List<Block> blocks = MarioNes.blocks;
+	private List<Enemy> enemies = MarioNes.enemies;
 
 	public void addOffset(int add) {
 		offset += add;
@@ -95,8 +43,15 @@ public class World {
 	}
 
 	public void draw(Graphics2D g2) {
-		for ( Block block : blocks) {
-			block.draw(g2, offset);
+		for ( Block block : blocks ) {
+			if ( block.getX(offset) > -100 && block.getX(offset) < 256*MarioNes.PIXEL_SCALE ) {
+				block.draw(g2, offset);
+			}
+		}
+		for ( Enemy enemy : enemies ) {
+			if ( enemy.getX(offset) > -100 && enemy.getX(offset) < 256*MarioNes.PIXEL_SCALE ) {
+				enemy.draw(g2, offset);
+			}
 		}
 	}
 
@@ -105,7 +60,7 @@ public class World {
 		int upDown = shape.getY() - block.getY();
 		int leftRight = shape.getX() - block.getX();
 
-		if ( Math.abs(upDown) >= Math.abs(leftRight) ) {
+		if ( Math.abs(upDown)+1 >= Math.abs(leftRight) ) {
 			// top or bottom hit
 			if ( upDown > 0 && vector.getDy() < 0 ) {
 				return Side.BOTTOM;
@@ -135,7 +90,7 @@ public class World {
 
 		// find the blocks that are hit
 		for ( Block block : blocks ) {
-			if ( block.getX(offset) > -100 && block.getX(offset) < 256*MarioNes.PIXEL_SCALE ) {
+			if ( block.getX(offset) > -100 && block.getX(offset) < 256*MarioNes.PIXEL_SCALE + 500) {
 				if ( inputRect.intersects( block.getRect(offset) ) ) {
 
 					switch ( getSide(pos.copy(width/2, height/2), block.getCenter(offset), vector) ) {

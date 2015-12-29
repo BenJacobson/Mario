@@ -4,7 +4,7 @@ import main.MarioNes;
 
 public class Vector {
 
-	private double genSpeed = .166667* MarioNes.PIXEL_SCALE;
+	private double genSpeed = .166667 * MarioNes.PIXEL_SCALE;
 
 	private double dx = 0;
 	private double dy = 0;

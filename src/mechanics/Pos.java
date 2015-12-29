@@ -2,8 +2,8 @@ package mechanics;
 
 public class Pos {
 
-	private int x;
-	private int y;
+	private double x;
+	private double y;
 
 	public Pos(int x, int y) {
 		set(x,y);
@@ -24,34 +24,34 @@ public class Pos {
 		this.y = y;
 	}
 
-	public void moveRight(int dx) {
+	public void moveRight(double dx) {
 		this.x += dx;
 	}
 
-	public void moveDown(int dy) {
+	public void moveDown(double dy) {
 		this.y += dy;
 	}
 
 	public void move(Vector vector) {
 
-		moveRight((int) vector.getDx());
-		moveDown((int) vector.getDy());
+		moveRight(vector.getDx());
+		moveDown(vector.getDy());
 	}
 
 	public int getX() {
-		return x;
+		return (int) x;
 	}
 
 	public int getY() {
-		return y;
+		return (int) y;
 	}
 
 	public Pos copy() {
 		return copy(0,0);
 	}
 
-	public Pos copy(int dx, int dy) {
-		return new Pos(x+dx, y+dy);
+	public Pos copy(double dx, double dy) {
+		return new Pos((int)(x+dx), (int)(y+dy));
 	}
 
 	@Override

@@ -18,4 +18,6 @@ public interface Block {
 	Pos getCenter(int offset);
 
 	Rectangle2D getRect(int offset);
+
+	void hit();
 }

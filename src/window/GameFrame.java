@@ -22,6 +22,8 @@ public class GameFrame extends JFrame {
 
 	public GameFrame() {
 
+		MarioNes.initBlocks();
+
 		setTitle("Super Mario Bros.");
 
 		setApplicationIcon();
@@ -30,7 +32,7 @@ public class GameFrame extends JFrame {
 
 		setKeyListener();
 
-		setSize(256* MarioNes.PIXEL_SCALE,230*MarioNes.PIXEL_SCALE);
+		setSize(256*MarioNes.PIXEL_SCALE, 230*MarioNes.PIXEL_SCALE);
 		setResizable(false);
 
 		setLocation();
