@@ -57,6 +57,10 @@ public class Vector {
 		}
 	}
 
+	public void reverse() {
+		dx = -dx;
+	}
+
 	@Override
 	public String toString() {
 		return String.format("dx:%f dy:%f", dx, dy);

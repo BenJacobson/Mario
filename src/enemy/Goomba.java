@@ -1,11 +1,11 @@
 package enemy;
 
 
-import mario.Mario;
 import mechanics.Pos;
 import mechanics.Vector;
 import window.GameCanvas;
 import world.World;
+import world.collision.CollisionResult;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
@@ -52,7 +52,15 @@ public class Goomba implements Enemy {
 		updateFrame();
 		vector.gravity();
 		pos.move(vector);
-		World.getInstance().collision(pos, imageLeft.getWidth(null), imageLeft.getHeight(null), vector);
+
+		int offset = World.getInstance().getOffest();
+		CollisionResult collisionResult = World.getInstance().collision(getRect(offset), vector);
+		pos.moveDown(collisionResult.getDy());
+		if ( collisionResult.getDx() > 0 ) {
+			pos.moveRight(collisionResult.getDx());
+			vector.reverse();
+		}
+
 		// Mario.getInstance().
 	}
 

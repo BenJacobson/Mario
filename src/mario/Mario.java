@@ -4,10 +4,11 @@ import main.MarioNes;
 import mechanics.Pos;
 import mechanics.Vector;
 import window.GameCanvas;
+import world.collision.CollisionResult;
 import world.World;
 
 import java.awt.*;
-import java.io.*;
+import java.awt.geom.Rectangle2D;
 
 // contains the information and subclasses about mario on screen
 public class Mario {
@@ -212,18 +213,34 @@ public class Mario {
 
 	private void handleCollisions() {
 
-		boolean isCollision = World.getInstance().collision(currentPos, stand_frame.getWidth(null), stand_frame.getHeight(null), vector);
-		canJumpAgain |= isCollision;
-		if ( isCollision && !isInRunState() ) {
+		CollisionResult collisionResult = World.getInstance().collision(getRect(), vector);
+
+		currentPos.moveDown( collisionResult.getDy() );
+		currentPos.moveRight( collisionResult.getDx() );
+
+		canJumpAgain |= collisionResult.isTopHit();
+
+		if ( collisionResult.isTopHit() && !isInRunState() ) {
 			frameState = FrameState.STAND;
 		}
 
+		if ( collisionResult.isTopHit() || collisionResult.isBottomHit() ) {
+			vector.hitY();
+		}
+		if ( collisionResult.isLeftHit() || collisionResult.isRightHit() ) {
+			vector.hitX();
+		}
+
 		if ( currentPos.getX() < 2*MarioNes.PIXEL_SCALE ) {
-			currentPos.setX( 5 );
+			currentPos.setX( 2*MarioNes.PIXEL_SCALE );
 		} else if ( currentPos.getX() > 256*MarioNes.PIXEL_SCALE/2 ) {
 			World.getInstance().addOffset( currentPos.getX() - 256*MarioNes.PIXEL_SCALE/2 );
 			currentPos.setX( 256*MarioNes.PIXEL_SCALE/2 );
 		}
+	}
+
+	private Rectangle2D getRect() {
+		return new Rectangle2D.Double(currentPos.getX(), currentPos.getY(), stand_frame.getWidth(null), stand_frame.getHeight(null));
 	}
 
 	private boolean isInRunState() {
