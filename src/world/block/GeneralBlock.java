@@ -54,5 +54,7 @@ public class GeneralBlock implements Block {
 	}
 
 	@Override
-	public void hit() {}
+	public void hit() {
+
+	}
 }

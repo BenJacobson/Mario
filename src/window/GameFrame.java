@@ -16,8 +16,6 @@ import java.util.TimerTask;
 // window the surrounds the game
 public class GameFrame extends JFrame {
 
-	private GameCanvas gameCanvas = new GameCanvas();
-
 	Timer timer = new Timer();
 
 	public GameFrame() {
@@ -28,7 +26,7 @@ public class GameFrame extends JFrame {
 
 		setApplicationIcon();
 
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
 		setKeyListener();
 
@@ -37,7 +35,7 @@ public class GameFrame extends JFrame {
 
 		setLocation();
 
-		setContentPane(gameCanvas);
+		setContentPane(new GameCanvas());
 
 		timer.schedule(new NextFrameTask(), 0, 20);
 
@@ -84,7 +82,6 @@ public class GameFrame extends JFrame {
 
 	private class NextFrameTask extends TimerTask {
 		public void run() {
-			Mario.getInstance().move();
 			repaint();
 		}
 	}

@@ -2,6 +2,8 @@ package world;
 
 import enemy.Enemy;
 import main.*;
+import mechanics.Pos;
+import mechanics.Side;
 import mechanics.Vector;
 import world.block.*;
 import world.collision.CollisionOperator;
@@ -44,19 +46,76 @@ public class World {
 	}
 
 	public void draw(Graphics2D g2) {
-		for ( Block block : blocks ) {
-			if ( block.getX(offset) > -100 && block.getX(offset) < 256*MarioNes.PIXEL_SCALE ) {
-				block.draw(g2, offset);
-			}
-		}
-		for ( Enemy enemy : enemies ) {
-			if ( enemy.getX(offset) > -100 && enemy.getX(offset) < 256*MarioNes.PIXEL_SCALE ) {
-				enemy.draw(g2, offset);
+
+		findEnemyEnemyCollisions();
+
+		blocks.stream()
+				.filter( block -> block.getX(offset) > -100 && block.getX(offset) < 256*MarioNes.PIXEL_SCALE )
+				.forEach( block -> block.draw(g2, offset) );
+
+		enemies.stream()
+				.filter( enemy -> enemy.getX(offset) > -100 && enemy.getX(offset) < 256*MarioNes.PIXEL_SCALE)
+				.forEach( enemy -> enemy.draw(g2, offset) );
+	}
+
+	private void findEnemyEnemyCollisions() {
+		for ( int i = 0; i < enemies.size(); i++ ) {
+			Enemy enemy = enemies.get(i);
+			for ( int j = i+1; j < enemies.size(); j++ ) {
+				Enemy other = enemies.get(j);
+				if ( enemy.getRect(offset).intersects(other.getRect(offset)) ) {
+					enemy.reverse();
+					other.reverse();
+				}
 			}
 		}
 	}
 
-	public CollisionResult collision(Rectangle2D inputRect, Vector vector) {
+	public boolean findMarioEnemyCollisions(Rectangle2D marioRect) {
+
+		boolean marioHit = false;
+
+		for ( Enemy enemy : enemies ) {
+			if ( enemy.getRect(offset).intersects(marioRect) ) {
+				Pos marioPos = new Pos(marioRect.getCenterX(), marioRect.getCenterY());
+				Pos enemyPos = new Pos(enemy.getRect(offset).getCenterX(), enemy.getRect(offset).getCenterY());
+				Side sideHit = getSide(marioPos, enemyPos);
+
+				if ( sideHit == Side.TOP ) {
+					enemy.hit();
+					enemies.remove(enemy);
+				} else {
+					marioHit = true;
+				}
+			}
+		}
+
+		return marioHit;
+	}
+
+	private Side getSide(Pos marioPos, Pos enemyPos) {
+
+		int upDown = marioPos.getY() - enemyPos.getY();
+		int leftRight = marioPos.getX() - enemyPos.getX();
+
+		if ( Math.abs(upDown) >= Math.abs(leftRight) ) {
+			// top or bottom hit
+			if ( upDown > 0 ) {
+				return Side.BOTTOM;
+			} else {
+				return Side.TOP;
+			}
+		} else {
+			// left of right hit
+			if ( leftRight > 0 ) {
+				return Side.RIGHT;
+			} else {
+				return Side.LEFT;
+			}
+		}
+	}
+
+	public CollisionResult blockCollisions(Rectangle2D inputRect, Vector vector) {
 		return collisionOperator.collision(blocks, inputRect, vector, offset);
 	}
 }

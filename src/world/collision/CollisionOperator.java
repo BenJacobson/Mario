@@ -12,12 +12,14 @@ import java.util.List;
 
 public class CollisionOperator {
 
-	private Side getSide(Pos shape, Pos block, Vector vector) {
+	public Side getSide(Pos shape, Pos block, Vector vector) {
 
 		int upDown = shape.getY() - block.getY();
 		int leftRight = shape.getX() - block.getX();
 
-		if ( Math.abs(upDown)+1 >= Math.abs(leftRight) ) {
+		int favorUpDown = 4*MarioNes.PIXEL_SCALE;
+
+		if ( Math.abs(upDown)+favorUpDown >= Math.abs(leftRight) ) {
 			// top or bottom hit
 			if ( upDown > 0 && vector.getDy() < 0 ) {
 				return Side.BOTTOM;
@@ -83,6 +85,8 @@ public class CollisionOperator {
 			result.setBottomHit(true);
 			Block block = bottomHit.get(0);
 			result.setDy(block.getY() + block.getHeight() - inputRect.getY());
+			MarioNes.blocks.removeAll(bottomHit);
+			bottomHit.stream().forEach( b -> b.hit() );
 		}
 		if ( leftHit != null && leftHit.size() > 0 ) {
 			result.setLeftHit(true);

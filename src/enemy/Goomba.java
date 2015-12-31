@@ -48,20 +48,33 @@ public class Goomba implements Enemy {
 		return new Rectangle2D.Double(pos.getX()-offset, pos.getY(), imageLeft.getWidth(null), imageLeft.getHeight(null));
 	}
 
+	@Override
+	public void reverse() {
+		vector.reverse();
+	}
+
+	@Override
+	public void hit() {
+
+	}
+
 	private void update() {
-		updateFrame();
 		vector.gravity();
 		pos.move(vector);
+		updateFrame();
+		checkCollision();
+	}
+
+	private void checkCollision() {
 
 		int offset = World.getInstance().getOffest();
-		CollisionResult collisionResult = World.getInstance().collision(getRect(offset), vector);
-		pos.moveDown(collisionResult.getDy());
-		if ( collisionResult.getDx() > 0 ) {
-			pos.moveRight(collisionResult.getDx());
-			vector.reverse();
-		}
+		CollisionResult collisionResult = World.getInstance().blockCollisions(getRect(offset), vector);
 
-		// Mario.getInstance().
+		pos.moveDown(collisionResult.getDy());
+		if ( Math.abs(collisionResult.getDx()) > 0 ) {
+			pos.moveRight(collisionResult.getDx());
+			reverse();
+		}
 	}
 
 	private void updateFrame() {

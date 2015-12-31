@@ -12,8 +12,8 @@ public class Coin {
 
 	Image image;
 
-	public Coin(Pos pos, String fileName) {
+	public Coin(Pos pos) {
 		this.pos = pos;
-		image = GameCanvas.initFrame(fileName);
+		image = GameCanvas.initFrame(GameCanvas.imageFolder + "coin.png");
 	}
 }

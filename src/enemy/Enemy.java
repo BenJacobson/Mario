@@ -9,4 +9,7 @@ public interface Enemy {
 
 	int getX(int offset);
 	Rectangle2D getRect(int offset);
+
+	void reverse();
+	void hit();
 }

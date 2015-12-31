@@ -5,22 +5,22 @@ public class Pos {
 	private double x;
 	private double y;
 
-	public Pos(int x, int y) {
+	public Pos(double x, double y) {
 		set(x,y);
 	}
 
-	public Pos set(int x, int y) {
+	public Pos set(double x, double y) {
 		this.x = x;
 		this.y = y;
 
 		return this;
 	}
 
-	public void setX(int x) {
+	public void setX(double x) {
 		this.x = x;
 	}
 
-	public void setY(int y) {
+	public void setY(double y) {
 		this.y = y;
 	}
 
@@ -51,7 +51,7 @@ public class Pos {
 	}
 
 	public Pos copy(double dx, double dy) {
-		return new Pos((int)(x+dx), (int)(y+dy));
+		return new Pos(x+dx, y+dy);
 	}
 
 	@Override

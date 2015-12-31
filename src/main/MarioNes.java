@@ -9,10 +9,7 @@ import world.block.*;
 import world.coin.Coin;
 
 import java.awt.*;
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 import java.util.List;
 
@@ -39,7 +36,7 @@ public class MarioNes {
 		try {
 			mapScan = new Scanner(new BufferedInputStream(new FileInputStream(new File(fileName))));
 		} catch (IOException ex) {
-			System.out.println("Cannot load map 1-1");
+			System.out.println("Cannot load " + fileName);
 			System.exit(0);
 		}
 
@@ -63,34 +60,47 @@ public class MarioNes {
 
 	public static void initBlocks() {
 
-		blocks = new LinkedList<>();
-		enemies = new LinkedList<>();
-		coins = new LinkedList<>();
+		List<Block> blocks = new LinkedList<>();
+		List<Enemy> enemies = new LinkedList<>();
+		List<Coin> coins = new LinkedList<>();
+
+		int width = World.block_width;
+		int height = World.block_height;
+		int scale = MarioNes.PIXEL_SCALE;
 
 		char[][] map = getMap();
 
 		for ( int y = 0; y < map.length; y++ ) {
 			for ( int x = 0; x < map[y].length; x++ ) {
-				if ( map[y][x] == 'g' ) {
-					blocks.add(new Ground(new Pos(x * World.block_width* MarioNes.PIXEL_SCALE, (212 - y * World.block_height) * MarioNes.PIXEL_SCALE)));
-				} else if ( map[y][x] == 't' ) {
-					blocks.add(new PipeTop(new Pos(x * World.block_width* MarioNes.PIXEL_SCALE, (212 - y * World.block_height) * MarioNes.PIXEL_SCALE)));
-				} else if ( map[y][x] == 'b' ) {
-					blocks.add(new PipeBottom(new Pos(x * World.block_width* MarioNes.PIXEL_SCALE, (212 - y * World.block_height) * MarioNes.PIXEL_SCALE)));
-				} else if ( map[y][x] == 'i' ) {
-					blocks.add(new GeneralBlock(new Pos(x * World.block_width* MarioNes.PIXEL_SCALE, (212 - y * World.block_height) * MarioNes.PIXEL_SCALE), "block_invisible.png"));
-				} else if ( map[y][x] == 'r' ) {
-					blocks.add(new GeneralBlock(new Pos(x * World.block_width* MarioNes.PIXEL_SCALE, (212 - y * World.block_height) * MarioNes.PIXEL_SCALE), "block_brick.png"));
-				} else if ( map[y][x] == '?' ) {
-					blocks.add(new GeneralBlock(new Pos(x * World.block_width* MarioNes.PIXEL_SCALE, (212 - y * World.block_height) * MarioNes.PIXEL_SCALE), "block_question.png"));
-				} else if ( map[y][x] == 's' ) {
-					blocks.add(new GeneralBlock(new Pos(x * World.block_width* MarioNes.PIXEL_SCALE, (212 - y * World.block_height) * MarioNes.PIXEL_SCALE), "block_square.png"));
-				} else if ( map[y][x] == 'e' ) {
-					enemies.add(new Goomba(new Pos(x * World.block_width* MarioNes.PIXEL_SCALE, (212 - y * World.block_height) * MarioNes.PIXEL_SCALE)));
-				} else if ( map[y][x] == 'c' ) {
-					coins.add(new Coin(new Pos(x * World.block_width* MarioNes.PIXEL_SCALE, (212 - y * World.block_height) * MarioNes.PIXEL_SCALE), "Coin.png"));
+
+				char c = map[y][x];
+				int xcoord = x * width * scale;
+				int ycoord = (212 - y * height) * scale;
+
+				if ( c == 'g' ) {
+					blocks.add(new Ground(new Pos(xcoord, ycoord)));
+				} else if ( c == 't' ) {
+					blocks.add(new PipeTop(new Pos(xcoord, ycoord)));
+				} else if ( c == 'b' ) {
+					blocks.add(new PipeBottom(new Pos(xcoord, ycoord)));
+				} else if ( c == 'i' ) {
+					blocks.add(new GeneralBlock(new Pos(xcoord, ycoord), "block_invisible.png"));
+				} else if ( c == 'r' ) {
+					blocks.add(new GeneralBlock(new Pos(xcoord, ycoord), "block_brick.png"));
+				} else if ( c == '?' ) {
+					blocks.add(new GeneralBlock(new Pos(xcoord, ycoord), "block_question.png"));
+				} else if ( c == 's' ) {
+					blocks.add(new GeneralBlock(new Pos(xcoord, ycoord), "block_square.png"));
+				} else if ( c == 'e' ) {
+					enemies.add(new Goomba(new Pos(xcoord, ycoord)));
+				} else if ( c == 'c' ) {
+					coins.add(new Coin(new Pos(xcoord, ycoord)));
 				}
 			}
 		}
+
+		MarioNes.blocks = blocks;
+		MarioNes.enemies = enemies;
+		MarioNes.coins = coins;
 	}
 }

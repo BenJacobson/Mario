@@ -1,5 +1,6 @@
 package mario;
 
+import enemy.Enemy;
 import main.MarioNes;
 import mechanics.Pos;
 import mechanics.Vector;
@@ -9,6 +10,7 @@ import world.World;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
+import java.util.List;
 
 // contains the information and subclasses about mario on screen
 public class Mario {
@@ -30,9 +32,11 @@ public class Mario {
 	private boolean lastDirectionForward = true;
 	private boolean jump = false;
 	private boolean canJumpAgain = false;
+	private boolean jumpHeld = false;
 
-	private int passesBetweenFrames = 5;
 	private int numberOfPasses = 0;
+	private int jumpHeldState = 0;
+	private int jumpHeldPasses = 0;
 
 	private FrameState frameState = FrameState.STAND;
 	
@@ -47,9 +51,9 @@ public class Mario {
 	private final Image run_frame_4 = GameCanvas.initFrame(GameCanvas.imageFolder + "mario_run_4.png");
 	private final Image run_frame_4_back = GameCanvas.initFrame(GameCanvas.imageFolder + "mario_run_4_back.png");
 
-	public static int LEFT = 37;
-	public static int RIGHT = 39;
-	public static int SPACE = 32;
+	private final int LEFT = 37;
+	private final int RIGHT = 39;
+	private final int SPACE = 32;
 
 
 	private Mario() {}
@@ -95,7 +99,7 @@ public class Mario {
 				}
 		}
 
-		return null;
+		return stand_frame;
 	}
 
 	private void setRunFrame() {
@@ -117,13 +121,13 @@ public class Mario {
 
 			numberOfPasses++;
 
-			if ( numberOfPasses > passesBetweenFrames ) {
-				numberOfPasses = 0;
-			} else {
+			 int passesToWait = 5;
+			 if ( numberOfPasses <= passesToWait ) {
 				// don't change the frame yet
 				return;
 			}
 
+			numberOfPasses = 0;
 
 			// advance to next running frame
 			if (frameState == FrameState.RUN1) {
@@ -139,6 +143,7 @@ public class Mario {
 	}
 
 	public void draw(Graphics2D g2) {
+		move();
 		Image currentFrame = getCurrentFrame();
 
 		int extraX = 0, extraY = 0;
@@ -149,7 +154,7 @@ public class Mario {
 			extraY = MarioNes.PIXEL_SCALE;
 		}
 
-		g2.drawImage(currentFrame, currentPos.getX()-extraX, currentPos.getY()-extraY,
+		g2.drawImage(currentFrame, currentPos.getX()-extraX, currentPos.getY()+extraY,
 				currentFrame.getWidth(null), currentFrame.getHeight(null), null);
 	}
 
@@ -163,8 +168,10 @@ public class Mario {
 			movingLeft = false;
 			lastDirectionForward = canJumpAgain ? true : lastDirectionForward;
 		} else if ( action == SPACE ) {
-			if ( vector.getDy() == 0 && canJumpAgain) {
+			if ( vector.getDy() == 0 && canJumpAgain ) {
 				jump = true;
+				jumpHeld = true;
+				jumpHeldState = 0;
 			}
 		}
 	}
@@ -173,12 +180,16 @@ public class Mario {
 		if ( action == LEFT || action == RIGHT ) {
 			movingLeft = false;
 			movingRight = false;
+		} else if ( action == SPACE ) {
+			jumpHeld = false;
 		}
 	}
 
 	public void move() {
 
 		handleJump();
+
+		handleEnemies();
 
 		updateVector();
 
@@ -187,6 +198,14 @@ public class Mario {
 		handleCollisions();
 
 		checkDead();
+	}
+
+	private void handleEnemies() {
+		boolean maioHit = World.getInstance().findMarioEnemyCollisions(getRect());
+
+		if ( maioHit ) {
+			dead();
+		}
 	}
 
 	private void checkDead() {
@@ -213,7 +232,7 @@ public class Mario {
 
 	private void handleCollisions() {
 
-		CollisionResult collisionResult = World.getInstance().collision(getRect(), vector);
+		CollisionResult collisionResult = World.getInstance().blockCollisions(getRect(), vector);
 
 		currentPos.moveDown( collisionResult.getDy() );
 		currentPos.moveRight( collisionResult.getDx() );
@@ -238,6 +257,7 @@ public class Mario {
 			currentPos.setX( 256*MarioNes.PIXEL_SCALE/2 );
 		}
 	}
+
 
 	private Rectangle2D getRect() {
 		return new Rectangle2D.Double(currentPos.getX(), currentPos.getY(), stand_frame.getWidth(null), stand_frame.getHeight(null));
@@ -269,11 +289,26 @@ public class Mario {
 	}
 
 	private void handleJump() {
+		int jumpHeldMax = 10;
+
 		if ( jump ) {
 			vector.jump();
 			jump = false;
 			canJumpAgain = false;
 			frameState = FrameState.JUMP;
+		} else if ( jumpHeld && jumpHeldState <= jumpHeldMax ) {
+
+			jumpHeldPasses++;
+
+			int jumpPassesToWait = 2;
+			if ( jumpHeldPasses <= jumpPassesToWait ) {
+				return;
+			}
+
+			jumpHeldPasses = 0;
+			vector.jump();
+			jumpHeldState++;
+			System.out.println("jump state = " + jumpHeldState);
 		}
 	}
 
