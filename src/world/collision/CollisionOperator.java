@@ -58,6 +58,7 @@ public class CollisionOperator {
 						case BOTTOM:
 							if ( bottomHit == null ) {bottomHit = new LinkedList<>();}
 							bottomHit.add(block);
+							block.hit();
 							break;
 						case LEFT:
 							if ( leftHit == null ) {leftHit = new LinkedList<>();}
@@ -85,7 +86,6 @@ public class CollisionOperator {
 			result.setBottomHit(true);
 			Block block = bottomHit.get(0);
 			result.setDy(block.getY() + block.getHeight() - inputRect.getY());
-			MarioNes.blocks.removeAll(bottomHit);
 			bottomHit.stream().forEach( b -> b.hit() );
 		}
 		if ( leftHit != null && leftHit.size() > 0 ) {

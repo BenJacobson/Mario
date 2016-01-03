@@ -9,9 +9,9 @@ import java.awt.geom.Rectangle2D;
 
 public class GeneralBlock implements Block {
 
-	Pos pos;
+	protected Pos pos;
 
-	private Image image;
+	protected Image image;
 
 	public GeneralBlock(Pos pos, String imageName) {
 		this.pos = pos;

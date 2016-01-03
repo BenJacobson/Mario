@@ -1,6 +1,5 @@
 package mario;
 
-import enemy.Enemy;
 import main.MarioNes;
 import mechanics.Pos;
 import mechanics.Vector;
@@ -10,7 +9,6 @@ import world.World;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
-import java.util.List;
 
 // contains the information and subclasses about mario on screen
 public class Mario {
@@ -24,7 +22,8 @@ public class Mario {
 		return instance;
 	}
 
-	Pos currentPos = new Pos(100, 180*MarioNes.PIXEL_SCALE);
+	Pos originalPos = new Pos(100, 180*MarioNes.PIXEL_SCALE);
+	Pos currentPos = originalPos.copy();
 	Vector vector = new Vector();
 
 	private boolean movingLeft = false;
@@ -37,6 +36,7 @@ public class Mario {
 	private int numberOfPasses = 0;
 	private int jumpHeldState = 0;
 	private int jumpHeldPasses = 0;
+	private int deadState = 0;
 
 	private FrameState frameState = FrameState.STAND;
 	
@@ -50,6 +50,7 @@ public class Mario {
 	private final Image run_frame_2_back = GameCanvas.initFrame(GameCanvas.imageFolder + "mario_run_2_back.png");
 	private final Image run_frame_4 = GameCanvas.initFrame(GameCanvas.imageFolder + "mario_run_4.png");
 	private final Image run_frame_4_back = GameCanvas.initFrame(GameCanvas.imageFolder + "mario_run_4_back.png");
+	private final Image dead_frame = GameCanvas.initFrame(GameCanvas.imageFolder + "mario_dead.png");
 
 	private final int LEFT = 37;
 	private final int RIGHT = 39;
@@ -97,6 +98,8 @@ public class Mario {
 				} else {
 					return run_frame_4_back;
 				}
+			case DEAD:
+				return dead_frame;
 		}
 
 		return stand_frame;
@@ -168,7 +171,7 @@ public class Mario {
 			movingLeft = false;
 			lastDirectionForward = canJumpAgain ? true : lastDirectionForward;
 		} else if ( action == SPACE ) {
-			if ( vector.getDy() == 0 && canJumpAgain ) {
+			if ( vector.getDy() == 0 && canJumpAgain && !jumpHeld ) {
 				jump = true;
 				jumpHeld = true;
 				jumpHeldState = 0;
@@ -177,8 +180,9 @@ public class Mario {
 	}
 
 	public void unsetDirection(int action) {
-		if ( action == LEFT || action == RIGHT ) {
+		if ( action == LEFT ) {
 			movingLeft = false;
+		} else if ( action == RIGHT ) {
 			movingRight = false;
 		} else if ( action == SPACE ) {
 			jumpHeld = false;
@@ -187,24 +191,37 @@ public class Mario {
 
 	public void move() {
 
-		handleJump();
+		if ( frameState != FrameState.DEAD ) {
 
-		handleEnemies();
+			handleJump();
 
-		updateVector();
+			handleEnemies();
 
-		currentPos.move(vector);
+			updateVector();
 
-		handleCollisions();
+			currentPos.move(vector);
 
-		checkDead();
+			handleCollisions();
+
+			checkDead();
+
+		} else {
+
+			if ( deadState++ > 100 ) {
+				reset();
+			}
+
+		}
 	}
 
 	private void handleEnemies() {
-		boolean maioHit = World.getInstance().findMarioEnemyCollisions(getRect());
+		Boolean[] hits = World.getInstance().findMarioEnemyCollisions(getRect());
 
-		if ( maioHit ) {
+		if ( hits[0] ) {
 			dead();
+		}
+		if ( hits[1] ) {
+			vector.bounce();
 		}
 	}
 
@@ -215,19 +232,26 @@ public class Mario {
 	}
 
 	private void dead() {
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException ex) {
-			// move on
-		}
+		movingLeft = false;
+		movingRight = false;
+		canJumpAgain = false;
+		frameState = FrameState.DEAD;
+	}
 
-		// reset values
-		currentPos.set(100,100);
+	public boolean isNotDead() {
+		return frameState != FrameState.DEAD;
+	}
+
+	private void reset() {
+		deadState = 0;
+		currentPos = originalPos.copy();
 		World.getInstance().resetOffset();
+		World.getInstance().resetEnemies();
 		frameState = FrameState.STAND;
 		vector.hitX();
 		vector.hitY();
 		lastDirectionForward = true;
+		canJumpAgain = true;
 	}
 
 	private void handleCollisions() {
@@ -239,7 +263,7 @@ public class Mario {
 
 		canJumpAgain |= collisionResult.isTopHit();
 
-		if ( collisionResult.isTopHit() && !isInRunState() ) {
+		if ( collisionResult.isTopHit() && !isInRunState() && isNotDead() ) {
 			frameState = FrameState.STAND;
 		}
 
@@ -269,6 +293,7 @@ public class Mario {
 	}
 
 	private void updateVector() {
+
 		if ( movingLeft ) {
 			vector.moveLeft();
 			setRunFrame();
@@ -289,7 +314,7 @@ public class Mario {
 	}
 
 	private void handleJump() {
-		int jumpHeldMax = 10;
+		int jumpHeldMax = 12;
 
 		if ( jump ) {
 			vector.jump();
@@ -298,17 +323,15 @@ public class Mario {
 			frameState = FrameState.JUMP;
 		} else if ( jumpHeld && jumpHeldState <= jumpHeldMax ) {
 
-			jumpHeldPasses++;
-
-			int jumpPassesToWait = 2;
+			int jumpPassesToWait = 0;
 			if ( jumpHeldPasses <= jumpPassesToWait ) {
+				jumpHeldPasses++;
 				return;
 			}
 
 			jumpHeldPasses = 0;
-			vector.jump();
+			vector.jumpHold();
 			jumpHeldState++;
-			System.out.println("jump state = " + jumpHeldState);
 		}
 	}
 

@@ -26,7 +26,15 @@ public class Vector {
 	}
 
 	public void jump() {
-		dy = -genSpeed*10;
+		dy = -genSpeed*33;
+	}
+
+	public void bounce() {
+		dy = -genSpeed*20;
+	}
+
+	public void jumpHold() {
+		dy -= genSpeed*3.73;
 	}
 
 	public void moveRight() {
@@ -37,7 +45,7 @@ public class Vector {
 
 	public void moveLeft() {
 		if ( dx > -genSpeed*16 ) {
-			dx -= genSpeed;
+	 		dx -= genSpeed;
 		}
 	}
 
@@ -53,7 +61,7 @@ public class Vector {
 
 	public void gravity() {
 		if ( dy < genSpeed*24 ) {
-			dy += genSpeed;
+			dy += genSpeed*3;
 		}
 	}
 

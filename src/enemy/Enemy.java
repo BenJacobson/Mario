@@ -12,4 +12,5 @@ public interface Enemy {
 
 	void reverse();
 	void hit();
+	void reset();
 }

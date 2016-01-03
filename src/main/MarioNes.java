@@ -84,9 +84,9 @@ public class MarioNes {
 				} else if ( c == 'b' ) {
 					blocks.add(new PipeBottom(new Pos(xcoord, ycoord)));
 				} else if ( c == 'i' ) {
-					blocks.add(new GeneralBlock(new Pos(xcoord, ycoord), "block_invisible.png"));
+					blocks.add(new Invisible(new Pos(xcoord, ycoord)));
 				} else if ( c == 'r' ) {
-					blocks.add(new GeneralBlock(new Pos(xcoord, ycoord), "block_brick.png"));
+					blocks.add(new Brick(new Pos(xcoord, ycoord)));
 				} else if ( c == '?' ) {
 					blocks.add(new GeneralBlock(new Pos(xcoord, ycoord), "block_question.png"));
 				} else if ( c == 's' ) {

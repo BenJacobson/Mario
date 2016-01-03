@@ -1,8 +1,8 @@
 package window;
 
-import enemy.Enemy;
 import mario.Mario;
 import main.MarioNes;
+import stats.Stats;
 import world.World;
 
 import javax.imageio.ImageIO;
@@ -11,7 +11,6 @@ import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 // class to handle the painting of the game
 public class GameCanvas extends JComponent {
@@ -29,12 +28,15 @@ public class GameCanvas extends JComponent {
 		}
 	}
 
+	private Stats stats = new Stats();
+
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
 
 		drawBackground(g2);
+		drawStats(g2);
 		drawWorld(g2);
 		drawMario(g2);
 	}
@@ -42,6 +44,10 @@ public class GameCanvas extends JComponent {
 	private void drawBackground(Graphics2D g2) {
 		g2.setColor(new Color(132, 205, 254));
 		g2.fillRect(0, 0, getWidth(), getHeight());
+	}
+
+	private void drawStats(Graphics2D g2) {
+		stats.draw(g2);
 	}
 
 	private void drawWorld(Graphics2D g2) {

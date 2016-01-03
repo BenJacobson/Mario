@@ -45,6 +45,12 @@ public class World {
 		offset = 0;
 	}
 
+	public void resetEnemies(){
+		for ( Enemy enemy : enemies ) {
+			enemy.reset();
+		}
+	}
+
 	public void draw(Graphics2D g2) {
 
 		findEnemyEnemyCollisions();
@@ -71,9 +77,9 @@ public class World {
 		}
 	}
 
-	public boolean findMarioEnemyCollisions(Rectangle2D marioRect) {
+	public Boolean[] findMarioEnemyCollisions(Rectangle2D marioRect) {
 
-		boolean marioHit = false;
+		boolean marioHit = false, enemyHit = false;
 
 		for ( Enemy enemy : enemies ) {
 			if ( enemy.getRect(offset).intersects(marioRect) ) {
@@ -83,14 +89,14 @@ public class World {
 
 				if ( sideHit == Side.TOP ) {
 					enemy.hit();
-					enemies.remove(enemy);
+					enemyHit = true;
 				} else {
 					marioHit = true;
 				}
 			}
 		}
 
-		return marioHit;
+		return new Boolean[] { marioHit, enemyHit };
 	}
 
 	private Side getSide(Pos marioPos, Pos enemyPos) {
