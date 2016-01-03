@@ -88,9 +88,9 @@ public class MarioNes {
 				} else if ( c == 'r' ) {
 					blocks.add(new Brick(new Pos(xcoord, ycoord)));
 				} else if ( c == '?' ) {
-					blocks.add(new GeneralBlock(new Pos(xcoord, ycoord), "block_question.png"));
+					blocks.add(new Question(new Pos(xcoord, ycoord)));
 				} else if ( c == 's' ) {
-					blocks.add(new GeneralBlock(new Pos(xcoord, ycoord), "block_square.png"));
+					blocks.add(new Square(new Pos(xcoord, ycoord)));
 				} else if ( c == 'e' ) {
 					enemies.add(new Goomba(new Pos(xcoord, ycoord)));
 				} else if ( c == 'c' ) {
