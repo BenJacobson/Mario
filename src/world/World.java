@@ -57,11 +57,11 @@ public class World {
 		findEnemyEnemyCollisions();
 
 		blocks.stream()
-				.filter( block -> block.getX(offset) > -100 && block.getX(offset) < GameFrame.UNSCALED_WIDTH*GameFrame.PIXEL_SCALE )
+				.filter( block -> block.getX(offset) > -100 && block.getX(offset) < GameFrame.gameWidth() )
 				.forEach( block -> block.draw(g2, offset) );
 
 		enemies.stream()
-				.filter( enemy -> enemy.getX(offset) > -100 && enemy.getX(offset) < GameFrame.UNSCALED_HEIGHT*GameFrame.PIXEL_SCALE)
+				.filter( enemy -> enemy.getX(offset) > -100 && enemy.getX(offset) < GameFrame.gameHeight())
 				.forEach( enemy -> enemy.draw(g2, offset) );
 	}
 

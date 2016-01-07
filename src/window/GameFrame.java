@@ -17,8 +17,16 @@ import java.util.TimerTask;
 public class GameFrame extends JFrame {
 
 	public static final int PIXEL_SCALE = 4;
-	public static final int UNSCALED_WIDTH = 256;
-	public static final int UNSCALED_HEIGHT = 230;
+	private static final int UNSCALED_WIDTH = 256;
+	private static final int UNSCALED_HEIGHT = 230;
+
+	public static int gameWidth() {
+		return UNSCALED_WIDTH*PIXEL_SCALE;
+	}
+
+	public static int gameHeight() {
+		return UNSCALED_HEIGHT*PIXEL_SCALE;
+	}
 
 	Timer timer = new Timer();
 
@@ -34,7 +42,7 @@ public class GameFrame extends JFrame {
 
 		setKeyListener();
 
-		setSize(UNSCALED_WIDTH*PIXEL_SCALE, UNSCALED_HEIGHT*PIXEL_SCALE);
+		setSize(gameWidth(), gameHeight());
 		setResizable(false);
 
 		setLocation();

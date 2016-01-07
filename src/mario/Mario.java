@@ -277,9 +277,9 @@ public class Mario {
 
 		if ( currentPos.getX() < 2*GameFrame.PIXEL_SCALE ) {
 			currentPos.setX( 2*GameFrame.PIXEL_SCALE );
-		} else if ( currentPos.getX() > 256*GameFrame.PIXEL_SCALE/2 ) {
-			World.getInstance().addOffset( currentPos.getX() - 256*GameFrame.PIXEL_SCALE/2 );
-			currentPos.setX( 256*GameFrame.PIXEL_SCALE/2 );
+		} else if ( currentPos.getX() > GameFrame.gameWidth()/2 ) {
+			World.getInstance().addOffset( currentPos.getX() - GameFrame.gameWidth()/2 );
+			currentPos.setX( GameFrame.gameWidth()/2 );
 		}
 	}
 
