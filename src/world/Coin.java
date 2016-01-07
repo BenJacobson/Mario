@@ -1,4 +1,4 @@
-package world.coin;
+package world;
 
 
 import mechanics.Pos;

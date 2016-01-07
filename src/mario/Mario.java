@@ -29,6 +29,7 @@ public class Mario {
 
 	private boolean movingLeft = false;
 	private boolean movingRight = false;
+	private boolean running = false;
 	private boolean lastDirectionForward = true;
 	private boolean jump = false;
 	private boolean canJumpAgain = false;
@@ -55,6 +56,7 @@ public class Mario {
 
 	private final int LEFT = 37;
 	private final int RIGHT = 39;
+	private final int RUN = 88;
 	private final int SPACE = 32;
 
 
@@ -123,9 +125,9 @@ public class Mario {
 		 if ( frameState == FrameState.RUN1 || frameState == FrameState.RUN2 ||
 				 frameState == FrameState.RUN3 || frameState == FrameState.RUN4 ) {
 
-			numberOfPasses++;
+			 numberOfPasses++;
 
-			 int passesToWait = 5;
+			 int passesToWait = vector.isFast() ? 3 : 5;
 			 if ( numberOfPasses <= passesToWait ) {
 				// don't change the frame yet
 				return;
@@ -163,6 +165,7 @@ public class Mario {
 	}
 
 	public void setDirection(int action) {
+
 		if ( action == LEFT ) {
 			movingLeft = true;
 			movingRight = false;
@@ -171,6 +174,8 @@ public class Mario {
 			movingRight = true;
 			movingLeft = false;
 			lastDirectionForward = canJumpAgain ? true : lastDirectionForward;
+		} else if ( action == RUN  && canJumpAgain ) {
+			running = true;
 		} else if ( action == SPACE ) {
 			if ( vector.getDy() == 0 && canJumpAgain && !jumpHeld ) {
 				jump = true;
@@ -185,6 +190,8 @@ public class Mario {
 			movingLeft = false;
 		} else if ( action == RIGHT ) {
 			movingRight = false;
+		} else if ( action == RUN ) {
+			running = false;
 		} else if ( action == SPACE ) {
 			jumpHeld = false;
 		}
@@ -253,7 +260,8 @@ public class Mario {
 		vector.hitY();
 		lastDirectionForward = true;
 		canJumpAgain = true;
-	}
+		jump = false;
+   	}
 
 	private void handleCollisions() {
 
@@ -262,7 +270,7 @@ public class Mario {
 		currentPos.moveDown( collisionResult.getDy() );
 		currentPos.moveRight( collisionResult.getDx() );
 
-		canJumpAgain |= collisionResult.isTopHit();
+		canJumpAgain = collisionResult.isTopHit();
 
 		if ( collisionResult.isTopHit() && !isInRunState() && isNotDead() ) {
 			frameState = FrameState.STAND;
@@ -296,11 +304,11 @@ public class Mario {
 	private void updateVector() {
 
 		if ( movingLeft ) {
-			vector.moveLeft();
+			vector.moveLeft(running);
 			setRunFrame();
 			updateRunFrame();
 		} else if ( movingRight ) {
-			vector.moveRight();
+			vector.moveRight(running);
 			setRunFrame();
 			updateRunFrame();
 		} else {

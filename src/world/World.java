@@ -6,9 +6,8 @@ import mechanics.Pos;
 import mechanics.Side;
 import mechanics.Vector;
 import window.GameFrame;
-import world.block.*;
-import world.collision.CollisionOperator;
-import world.collision.CollisionResult;
+import world.block.Block;
+import world.collision.*;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;

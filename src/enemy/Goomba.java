@@ -30,9 +30,9 @@ public class Goomba implements Enemy {
 	public Goomba(Pos pos) {
 		this.originalPos = pos;
 		this.pos = pos.copy();
-		vector.moveLeft();
-		vector.moveLeft();
-		vector.moveLeft();
+		vector.moveLeft(false);
+		vector.moveLeft(false);
+		vector.moveLeft(false);
 	}
 
 

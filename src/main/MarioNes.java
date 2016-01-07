@@ -6,7 +6,7 @@ import mechanics.Pos;
 import window.GameFrame;
 import world.World;
 import world.block.*;
-import world.coin.Coin;
+import world.Coin;
 
 import java.awt.*;
 import java.io.*;

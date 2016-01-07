@@ -37,16 +37,56 @@ public class Vector {
 		dy -= genSpeed*3.75;
 	}
 
-	public void moveRight() {
-		if ( dx < genSpeed*16 ) {
-			dx += genSpeed;
+	public void moveRight(boolean fast) {
+		if ( fast ) {
+			moveRightFast();
+		} else {
+			moveRightSlow();
 		}
 	}
 
-	public void moveLeft() {
-		if ( dx > -genSpeed*16 ) {
-	 		dx -= genSpeed;
+	private void moveRightFast() {
+		if ( dx < genSpeed*24 ) {
+			dx += genSpeed;
+		} else {
+			reduceSpeed();
 		}
+	}
+
+	private void moveRightSlow() {
+		if ( dx < genSpeed*12 ) {
+			dx += genSpeed;
+		} else {
+			reduceSpeed();
+		}
+	}
+
+	public void moveLeft(boolean fast) {
+		if ( fast ) {
+	 		moveLeftFast();
+		} else {
+			moveLeftSlow();
+		}
+	}
+
+	private void moveLeftFast() {
+		if ( dx > -genSpeed*24 ) {
+			dx -= genSpeed;
+		} else {
+			reduceSpeed();
+		}
+	}
+
+	private void moveLeftSlow() {
+		if ( dx > -genSpeed*12 ) {
+			dx -= genSpeed;
+		} else {
+			reduceSpeed();
+		}
+	}
+
+	public boolean isFast() {
+		return Math.abs(dx) > genSpeed*12;
 	}
 
 	public void reduceSpeed() {

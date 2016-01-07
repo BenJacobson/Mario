@@ -11,7 +11,7 @@ public class Stats {
 	long startTime = System.currentTimeMillis();
 	long pauseTime;
 	State state = State.STOP;
-	Font font = new Font("fixedsys", Font.PLAIN, 40);
+	Font font = new Font(Font.MONOSPACED, Font.BOLD, 40);
 
 	public void draw(Graphics2D g2) {
 		g2.setColor(Color.WHITE);
@@ -24,7 +24,7 @@ public class Stats {
 		g2.drawString("x"+coins, GameFrame.gameWidth()*5/16, 100 + metrics.getHeight());
 
 		g2.drawString("WORLD", GameFrame.gameWidth()*9/16, 100);
-		g2.drawString("1-1", GameFrame.gameWidth()*9/16, 100 + metrics.getHeight());
+		g2.drawString(" 1-1", GameFrame.gameWidth()*9/16, 100 + metrics.getHeight());
 
 		g2.drawString("TIME", GameFrame.gameWidth()*13/16, 100);
 		g2.drawString(getTime(), GameFrame.gameWidth()*13/16, 100 + metrics.getHeight());
