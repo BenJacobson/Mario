@@ -1,9 +1,9 @@
 package world.collision;
 
-import main.MarioNes;
 import mechanics.Pos;
 import mechanics.Side;
 import mechanics.Vector;
+import window.GameFrame;
 import world.block.Block;
 
 import java.awt.geom.Rectangle2D;
@@ -17,7 +17,7 @@ public class CollisionOperator {
 		int upDown = shape.getY() - block.getY();
 		int leftRight = shape.getX() - block.getX();
 
-		int favorUpDown = 4*MarioNes.PIXEL_SCALE;
+		int favorUpDown = 4*GameFrame.PIXEL_SCALE;
 
 		if ( Math.abs(upDown)+favorUpDown >= Math.abs(leftRight) ) {
 			// top or bottom hit
@@ -47,7 +47,7 @@ public class CollisionOperator {
 
 		// find the blocks that are hit
 		for ( Block block : blocks ) {
-			if ( block.getX(offset) > -100 && block.getX(offset) < 256* MarioNes.PIXEL_SCALE) {
+			if ( block.getX(offset) > -100 && block.getX(offset) < 256* GameFrame.PIXEL_SCALE) {
 				if ( inputRect.intersects( block.getRect(offset) ) ) {
 
 					switch ( getSide(new Pos((int)inputRect.getCenterX(), (int)inputRect.getCenterY()), block.getCenter(offset), vector) ) {

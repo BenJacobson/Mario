@@ -1,10 +1,10 @@
 package mechanics;
 
-import main.MarioNes;
+import window.GameFrame;
 
 public class Vector {
 
-	private double genSpeed = .166667 * MarioNes.PIXEL_SCALE;
+	private double genSpeed = .166667 * GameFrame.PIXEL_SCALE;
 
 	private double dx = 0;
 	private double dy = 0;
@@ -34,7 +34,7 @@ public class Vector {
 	}
 
 	public void jumpHold() {
-		dy -= genSpeed*3.73;
+		dy -= genSpeed*3.75;
 	}
 
 	public void moveRight() {

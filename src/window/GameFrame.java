@@ -16,6 +16,10 @@ import java.util.TimerTask;
 // window the surrounds the game
 public class GameFrame extends JFrame {
 
+	public static final int PIXEL_SCALE = 4;
+	public static final int UNSCALED_WIDTH = 256;
+	public static final int UNSCALED_HEIGHT = 230;
+
 	Timer timer = new Timer();
 
 	public GameFrame() {
@@ -30,7 +34,7 @@ public class GameFrame extends JFrame {
 
 		setKeyListener();
 
-		setSize(256*MarioNes.PIXEL_SCALE, 230*MarioNes.PIXEL_SCALE);
+		setSize(UNSCALED_WIDTH*PIXEL_SCALE, UNSCALED_HEIGHT*PIXEL_SCALE);
 		setResizable(false);
 
 		setLocation();

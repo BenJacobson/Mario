@@ -20,7 +20,7 @@ public class GameCanvas extends JComponent {
 	public static Image initFrame(String filePath) {
 		try {
 			Image frame = ImageIO.read(new FileInputStream(new File(filePath)));
-			return frame.getScaledInstance(frame.getWidth(null)* MarioNes.PIXEL_SCALE, frame.getHeight(null)*MarioNes.PIXEL_SCALE, 0);
+			return frame.getScaledInstance(frame.getWidth(null)* GameFrame.PIXEL_SCALE, frame.getHeight(null)*GameFrame.PIXEL_SCALE, 0);
 		} catch (IOException e) {
 			System.out.println("Could not load " + filePath);
 			System.exit(0);

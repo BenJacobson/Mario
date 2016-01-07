@@ -1,8 +1,8 @@
 package world.block;
 
 
-import main.MarioNes;
 import mechanics.Pos;
+import window.GameFrame;
 
 import java.awt.*;
 
@@ -25,19 +25,19 @@ public class Brick extends GeneralBlock {
 		if ( state == State.BOUNCE ) {
 			
 			if ( bounceState < 2 ) {
-				y -= 2 * MarioNes.PIXEL_SCALE;
+				y -= 2 * GameFrame.PIXEL_SCALE;
 			} else if ( bounceState < 4 ) {
-				y -= 4 * MarioNes.PIXEL_SCALE;
+				y -= 4 * GameFrame.PIXEL_SCALE;
 			} else if ( bounceState < 6 ) {
-				y -= 6 * MarioNes.PIXEL_SCALE;
+				y -= 6 * GameFrame.PIXEL_SCALE;
 			} else if ( bounceState < 7 ) {
-				y -= 4 * MarioNes.PIXEL_SCALE;
+				y -= 4 * GameFrame.PIXEL_SCALE;
 			} else if ( bounceState < 8 ) {
-				y -= 2 * MarioNes.PIXEL_SCALE;
+				y -= 2 * GameFrame.PIXEL_SCALE;
 			} else if ( bounceState < 9 ) {
 				// do nothing
 			} else if ( bounceState < 10 ) {
-				y += 2 * MarioNes.PIXEL_SCALE;
+				y += 2 * GameFrame.PIXEL_SCALE;
 			} else {
 				state = State.NORMAL;
 			}

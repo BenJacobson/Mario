@@ -20,9 +20,6 @@ public class MarioNes {
 		EventQueue.invokeLater( () -> new GameFrame() );
 	}
 
-
-	public static int PIXEL_SCALE = 4;
-
 	public static List<Block> blocks;
 	public static List<Enemy> enemies;
 	public static List<Coin> coins;
@@ -66,9 +63,13 @@ public class MarioNes {
 
 		int width = World.block_width;
 		int height = World.block_height;
-		int scale = MarioNes.PIXEL_SCALE;
+		int scale = GameFrame.PIXEL_SCALE;
 
 		char[][] map = getMap();
+
+		Map<Character, List<Long>> blockBuildTimes = new HashMap<>();
+		int totalSize = 0;
+		long totalTime = System.currentTimeMillis();
 
 		for ( int y = 0; y < map.length; y++ ) {
 			for ( int x = 0; x < map[y].length; x++ ) {
@@ -76,6 +77,7 @@ public class MarioNes {
 				char c = map[y][x];
 				int xcoord = x * width * scale;
 				int ycoord = (212 - y * height) * scale;
+				long start = System.currentTimeMillis();
 
 				if ( c == 'g' ) {
 					blocks.add(new Ground(new Pos(xcoord, ycoord)));
@@ -96,7 +98,32 @@ public class MarioNes {
 				} else if ( c == 'c' ) {
 					coins.add(new Coin(new Pos(xcoord, ycoord)));
 				}
+
+				long end = System.currentTimeMillis();
+				List<Long> addTimes = blockBuildTimes.get(c);
+				if ( addTimes != null ) {
+					addTimes.add(end - start);
+				} else {
+					addTimes = new LinkedList<>();
+					addTimes.add(end - start);
+					blockBuildTimes.put(c, addTimes);
+				}
+				totalSize++;
 			}
+		}
+
+		System.out.println("Total size: " + totalSize);
+
+		totalTime = System.currentTimeMillis() - totalTime;
+		System.out.println("Total time: " + totalTime);
+
+		for ( Map.Entry entry : blockBuildTimes.entrySet() ) {
+			double sum = 0;
+			List<Long> times = (List<Long>) entry.getValue();
+			for ( Long time : times ) {
+				sum += time;
+			}
+			System.out.printf("'%c' : %f\n", entry.getKey(), sum/times.size());
 		}
 
 		MarioNes.blocks = blocks;

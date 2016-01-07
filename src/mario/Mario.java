@@ -4,6 +4,7 @@ import main.MarioNes;
 import mechanics.Pos;
 import mechanics.Vector;
 import window.GameCanvas;
+import window.GameFrame;
 import world.collision.CollisionResult;
 import world.World;
 
@@ -22,7 +23,7 @@ public class Mario {
 		return instance;
 	}
 
-	Pos originalPos = new Pos(100, 180*MarioNes.PIXEL_SCALE);
+	Pos originalPos = new Pos(100, 180*GameFrame.PIXEL_SCALE);
 	Pos currentPos = originalPos.copy();
 	Vector vector = new Vector();
 
@@ -152,9 +153,9 @@ public class Mario {
 		int extraX = 0, extraY = 0;
 		if ( currentFrame == jump_frame || currentFrame == jump_frame_back ||
 				currentFrame == run_frame_4 || currentFrame == run_frame_4_back ) {
-			extraX = 2 * MarioNes.PIXEL_SCALE;
+			extraX = 2 * GameFrame.PIXEL_SCALE;
 		} else if ( currentFrame == run_frame_13 || currentFrame == run_frame_13_back ) {
-			extraY = MarioNes.PIXEL_SCALE;
+			extraY = GameFrame.PIXEL_SCALE;
 		}
 
 		g2.drawImage(currentFrame, currentPos.getX()-extraX, currentPos.getY()+extraY,
@@ -226,7 +227,7 @@ public class Mario {
 	}
 
 	private void checkDead() {
-		if ( currentPos.getY() > 250*MarioNes.PIXEL_SCALE ) {
+		if ( currentPos.getY() > 250*GameFrame.PIXEL_SCALE ) {
 			dead();
 		}
 	}
@@ -274,11 +275,11 @@ public class Mario {
 			vector.hitX();
 		}
 
-		if ( currentPos.getX() < 2*MarioNes.PIXEL_SCALE ) {
-			currentPos.setX( 2*MarioNes.PIXEL_SCALE );
-		} else if ( currentPos.getX() > 256*MarioNes.PIXEL_SCALE/2 ) {
-			World.getInstance().addOffset( currentPos.getX() - 256*MarioNes.PIXEL_SCALE/2 );
-			currentPos.setX( 256*MarioNes.PIXEL_SCALE/2 );
+		if ( currentPos.getX() < 2*GameFrame.PIXEL_SCALE ) {
+			currentPos.setX( 2*GameFrame.PIXEL_SCALE );
+		} else if ( currentPos.getX() > 256*GameFrame.PIXEL_SCALE/2 ) {
+			World.getInstance().addOffset( currentPos.getX() - 256*GameFrame.PIXEL_SCALE/2 );
+			currentPos.setX( 256*GameFrame.PIXEL_SCALE/2 );
 		}
 	}
 

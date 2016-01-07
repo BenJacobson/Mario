@@ -1,6 +1,6 @@
 package stats;
 
-import main.MarioNes;
+import window.GameFrame;
 
 import java.awt.*;
 
@@ -18,16 +18,16 @@ public class Stats {
 		g2.setFont(font);
 		FontMetrics metrics = g2.getFontMetrics();
 
-		g2.drawString("MARIO", 256*MarioNes.PIXEL_SCALE/8, 100);
-		g2.drawString(String.valueOf(score), 256*MarioNes.PIXEL_SCALE/8, 100 + metrics.getHeight());
+		g2.drawString("MARIO", 256*GameFrame.PIXEL_SCALE/8, 100);
+		g2.drawString(String.valueOf(score), 256*GameFrame.PIXEL_SCALE/8, 100 + metrics.getHeight());
 
-		g2.drawString("x"+coins, 256*MarioNes.PIXEL_SCALE*3/8, 100 + metrics.getHeight());
+		g2.drawString("x"+coins, 256*GameFrame.PIXEL_SCALE*3/8, 100 + metrics.getHeight());
 
-		g2.drawString("WORLD", 256*MarioNes.PIXEL_SCALE*5/8, 100);
-		g2.drawString("1-1", 256*MarioNes.PIXEL_SCALE*5/8, 100 + metrics.getHeight());
+		g2.drawString("WORLD", 256*GameFrame.PIXEL_SCALE*5/8, 100);
+		g2.drawString("1-1", 256*GameFrame.PIXEL_SCALE*5/8, 100 + metrics.getHeight());
 
-		g2.drawString("TIME", 256*MarioNes.PIXEL_SCALE*7/8, 100);
-		g2.drawString(getTime(), 256*MarioNes.PIXEL_SCALE*7/8, 100 + metrics.getHeight());
+		g2.drawString("TIME", 256*GameFrame.PIXEL_SCALE*7/8, 100);
+		g2.drawString(getTime(), 256*GameFrame.PIXEL_SCALE*7/8, 100 + metrics.getHeight());
 	}
 
 	private String getTime() {
