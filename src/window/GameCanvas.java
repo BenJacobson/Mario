@@ -15,21 +15,6 @@ import java.io.IOException;
 // class to handle the painting of the game
 public class GameCanvas extends JComponent {
 
-	public static final String imageFolder = "lib" + File.separator + "pic" + File.separator;
-
-	public static Image initFrame(String filePath) {
-		try {
-			Image frame = ImageIO.read(new FileInputStream(new File(filePath)));
-			return frame.getScaledInstance(frame.getWidth(null)* GameFrame.PIXEL_SCALE, frame.getHeight(null)*GameFrame.PIXEL_SCALE, 0);
-		} catch (IOException e) {
-			System.out.println("Could not load " + filePath);
-			System.exit(0);
-			return null;
-		}
-	}
-
-	private Stats stats = new Stats();
-
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -47,7 +32,7 @@ public class GameCanvas extends JComponent {
 	}
 
 	private void drawStats(Graphics2D g2) {
-		stats.draw(g2);
+		Stats.getInstance().draw(g2);
 	}
 
 	private void drawWorld(Graphics2D g2) {

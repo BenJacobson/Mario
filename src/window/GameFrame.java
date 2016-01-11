@@ -2,6 +2,7 @@ package window;
 
 import mario.Mario;
 import main.MarioNes;
+import util.Maps;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -32,7 +33,7 @@ public class GameFrame extends JFrame {
 
 	public GameFrame() {
 
-		MarioNes.initBlocks();
+		Maps.initBlocks("1-1");
 
 		setTitle("Super Mario Bros.");
 

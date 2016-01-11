@@ -5,19 +5,45 @@ import mechanics.Pos;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 
-// a general block
-public interface Block {
 
-	void draw(Graphics2D g2, int offset);
+public class Block {
 
-	int getX(int offset);
-	int getY();
-	int getWidth();
-	int getHeight();
+	protected Pos pos;
 
-	Pos getCenter(int offset);
+	protected Image image;
 
-	Rectangle2D getRect(int offset);
+	protected Block(Pos pos) {
+		this.pos = pos;
+	}
 
-	void hit();
+	public void draw(Graphics2D g2, int offset) {
+		g2.drawImage(image, pos.getX()-offset, pos.getY(), null);
+	}
+
+	public int getX(int offset) {
+		return pos.getX() - offset;
+	}
+
+	public int getY() {
+		return pos.getY();
+	}
+
+	public int getWidth() {
+		return image.getWidth(null);
+	}
+
+	public int getHeight() {
+		return image.getHeight(null);
+	}
+
+	public Pos getCenter(int offset) {
+		return pos.copy(-offset + getWidth()/2, getHeight()/2);
+	}
+
+	public Rectangle2D getRect(int offset) {
+		return new Rectangle2D.Double(getX(offset), getY(), getWidth(), getHeight());
+	}
+
+	public void hit() {}
+
 }

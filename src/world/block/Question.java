@@ -1,9 +1,11 @@
 package world.block;
 
 import mechanics.Pos;
+import util.Images;
 
-public class Question extends GeneralBlock {
+public class Question extends Block {
 	public Question(Pos pos) {
-		super(pos, "block_question.png");
+		super(pos);
+		image = Images.question;
 	}
 }

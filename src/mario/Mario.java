@@ -1,8 +1,9 @@
 package mario;
 
-import main.MarioNes;
 import mechanics.Pos;
 import mechanics.Vector;
+import stats.Stats;
+import util.Images;
 import window.GameCanvas;
 import window.GameFrame;
 import world.collision.CollisionResult;
@@ -42,17 +43,17 @@ public class Mario {
 
 	private FrameState frameState = FrameState.STAND;
 	
-	private final Image stand_frame = GameCanvas.initFrame(GameCanvas.imageFolder + "mario_stand.png");
-	private final Image jump_frame = GameCanvas.initFrame(GameCanvas.imageFolder + "mario_jump.png");
-	private final Image stand_frame_back = GameCanvas.initFrame(GameCanvas.imageFolder + "mario_stand_back.png");
-	private final Image jump_frame_back = GameCanvas.initFrame(GameCanvas.imageFolder + "mario_jump_back.png");
-	private final Image run_frame_13 = GameCanvas.initFrame(GameCanvas.imageFolder + "mario_run_13.png");
-	private final Image run_frame_13_back = GameCanvas.initFrame(GameCanvas.imageFolder + "mario_run_13_back.png");
-	private final Image run_frame_2 = GameCanvas.initFrame(GameCanvas.imageFolder + "mario_run_2.png");
-	private final Image run_frame_2_back = GameCanvas.initFrame(GameCanvas.imageFolder + "mario_run_2_back.png");
-	private final Image run_frame_4 = GameCanvas.initFrame(GameCanvas.imageFolder + "mario_run_4.png");
-	private final Image run_frame_4_back = GameCanvas.initFrame(GameCanvas.imageFolder + "mario_run_4_back.png");
-	private final Image dead_frame = GameCanvas.initFrame(GameCanvas.imageFolder + "mario_dead.png");
+	private final Image stand_frame = Images.stand_frame;
+	private final Image jump_frame = Images.jump_frame;
+	private final Image stand_frame_back = Images.stand_frame_back;
+	private final Image jump_frame_back = Images.jump_frame_back;
+	private final Image run_frame_13 = Images.run_frame_13;
+	private final Image run_frame_13_back = Images.run_frame_13_back;
+	private final Image run_frame_2 = Images.run_frame_2;
+	private final Image run_frame_2_back = Images.run_frame_2_back;
+	private final Image run_frame_4 = Images.run_frame_4;
+	private final Image run_frame_4_back = Images.run_frame_4_back;
+	private final Image dead_frame = Images.dead_frame;
 
 	private final int LEFT = 37;
 	private final int RIGHT = 39;
@@ -109,7 +110,7 @@ public class Mario {
 	}
 
 	private void setRunFrame() {
-		if ( frameState == FrameState.JUMP ) {
+		if ( !canJumpAgain ) {
 			// do nothing because you can't run in the air
 			return;
 		}
@@ -122,13 +123,19 @@ public class Mario {
 	}
 
 	private void updateRunFrame() {
-		 if ( frameState == FrameState.RUN1 || frameState == FrameState.RUN2 ||
+
+		if ( frameState == FrameState.RUN1 || frameState == FrameState.RUN2 ||
 				 frameState == FrameState.RUN3 || frameState == FrameState.RUN4 ) {
 
-			 numberOfPasses++;
+			if ( !canJumpAgain ) {
+				// falling while running, switch frame to jump frame
+				frameState = FrameState.JUMP;
+			}
 
-			 int passesToWait = vector.isFast() ? 3 : 5;
-			 if ( numberOfPasses <= passesToWait ) {
+			numberOfPasses++;
+
+			int passesToWait = vector.isFast() ? 3 : 6;
+			if ( numberOfPasses <= passesToWait ) {
 				// don't change the frame yet
 				return;
 			}
@@ -169,11 +176,11 @@ public class Mario {
 		if ( action == LEFT ) {
 			movingLeft = true;
 			movingRight = false;
-			lastDirectionForward = canJumpAgain ? false : lastDirectionForward;
+			if (canJumpAgain) lastDirectionForward = false;
 		} else if ( action == RIGHT ) {
 			movingRight = true;
 			movingLeft = false;
-			lastDirectionForward = canJumpAgain ? true : lastDirectionForward;
+			if (canJumpAgain) lastDirectionForward = true;
 		} else if ( action == RUN  && canJumpAgain ) {
 			running = true;
 		} else if ( action == SPACE ) {
@@ -215,7 +222,10 @@ public class Mario {
 
 		} else {
 
-			if ( deadState++ > 100 ) {
+			if ( deadState++ > 50 && deadState < 100 ) {
+				vector.gravity();
+				currentPos.move(vector);
+			} else if ( deadState > 150 ) {
 				reset();
 			}
 
@@ -244,6 +254,10 @@ public class Mario {
 		movingRight = false;
 		canJumpAgain = false;
 		frameState = FrameState.DEAD;
+		vector.hitX();
+		vector.hitY();
+		vector.jump();
+		Stats.getInstance().pause();
 	}
 
 	public boolean isNotDead() {
@@ -261,6 +275,7 @@ public class Mario {
 		lastDirectionForward = true;
 		canJumpAgain = true;
 		jump = false;
+		Stats.getInstance().resume();
    	}
 
 	private void handleCollisions() {

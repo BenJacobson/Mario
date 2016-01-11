@@ -2,10 +2,12 @@ package world.block;
 
 
 import mechanics.Pos;
+import util.Images;
 
-public class PipeTop extends GeneralBlock {
+public class PipeTop extends Block {
 
 	public PipeTop(Pos pos) {
-		super(pos, "pipe_top.png");
+		super(pos);
+		image = Images.pipeTop;
 	}
 }

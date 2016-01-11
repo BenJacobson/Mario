@@ -2,6 +2,7 @@ package world;
 
 
 import mechanics.Pos;
+import util.Images;
 import window.GameCanvas;
 
 import java.awt.*;
@@ -14,6 +15,6 @@ public class Coin {
 
 	public Coin(Pos pos) {
 		this.pos = pos;
-		image = GameCanvas.initFrame(GameCanvas.imageFolder + "coin.png");
+		image = Images.coin;
 	}
 }

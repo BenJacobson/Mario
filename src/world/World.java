@@ -5,6 +5,7 @@ import main.*;
 import mechanics.Pos;
 import mechanics.Side;
 import mechanics.Vector;
+import util.Maps;
 import window.GameFrame;
 import world.block.Block;
 import world.collision.*;
@@ -30,8 +31,8 @@ public class World {
 	public static final int block_width = 16;
 	public static final int block_height = 16;
 
-	private List<Block> blocks = MarioNes.blocks;
-	private List<Enemy> enemies = MarioNes.enemies;
+	private List<Block> blocks = Maps.blocks;
+	private List<Enemy> enemies = Maps.enemies;
 
 	public int getOffest() {
 		return offset;

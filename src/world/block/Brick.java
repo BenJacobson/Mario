@@ -2,17 +2,19 @@ package world.block;
 
 
 import mechanics.Pos;
+import util.Images;
 import window.GameFrame;
 
 import java.awt.*;
 
-public class Brick extends GeneralBlock {
+public class Brick extends Block {
 
 	private State state = State.NORMAL;
 	private int bounceState = 0;
 
 	public Brick(Pos pos) {
-		super(pos, "block_brick.png");
+		super(pos);
+		image = Images.brick;
 	}
 
 	@Override

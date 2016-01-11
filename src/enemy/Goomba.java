@@ -4,6 +4,7 @@ package enemy;
 import mario.Mario;
 import mechanics.Pos;
 import mechanics.Vector;
+import util.Images;
 import window.GameCanvas;
 import world.World;
 import world.collision.CollisionResult;
@@ -17,9 +18,9 @@ public class Goomba implements Enemy {
 	private Pos pos;
 	private Vector vector = new Vector();
 
-	private final Image imageLeft = GameCanvas.initFrame(GameCanvas.imageFolder + "enemy_goomba_left.png");
-	private final Image imageRight = GameCanvas.initFrame(GameCanvas.imageFolder + "enemy_goomba_right.png");
-	private final Image imageSquished = GameCanvas.initFrame(GameCanvas.imageFolder + "enemy_goomba_squished.png");
+	private final Image imageLeft = Images.goombaLeft;
+	private final Image imageRight = Images.goombaRight;
+	private final Image imageSquished = Images.goombaSquished;
 
 	private State state = State.ALIVE;
 

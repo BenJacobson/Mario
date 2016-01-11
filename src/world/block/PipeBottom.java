@@ -1,15 +1,12 @@
 package world.block;
 
 import mechanics.Pos;
-import window.GameCanvas;
+import util.Images;
 
-import java.awt.*;
-import java.awt.geom.Rectangle2D;
-import java.io.File;
-
-public class PipeBottom extends GeneralBlock {
+public class PipeBottom extends Block {
 
 	public PipeBottom(Pos pos) {
-		super(pos, "pipe_bottom.png");
+		super(pos);
+		image = Images.pipeBottom;
 	}
 }

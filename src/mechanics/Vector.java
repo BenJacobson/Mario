@@ -4,7 +4,9 @@ import window.GameFrame;
 
 public class Vector {
 
-	private double genSpeed = .166667 * GameFrame.PIXEL_SCALE;
+	private final double genSpeed = .166667 * GameFrame.PIXEL_SCALE;
+	private final double fast = 18;
+	private final double slow = 12;
 
 	private double dx = 0;
 	private double dy = 0;
@@ -37,6 +39,12 @@ public class Vector {
 		dy -= genSpeed*3.75;
 	}
 
+	public void gravity() {
+		if ( dy < genSpeed*24) {
+			dy += genSpeed*3;
+		}
+	}
+
 	public void moveRight(boolean fast) {
 		if ( fast ) {
 			moveRightFast();
@@ -46,7 +54,7 @@ public class Vector {
 	}
 
 	private void moveRightFast() {
-		if ( dx < genSpeed*24 ) {
+		if ( dx < genSpeed*fast ) {
 			dx += genSpeed;
 		} else {
 			reduceSpeed();
@@ -54,7 +62,7 @@ public class Vector {
 	}
 
 	private void moveRightSlow() {
-		if ( dx < genSpeed*12 ) {
+		if ( dx < genSpeed*slow ) {
 			dx += genSpeed;
 		} else {
 			reduceSpeed();
@@ -70,7 +78,7 @@ public class Vector {
 	}
 
 	private void moveLeftFast() {
-		if ( dx > -genSpeed*24 ) {
+		if ( dx > -genSpeed*fast ) {
 			dx -= genSpeed;
 		} else {
 			reduceSpeed();
@@ -78,7 +86,7 @@ public class Vector {
 	}
 
 	private void moveLeftSlow() {
-		if ( dx > -genSpeed*12 ) {
+		if ( dx > -genSpeed*slow ) {
 			dx -= genSpeed;
 		} else {
 			reduceSpeed();
@@ -86,7 +94,7 @@ public class Vector {
 	}
 
 	public boolean isFast() {
-		return Math.abs(dx) > genSpeed*12;
+		return Math.abs(dx) > genSpeed*(slow+1);
 	}
 
 	public void reduceSpeed() {
@@ -96,12 +104,6 @@ public class Vector {
 			dx += genSpeed;
 		} else {
 			dx = 0;
-		}
-	}
-
-	public void gravity() {
-		if ( dy < genSpeed*24 ) {
-			dy += genSpeed*3;
 		}
 	}
 
