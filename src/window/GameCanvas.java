@@ -3,7 +3,9 @@ package window;
 import mario.Mario;
 import main.MarioNes;
 import stats.Stats;
+import util.Maps;
 import world.World;
+import world.background.Background;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -29,6 +31,10 @@ public class GameCanvas extends JComponent {
 	private void drawBackground(Graphics2D g2) {
 		g2.setColor(new Color(132, 205, 254));
 		g2.fillRect(0, 0, getWidth(), getHeight());
+
+		for (Background background : Maps.backgrounds ) {
+			background.draw(g2, World.getInstance().getOffest());
+		}
 	}
 
 	private void drawStats(Graphics2D g2) {

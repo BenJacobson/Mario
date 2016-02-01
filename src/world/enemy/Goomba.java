@@ -1,11 +1,11 @@
-package enemy;
+package world.enemy;
 
 
 import mario.Mario;
 import mechanics.Pos;
 import mechanics.Vector;
 import util.Images;
-import window.GameCanvas;
+import window.GameFrame;
 import world.World;
 import world.collision.CollisionResult;
 
@@ -21,13 +21,14 @@ public class Goomba implements Enemy {
 	private final Image imageLeft = Images.goombaLeft;
 	private final Image imageRight = Images.goombaRight;
 	private final Image imageSquished = Images.goombaSquished;
+	private final Image imageFlipped = Images.goombaFlipped;
+
 
 	private State state = State.ALIVE;
 
 	boolean useLeftImage;
 	private int numberOfPasses = 0;
 	private int drawSquished = 0;
-
 	public Goomba(Pos pos) {
 		this.originalPos = pos;
 		this.pos = pos.copy();
@@ -41,14 +42,34 @@ public class Goomba implements Enemy {
 	public void draw(Graphics2D g2, int offset) {
 		if ( state != State.DEAD ) {
 			update();
-			Image image = state == State.ALIVE ? useLeftImage ? imageLeft : imageRight : imageSquished;
+			Image image = getStateImage();
 			g2.drawImage(image, pos.getX() - offset, pos.getY(), null);
+		}
+	}
+
+	private Image getStateImage() {
+		switch(state) {
+			case ALIVE:
+				if ( useLeftImage ) {
+					return imageLeft;
+				} else {
+					return imageRight;
+				}
+			case FLIPPED:
+				return imageFlipped;
+			default:
+				return imageSquished;
 		}
 	}
 
 	@Override
 	public int getX(int offset) {
 		return pos.getX() - offset;
+	}
+
+	@Override
+	public int getY() {
+		return pos.getY();
 	}
 
 	@Override
@@ -69,6 +90,26 @@ public class Goomba implements Enemy {
 	public void hit() {
 		state = State.SQUISHED;
 		drawSquished = 0;
+
+		World.getInstance().addPoints(100,pos.copy());
+	}
+
+	@Override
+	public void blockHit() {
+		state = State.FLIPPED;
+
+		vector.jump();
+		if ( vector.getDx() > 0 ) {
+			for ( int i = 0; i < 4; i++ ) {
+				vector.moveRight(false);
+			}
+		} else {
+			for ( int i = 0; i < 4; i++ ) {
+				vector.moveLeft(false);
+			}
+		}
+
+		World.getInstance().addPoints(100,pos.copy());
 	}
 
 	@Override
@@ -78,10 +119,13 @@ public class Goomba implements Enemy {
 	}
 
 	private void update() {
-		if ( state == State.ALIVE && Mario.getInstance().isNotDead()) {
+		if ( state == State.ALIVE && Mario.getInstance().isNotDead() ) {
 			vector.gravity();
 			pos.move(vector);
 			checkCollision();
+		} else if ( state == State.FLIPPED && Mario.getInstance().isNotDead() ) {
+			vector.gravity();
+			pos.move(vector);
 		}
 		updateFrame();
 	}
@@ -111,10 +155,14 @@ public class Goomba implements Enemy {
 			if ( drawSquished++ > 30 ) {
 				state = State.DEAD;
 			}
+		} else if ( state == State.FLIPPED ) {
+			if ( this.getY() > GameFrame.gameHeight() + GameFrame.blockDimension() ) {
+				state = State.DEAD;
+			}
 		}
 	}
 
 	private enum State {
-		ALIVE, SQUISHED, DEAD
+		ALIVE, SQUISHED, FLIPPED, DEAD
 	}
 }

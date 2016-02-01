@@ -24,7 +24,7 @@ public class Mario {
 		return instance;
 	}
 
-	Pos originalPos = new Pos(100, 180*GameFrame.PIXEL_SCALE);
+	Pos originalPos = new Pos(25*GameFrame.pixelScale(), 180*GameFrame.pixelScale());
 	Pos currentPos = originalPos.copy();
 	Vector vector = new Vector();
 
@@ -162,9 +162,9 @@ public class Mario {
 		int extraX = 0, extraY = 0;
 		if ( currentFrame == jump_frame || currentFrame == jump_frame_back ||
 				currentFrame == run_frame_4 || currentFrame == run_frame_4_back ) {
-			extraX = 2 * GameFrame.PIXEL_SCALE;
+			extraX = 2 * GameFrame.pixelScale();
 		} else if ( currentFrame == run_frame_13 || currentFrame == run_frame_13_back ) {
-			extraY = GameFrame.PIXEL_SCALE;
+			extraY = GameFrame.pixelScale();
 		}
 
 		g2.drawImage(currentFrame, currentPos.getX()-extraX, currentPos.getY()+extraY,
@@ -244,7 +244,7 @@ public class Mario {
 	}
 
 	private void checkDead() {
-		if ( currentPos.getY() > 250*GameFrame.PIXEL_SCALE ) {
+		if ( currentPos.getY() > 250*GameFrame.pixelScale() ) {
 			dead();
 		}
 	}
@@ -298,8 +298,8 @@ public class Mario {
 			vector.hitX();
 		}
 
-		if ( currentPos.getX() < 2*GameFrame.PIXEL_SCALE ) {
-			currentPos.setX( 2*GameFrame.PIXEL_SCALE );
+		if ( currentPos.getX() < 2*GameFrame.pixelScale() ) {
+			currentPos.setX( 2*GameFrame.pixelScale() );
 		} else if ( currentPos.getX() > GameFrame.gameWidth()/2 ) {
 			World.getInstance().addOffset( currentPos.getX() - GameFrame.gameWidth()/2 );
 			currentPos.setX( GameFrame.gameWidth()/2 );

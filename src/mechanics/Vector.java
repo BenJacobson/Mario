@@ -4,7 +4,7 @@ import window.GameFrame;
 
 public class Vector {
 
-	private final double genSpeed = .166667 * GameFrame.PIXEL_SCALE;
+	private final double genSpeed = .166667 * GameFrame.pixelScale();
 	private final double fast = 18;
 	private final double slow = 12;
 

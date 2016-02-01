@@ -1,5 +1,6 @@
 package stats;
 
+import util.Images;
 import window.GameFrame;
 
 import java.awt.*;
@@ -32,7 +33,8 @@ public class Stats {
 		g2.drawString("MARIO", GameFrame.gameWidth()/16, 100);
 		g2.drawString(String.format("%05d", score), GameFrame.gameWidth()/16, 100 + metrics.getHeight());
 
-		g2.drawString("x"+coins, GameFrame.gameWidth()*5/16, 100 + metrics.getHeight());
+		g2.drawImage(Images.coin, GameFrame.gameWidth()*5/16, 100 + metrics.getHeight() - GameFrame.blockDimension()/2, null);
+		g2.drawString("x"+coins, GameFrame.gameWidth()*6/16, 100 + metrics.getHeight());
 
 		g2.drawString("WORLD", GameFrame.gameWidth()*9/16, 100);
 		g2.drawString(" 1-1", GameFrame.gameWidth()*9/16, 100 + metrics.getHeight());
@@ -70,6 +72,10 @@ public class Stats {
 
 	public void gotCoin() {
 		coins++;
+	}
+
+	public void addPoints(int amount) {
+		score += amount;
 	}
 
 	private enum State {

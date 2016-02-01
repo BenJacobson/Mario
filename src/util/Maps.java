@@ -1,17 +1,15 @@
 package util;
 
-import enemy.Enemy;
-import enemy.Goomba;
+import world.background.Background;
+import world.enemy.Enemy;
+import world.enemy.Goomba;
+import main.MarioNes;
 import mechanics.Pos;
 import window.GameFrame;
 import world.Coin;
-import world.World;
 import world.block.*;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 public class Maps {
@@ -19,6 +17,7 @@ public class Maps {
 	public static List<Block> blocks;
 	public static List<Enemy> enemies;
 	public static List<Coin> coins;
+	public static List<Background> backgrounds;
 
 	private static char[][] getMap(String mapName) {
 
@@ -26,11 +25,15 @@ public class Maps {
 		String fileName = "lib" + File.separator + "map" + File.separator + gameFile;
 		Scanner mapScan = null;
 
-		try {
-			mapScan = new Scanner(new BufferedInputStream(new FileInputStream(new File(fileName))));
-		} catch (IOException ex) {
-			System.out.println("Cannot load " + fileName);
-			System.exit(0);
+		if ( MarioNes.jar ) {
+			mapScan = new Scanner(new BufferedInputStream(Maps.class.getResourceAsStream(fileName)));
+		} else {
+			try {
+				mapScan = new Scanner(new BufferedInputStream(new FileInputStream(new File(fileName))));
+			} catch (IOException e) {
+				System.out.println("Cannot load " + fileName);
+				System.exit(1);
+			}
 		}
 
 		List<char[]> linesList = new LinkedList<>();
@@ -56,10 +59,7 @@ public class Maps {
 		List<Block> blocks = new LinkedList<>();
 		List<Enemy> enemies = new LinkedList<>();
 		List<Coin> coins = new LinkedList<>();
-
-		int width = World.block_width;
-		int height = World.block_height;
-		int scale = GameFrame.PIXEL_SCALE;
+		List<Background> backgrounds = new LinkedList<>();
 
 		char[][] map = getMap(mapName);
 
@@ -71,8 +71,8 @@ public class Maps {
 			for ( int x = 0; x < map[y].length; x++ ) {
 
 				char c = map[y][x];
-				int xcoord = x * width * scale;
-				int ycoord = (212 - y * height) * scale;
+				int xcoord = x * GameFrame.blockDimension();
+				int ycoord = (212*GameFrame.pixelScale()) - (y*GameFrame.blockDimension());
 				long start = System.currentTimeMillis();
 
 				if ( c == 'g' ) {
@@ -93,6 +93,10 @@ public class Maps {
 					enemies.add(new Goomba(new Pos(xcoord, ycoord)));
 				} else if ( c == 'c' ) {
 					coins.add(new Coin(new Pos(xcoord, ycoord)));
+				} else if ( c == 'l' ) {
+					backgrounds.add(new Background(Images.hill_large, new Pos(xcoord, ycoord)));
+				} else if ( c == 'h' ) {
+					backgrounds.add(new Background(Images.hill_small, new Pos(xcoord, ycoord)));
 				}
 
 				long end = System.currentTimeMillis();
@@ -125,5 +129,6 @@ public class Maps {
 		Maps.blocks = blocks;
 		Maps.enemies = enemies;
 		Maps.coins = coins;
+		Maps.backgrounds = backgrounds;
 	}
 }

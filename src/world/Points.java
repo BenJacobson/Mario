@@ -1,24 +1,28 @@
 package world;
 
+import mechanics.Pos;
+
 import java.awt.*;
 
 public class Points {
 
 	String amount;
-	int x, y;
+	Pos pos;
 	int state;
+	Font font = new Font(Font.MONOSPACED, Font.BOLD, 28);
 
-	public Points(int amount, int x, int y) {
+	public Points(int amount, Pos pos) {
 		this.amount = String.valueOf(amount);
-		this.x = x;
-		this.y = y;
+		this.pos = pos;
 	}
 
-	public void draw(Graphics2D g2) {
-		g2.drawString(amount, x, y);
+	public void draw(Graphics2D g2, int offset) {
+		g2.setFont(font);
+		g2.drawString(amount, pos.getX()-offset, pos.getY()-state*4);
+		state++;
+	}
 
-		if ( state++ > 30 ) {
-
-		}
+	public int getState() {
+		return state;
 	}
 }

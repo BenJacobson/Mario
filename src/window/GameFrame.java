@@ -17,17 +17,15 @@ import java.util.TimerTask;
 // window the surrounds the game
 public class GameFrame extends JFrame {
 
-	public static final int PIXEL_SCALE = 4;
+	private static final int PIXEL_SCALE = 4;
 	private static final int UNSCALED_WIDTH = 256;
 	private static final int UNSCALED_HEIGHT = 230;
 
-	public static int gameWidth() {
-		return UNSCALED_WIDTH*PIXEL_SCALE;
-	}
 
-	public static int gameHeight() {
-		return UNSCALED_HEIGHT*PIXEL_SCALE;
-	}
+	public static int gameWidth() { return UNSCALED_WIDTH*PIXEL_SCALE; }
+	public static int gameHeight() { return UNSCALED_HEIGHT*PIXEL_SCALE; }
+	public static int blockDimension() { return PIXEL_SCALE*16; }
+	public static int pixelScale() { return PIXEL_SCALE; }
 
 	Timer timer = new Timer();
 

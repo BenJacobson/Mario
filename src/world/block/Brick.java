@@ -4,6 +4,7 @@ package world.block;
 import mechanics.Pos;
 import util.Images;
 import window.GameFrame;
+import world.World;
 
 import java.awt.*;
 
@@ -27,19 +28,19 @@ public class Brick extends Block {
 		if ( state == State.BOUNCE ) {
 			
 			if ( bounceState < 2 ) {
-				y -= 2 * GameFrame.PIXEL_SCALE;
+				y -= 2 * GameFrame.pixelScale();
 			} else if ( bounceState < 4 ) {
-				y -= 4 * GameFrame.PIXEL_SCALE;
+				y -= 4 * GameFrame.pixelScale();
 			} else if ( bounceState < 6 ) {
-				y -= 6 * GameFrame.PIXEL_SCALE;
+				y -= 6 * GameFrame.pixelScale();
 			} else if ( bounceState < 7 ) {
-				y -= 4 * GameFrame.PIXEL_SCALE;
+				y -= 4 * GameFrame.pixelScale();
 			} else if ( bounceState < 8 ) {
-				y -= 2 * GameFrame.PIXEL_SCALE;
+				y -= 2 * GameFrame.pixelScale();
 			} else if ( bounceState < 9 ) {
 				// do nothing
 			} else if ( bounceState < 10 ) {
-				y += 2 * GameFrame.PIXEL_SCALE;
+				y += 2 * GameFrame.pixelScale();
 			} else {
 				state = State.NORMAL;
 			}
@@ -54,6 +55,8 @@ public class Brick extends Block {
 	public void hit() {
 		state = State.BOUNCE;
 		bounceState = 0;
+		int offset = World.getInstance().getOffest();
+		World.getInstance().enemyDeadByBlock(this.getRect(offset));
 	}
 
 	private enum State {

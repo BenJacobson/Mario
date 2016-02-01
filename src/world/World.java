@@ -1,10 +1,10 @@
 package world;
 
-import enemy.Enemy;
-import main.*;
+import world.enemy.Enemy;
 import mechanics.Pos;
 import mechanics.Side;
 import mechanics.Vector;
+import stats.Stats;
 import util.Maps;
 import window.GameFrame;
 import world.block.Block;
@@ -12,7 +12,9 @@ import world.collision.*;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class World {
 
@@ -28,11 +30,10 @@ public class World {
 	private CollisionOperator collisionOperator = new CollisionOperator();
 
 	private int offset = 0;
-	public static final int block_width = 16;
-	public static final int block_height = 16;
 
 	private List<Block> blocks = Maps.blocks;
 	private List<Enemy> enemies = Maps.enemies;
+	private List<Points> points = new ArrayList<>();
 
 	public int getOffest() {
 		return offset;
@@ -56,12 +57,15 @@ public class World {
 
 		findEnemyEnemyCollisions();
 
+		points.stream().forEach( p -> p.draw(g2, offset) );
+		points = points.stream().filter( p -> p.getState() < 50 ).collect(Collectors.toList());
+
 		blocks.stream()
-				.filter( block -> block.getX(offset) > -100 && block.getX(offset) < GameFrame.gameWidth() )
+				.filter( block -> block.getX(offset) > -GameFrame.gameWidth() && block.getX(offset) < GameFrame.gameWidth()*2 )
 				.forEach( block -> block.draw(g2, offset) );
 
 		enemies.stream()
-				.filter( enemy -> enemy.getX(offset) > -100 && enemy.getX(offset) < GameFrame.gameHeight())
+				.filter( enemy -> enemy.getX(offset) > -GameFrame.gameWidth()/2 && enemy.getX(offset) < GameFrame.gameWidth()*1.5 )
 				.forEach( enemy -> enemy.draw(g2, offset) );
 	}
 
@@ -80,7 +84,7 @@ public class World {
 
 	public Boolean[] findMarioEnemyCollisions(Rectangle2D marioRect) {
 
-		boolean marioHit = false, enemyHit = false;
+		boolean marioHit = false, enemyHit = false, alreadyHitEnemy = false;
 
 		for ( Enemy enemy : enemies ) {
 			if ( enemy.getRect(offset).intersects(marioRect) ) {
@@ -89,7 +93,10 @@ public class World {
 				Side sideHit = getSide(marioPos, enemyPos);
 
 				if ( sideHit == Side.TOP ) {
-					enemy.hit();
+					if ( !alreadyHitEnemy ) {
+						enemy.hit();
+						alreadyHitEnemy = true;
+					}
 					enemyHit = true;
 				} else {
 					marioHit = true;
@@ -124,5 +131,18 @@ public class World {
 
 	public CollisionResult blockCollisions(Rectangle2D inputRect, Vector vector) {
 		return collisionOperator.collision(blocks, inputRect, vector, offset);
+	}
+
+	public void addPoints(int amount, Pos pos) {
+		Stats.getInstance().addPoints(amount);
+		points.add(new Points(amount, pos));
+	}
+
+	public void enemyDeadByBlock(Rectangle2D blockRect) {
+		Rectangle2D deadRect = new Rectangle2D.Double(blockRect.getX(), blockRect.getY()-GameFrame.blockDimension(),
+				blockRect.getWidth(), blockRect.getHeight());
+
+		enemies.stream().filter( enemy -> enemy.getRect(offset).intersects(deadRect) )
+				.forEach( enemy -> enemy.blockHit() );
 	}
 }
