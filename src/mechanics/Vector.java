@@ -45,52 +45,24 @@ public class Vector {
 		}
 	}
 
-	public void moveRight(boolean fast) {
-		if ( fast ) {
-			moveRightFast();
-		} else {
-			moveRightSlow();
-		}
-	}
-
-	private void moveRightFast() {
-		if ( dx < genSpeed*fast ) {
+	public void moveRight(boolean speedy) {
+		if ( dx < genSpeed*getSpeed(speedy) ) {
 			dx += genSpeed;
 		} else {
 			reduceSpeed();
 		}
 	}
 
-	private void moveRightSlow() {
-		if ( dx < genSpeed*slow ) {
-			dx += genSpeed;
-		} else {
-			reduceSpeed();
-		}
-	}
-
-	public void moveLeft(boolean fast) {
-		if ( fast ) {
-	 		moveLeftFast();
-		} else {
-			moveLeftSlow();
-		}
-	}
-
-	private void moveLeftFast() {
-		if ( dx > -genSpeed*fast ) {
+	public void moveLeft(boolean speedy) {
+		if ( dx > -genSpeed*getSpeed(speedy) ) {
 			dx -= genSpeed;
 		} else {
 			reduceSpeed();
 		}
 	}
 
-	private void moveLeftSlow() {
-		if ( dx > -genSpeed*slow ) {
-			dx -= genSpeed;
-		} else {
-			reduceSpeed();
-		}
+	private double getSpeed(boolean speedy) {
+		return speedy ? fast : slow;
 	}
 
 	public boolean isFast() {
