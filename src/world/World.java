@@ -48,9 +48,7 @@ public class World {
 	}
 
 	public void resetEnemies(){
-		for ( Enemy enemy : enemies ) {
-			enemy.reset();
-		}
+		enemies.forEach( enemy -> enemy.reset() );
 	}
 
 	public void draw(Graphics2D g2) {

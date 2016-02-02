@@ -21,17 +21,17 @@ public class Maps {
 
 	private static char[][] getMap(String mapName) {
 
-		String gameFile = mapName + ".dat";
-		String fileName = "lib" + File.separator + "map" + File.separator + gameFile;
+		String mapFile = mapName + ".dat";
+		String mapPath = MarioNes.jar ? "/map/" : "lib" + File.separator + "map" + File.separator;
 		Scanner mapScan = null;
 
 		if ( MarioNes.jar ) {
-			mapScan = new Scanner(new BufferedInputStream(Maps.class.getResourceAsStream(fileName)));
+			mapScan = new Scanner(new BufferedInputStream(Maps.class.getResourceAsStream(mapPath + mapFile)));
 		} else {
 			try {
-				mapScan = new Scanner(new BufferedInputStream(new FileInputStream(new File(fileName))));
+				mapScan = new Scanner(new BufferedInputStream(new FileInputStream(new File(mapPath + mapFile))));
 			} catch (IOException e) {
-				System.out.println("Cannot load " + fileName);
+				System.out.println("Cannot load " + mapPath);
 				System.exit(1);
 			}
 		}
@@ -112,6 +112,7 @@ public class Maps {
 			}
 		}
 
+		/*
 		System.out.println("Total size: " + totalSize);
 
 		totalTime = System.currentTimeMillis() - totalTime;
@@ -125,6 +126,7 @@ public class Maps {
 			}
 			System.out.printf("'%c' : %f\n", entry.getKey(), sum/times.size());
 		}
+		*/
 
 		Maps.blocks = blocks;
 		Maps.enemies = enemies;
