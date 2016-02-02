@@ -55,7 +55,7 @@ public class GameFrame extends JFrame {
 
 	private void setApplicationIcon() {
 		try {
-			final String filePath = "lib" + File.separator + "pic" + File.separator + "mario_stand.png";
+			final String filePath = (MarioNes.jar ? "/pic/" : "lib" + File.separator + "pic" + File.separator) + "mario_stand.png";
 			Image img = ImageIO.read(new File(filePath));
 			setIconImage(img);
 		} catch (IOException e) {

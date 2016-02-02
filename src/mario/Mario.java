@@ -134,7 +134,7 @@ public class Mario {
 
 			numberOfPasses++;
 
-			int passesToWait = vector.isFast() ? 3 : 6;
+			int passesToWait = vector.isFast() ? 3 : 5;
 			if ( numberOfPasses <= passesToWait ) {
 				// don't change the frame yet
 				return;
