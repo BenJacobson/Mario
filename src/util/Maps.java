@@ -1,5 +1,6 @@
 package util;
 
+import world.World;
 import world.background.Background;
 import world.enemy.Enemy;
 import world.enemy.Goomba;
@@ -8,6 +9,8 @@ import mechanics.Pos;
 import window.GameFrame;
 import world.Coin;
 import world.block.*;
+import world.item.Item;
+import world.item.Mushroom;
 
 import java.io.*;
 import java.util.*;
@@ -18,6 +21,7 @@ public class Maps {
 	public static List<Enemy> enemies;
 	public static List<Coin> coins;
 	public static List<Background> backgrounds;
+	public static List<Item> items;
 
 	private static char[][] getMap(String mapName) {
 
@@ -60,6 +64,7 @@ public class Maps {
 		List<Enemy> enemies = new LinkedList<>();
 		List<Coin> coins = new LinkedList<>();
 		List<Background> backgrounds = new LinkedList<>();
+		List<Item> items = new LinkedList<>();
 
 		char[][] map = getMap(mapName);
 
@@ -97,6 +102,12 @@ public class Maps {
 					backgrounds.add(new Background(Images.hill_large, new Pos(xcoord, ycoord)));
 				} else if ( c == 'h' ) {
 					backgrounds.add(new Background(Images.hill_small, new Pos(xcoord, ycoord)));
+				} else if ( c == 'm' ) {
+					Block block = new Question(new Pos(xcoord, ycoord));
+					Item item = new Mushroom(new Pos(xcoord, ycoord));
+					items.add(item);
+					block.addItem(item);
+					blocks.add(block);
 				}
 
 				long end = System.currentTimeMillis();
@@ -132,5 +143,6 @@ public class Maps {
 		Maps.enemies = enemies;
 		Maps.coins = coins;
 		Maps.backgrounds = backgrounds;
+		Maps.items = items;
 	}
 }

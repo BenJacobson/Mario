@@ -100,11 +100,11 @@ public class Goomba implements Enemy {
 
 		vector.jump();
 		if ( vector.getDx() > 0 ) {
-			for ( int i = 0; i < 4; i++ ) {
+			for ( int i = 0; i < 8; i++ ) {
 				vector.moveRight(false);
 			}
 		} else {
-			for ( int i = 0; i < 4; i++ ) {
+			for ( int i = 0; i < 8; i++ ) {
 				vector.moveLeft(false);
 			}
 		}
@@ -116,16 +116,18 @@ public class Goomba implements Enemy {
 	public void reset() {
 		state = State.ALIVE;
 		this.pos = originalPos.copy();
+		vector.hitX();
+		vector.hitY();
+		for ( int i = 0; i < 3; i++ ) {
+			vector.moveLeft(false);
+		}
 	}
 
 	private void update() {
-		if ( state == State.ALIVE && Mario.getInstance().isNotDead() ) {
+		if ( (state == State.ALIVE || state == State.FLIPPED) && Mario.getInstance().isNotDead() ) {
 			vector.gravity();
 			pos.move(vector);
 			checkCollision();
-		} else if ( state == State.FLIPPED && Mario.getInstance().isNotDead() ) {
-			vector.gravity();
-			pos.move(vector);
 		}
 		updateFrame();
 	}

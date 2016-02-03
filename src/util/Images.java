@@ -59,6 +59,8 @@ public class Images {
 	public static final Image goombaSquished = initFrame("enemy_goomba_squished.png");
 	public static final Image goombaFlipped = initFrame("enemy_goomba_flipped.png");
 
+	public static final Image mushroom = initFrame("item_mushroom.png");
+
 	public static final Image hill_large = initFrame("hill_large.png");
 	public static final Image hill_small = initFrame("hill_small.png");
 }

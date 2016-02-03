@@ -9,7 +9,7 @@ public class Points {
 	String amount;
 	Pos pos;
 	int state;
-	Font font = new Font(Font.MONOSPACED, Font.BOLD, 28);
+	Font font = new Font(Font.MONOSPACED, Font.BOLD, 30);
 
 	public Points(int amount, Pos pos) {
 		this.amount = String.valueOf(amount);

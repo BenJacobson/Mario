@@ -33,7 +33,6 @@ public class Pos {
 	}
 
 	public void move(Vector vector) {
-
 		moveRight(vector.getDx());
 		moveDown(vector.getDy());
 	}

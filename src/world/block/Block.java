@@ -1,9 +1,12 @@
 package world.block;
 
 import mechanics.Pos;
+import world.item.Item;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
+import java.util.LinkedList;
+import java.util.List;
 
 
 public class Block {
@@ -11,6 +14,8 @@ public class Block {
 	protected Pos pos;
 
 	protected Image image;
+
+	protected List<Item> items = null;
 
 	protected Block(Pos pos) {
 		this.pos = pos;
@@ -45,5 +50,12 @@ public class Block {
 	}
 
 	public void hit() {}
+
+	public void addItem(Item item) {
+		if ( items == null ) {
+			items = new LinkedList<>();
+		}
+		items.add(item);
+	}
 
 }

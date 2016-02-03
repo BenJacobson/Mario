@@ -9,6 +9,7 @@ import util.Maps;
 import window.GameFrame;
 import world.block.Block;
 import world.collision.*;
+import world.item.Item;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
@@ -34,6 +35,7 @@ public class World {
 	private List<Block> blocks = Maps.blocks;
 	private List<Enemy> enemies = Maps.enemies;
 	private List<Points> points = new ArrayList<>();
+	private List<Item> items = Maps.items;
 
 	public int getOffest() {
 		return offset;
@@ -57,6 +59,8 @@ public class World {
 
 		points.stream().forEach( p -> p.draw(g2, offset) );
 		points = points.stream().filter( p -> p.getState() < 50 ).collect(Collectors.toList());
+
+		items.stream().forEach( item -> item.draw(g2, offset));
 
 		blocks.stream()
 				.filter( block -> block.getX(offset) > -GameFrame.gameWidth() && block.getX(offset) < GameFrame.gameWidth()*2 )
@@ -134,6 +138,10 @@ public class World {
 	public void addPoints(int amount, Pos pos) {
 		Stats.getInstance().addPoints(amount);
 		points.add(new Points(amount, pos));
+	}
+
+	public void addItem(Item item) {
+		items.add(item);
 	}
 
 	public void enemyDeadByBlock(Rectangle2D blockRect) {

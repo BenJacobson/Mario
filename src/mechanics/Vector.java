@@ -19,6 +19,10 @@ public class Vector {
 		return dy;
 	}
 
+	public void setDy(double dy) {
+		this.dy = dy;
+	}
+
 	public void hitX() {
 		dx = 0;
 	}
