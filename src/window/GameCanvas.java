@@ -29,7 +29,7 @@ public class GameCanvas extends JComponent {
 	}
 
 	private void drawBackground(Graphics2D g2) {
-		g2.setColor(new Color(132, 205, 254));
+		g2.setColor(new Color(112, 185, 255));
 		g2.fillRect(0, 0, getWidth(), getHeight());
 
 		for (Background background : Maps.backgrounds ) {

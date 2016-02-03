@@ -26,19 +26,8 @@ public class Maps {
 	private static char[][] getMap(String mapName) {
 
 		String mapFile = mapName + ".dat";
-		String mapPath = MarioNes.jar ? "/map/" : "lib" + File.separator + "map" + File.separator;
-		Scanner mapScan = null;
-
-		if ( MarioNes.jar ) {
-			mapScan = new Scanner(new BufferedInputStream(Maps.class.getResourceAsStream(mapPath + mapFile)));
-		} else {
-			try {
-				mapScan = new Scanner(new BufferedInputStream(new FileInputStream(new File(mapPath + mapFile))));
-			} catch (IOException e) {
-				System.out.println("Cannot load " + mapPath);
-				System.exit(1);
-			}
-		}
+		String mapPath = "/map/";
+		Scanner mapScan = new Scanner(new BufferedInputStream(Maps.class.getResourceAsStream(mapPath + mapFile)));
 
 		List<char[]> linesList = new LinkedList<>();
 

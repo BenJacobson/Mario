@@ -2,6 +2,7 @@ package window;
 
 import mario.Mario;
 import main.MarioNes;
+import util.Images;
 import util.Maps;
 
 import javax.imageio.ImageIO;
@@ -9,6 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.Timer;
@@ -35,7 +37,7 @@ public class GameFrame extends JFrame {
 
 		setTitle("Super Mario Bros.");
 
-		setApplicationIcon();
+		setApplicationIcon("mario_stand.png");
 
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
@@ -53,10 +55,10 @@ public class GameFrame extends JFrame {
 		setVisible(true);
 	}
 
-	private void setApplicationIcon() {
+	private void setApplicationIcon(final String fileName) {
 		try {
-			final String filePath = (MarioNes.jar ? "/pic/" : "lib" + File.separator + "pic" + File.separator) + "mario_stand.png";
-			Image img = ImageIO.read(new File(filePath));
+			final String imageFolder = "/pic/";
+			Image img = ImageIO.read(new BufferedInputStream(Images.class.getResourceAsStream(imageFolder + fileName)));
 			setIconImage(img);
 		} catch (IOException e) {
 			// do nothing

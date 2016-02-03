@@ -13,17 +13,12 @@ import java.io.IOException;
 
 public class Images {
 
-	private static final String imageFolder = MarioNes.jar ? "/pic/" : "lib" + File.separator + "pic" + File.separator;
+	private static final String imageFolder = "/pic/";
 
 	private static Image initFrame(String fileName) {
 
 		try {
-			Image frame;
-			if ( MarioNes.jar ) {
-				frame = ImageIO.read(new BufferedInputStream(Images.class.getResourceAsStream(imageFolder + fileName)));
-			} else {
-				frame = ImageIO.read(new BufferedInputStream(new FileInputStream(new File(imageFolder + fileName))));
-			}
+			Image frame = ImageIO.read(new BufferedInputStream(Images.class.getResourceAsStream(imageFolder + fileName)));
 			return frame.getScaledInstance(frame.getWidth(null)*GameFrame.pixelScale(), frame.getHeight(null)*GameFrame.pixelScale(), 0);
 		} catch (IOException e) {
 			System.out.println("Could not load " + fileName);
