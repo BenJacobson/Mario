@@ -84,6 +84,19 @@ public class World {
 		}
 	}
 
+	public boolean findMarioItemCollisions(Rectangle2D marioRect) {
+		boolean powerUp = false;
+
+		for ( Item item : items ) {
+			if ( item.getRect(offset).intersects(marioRect) ) {
+				item.end();
+				powerUp = true;
+			}
+		}
+
+		return powerUp;
+	}
+
 	public Boolean[] findMarioEnemyCollisions(Rectangle2D marioRect) {
 
 		boolean marioHit = false, enemyHit = false, alreadyHitEnemy = false;

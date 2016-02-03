@@ -42,6 +42,7 @@ public class Mario {
 	private int deadState = 0;
 
 	private FrameState frameState = FrameState.STAND;
+	private PowerState powerState = PowerState.SMALL;
 	
 	private final Image stand_frame = Images.stand_frame;
 	private final Image jump_frame = Images.jump_frame;
@@ -204,13 +205,15 @@ public class Mario {
 		}
 	}
 
-	public void move() {
+	private void move() {
 
 		if ( frameState != FrameState.DEAD ) {
 
 			handleJump();
 
 			handleEnemies();
+
+			handleItems();
 
 			updateVector();
 
@@ -232,11 +235,35 @@ public class Mario {
 		}
 	}
 
+	private void handleItems() {
+		if ( World.getInstance().findMarioItemCollisions(getRect()) ) {
+			powerUp();
+		}
+	}
+
+	private void powerUp() {
+		if ( powerState == PowerState.SMALL ) {
+			powerState = PowerState.BIG;
+		} else if ( powerState == PowerState.BIG ) {
+			powerState = PowerState.FIRE;
+		}
+	}
+
+	private void hit() {
+		if ( powerState == PowerState.FIRE ) {
+			powerState = PowerState.BIG;
+		} else if ( powerState == PowerState.BIG ) {
+			powerState = PowerState.SMALL;
+		} else {
+			dead();
+		}
+	}
+
 	private void handleEnemies() {
 		Boolean[] hits = World.getInstance().findMarioEnemyCollisions(getRect());
 
 		if ( hits[0] ) {
-			dead();
+			hit();
 		}
 		if ( hits[1] ) {
 			vector.bounce();
@@ -291,6 +318,7 @@ public class Mario {
 			frameState = FrameState.STAND;
 		}
 
+		// stop moving if you hit something
 		if ( collisionResult.isTopHit() || collisionResult.isBottomHit() ) {
 			vector.hitY();
 		}
@@ -298,6 +326,7 @@ public class Mario {
 			vector.hitX();
 		}
 
+		// keep mario within the left half of the screen
 		if ( currentPos.getX() < 2*GameFrame.pixelScale() ) {
 			currentPos.setX( 2*GameFrame.pixelScale() );
 		} else if ( currentPos.getX() > GameFrame.gameWidth()/2 ) {
@@ -361,5 +390,9 @@ public class Mario {
 
 	private enum FrameState {
 		STAND, JUMP, RUN1, RUN2, RUN3, RUN4, DEAD
+	}
+
+	private enum PowerState {
+		SMALL, BIG, FIRE
 	}
 }

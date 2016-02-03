@@ -43,6 +43,7 @@ public class Question extends Block {
 				y += 2 * GameFrame.pixelScale();
 			} else {
 				state = State.NORMAL;
+				doItem();
 			}
 
 			bounceState++;
@@ -57,7 +58,6 @@ public class Question extends Block {
 		bounceState = 0;
 		int offset = World.getInstance().getOffest();
 		World.getInstance().enemyDeadByBlock(this.getRect(offset));
-		doItem();
 	}
 
 	private void doItem() {

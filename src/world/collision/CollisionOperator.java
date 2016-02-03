@@ -7,6 +7,7 @@ import window.GameFrame;
 import world.block.Block;
 
 import java.awt.geom.Rectangle2D;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -58,7 +59,6 @@ public class CollisionOperator {
 						case BOTTOM:
 							if ( bottomHit == null ) {bottomHit = new LinkedList<>();}
 							bottomHit.add(block);
-							block.hit();
 							break;
 						case LEFT:
 							if ( leftHit == null ) {leftHit = new LinkedList<>();}
@@ -86,7 +86,10 @@ public class CollisionOperator {
 			result.setBottomHit(true);
 			Block block = bottomHit.get(0);
 			result.setDy(block.getY() + block.getHeight() - inputRect.getY());
-			bottomHit.stream().forEach( b -> b.hit() );
+
+			int inputCenter = (int) inputRect.getCenterX();
+			final Comparator<Block> comparator = (b1, b2) -> ( Integer.compare(Math.abs(b1.getCenter(offset).getX()-inputCenter), Math.abs(b2.getCenter(offset).getX()-inputCenter)));
+			bottomHit.stream().min(comparator).get().hit();
 		}
 		if ( leftHit != null && leftHit.size() > 0 ) {
 			result.setLeftHit(true);

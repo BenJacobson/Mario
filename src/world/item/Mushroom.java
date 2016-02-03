@@ -19,7 +19,7 @@ public class Mushroom implements Item {
 	Image image;
 	State state = State.WAIT;
 	int riseState;
-	int riseFrames = 50;
+	int riseFrames = 40;
 
 	public Mushroom(Pos pos) {
 		this.pos = pos;
@@ -38,7 +38,10 @@ public class Mushroom implements Item {
 
 	public void draw(Graphics2D g2, int offset) {
 		update();
-		g2.drawImage(image, getX(offset), getY(), null);
+		if ( state == State.RISE || state == State.NORMAL ) {
+			g2.drawImage(image, getX(offset), getY(), null);
+		}
+
 	}
 
 	private void update() {
@@ -47,7 +50,7 @@ public class Mushroom implements Item {
 			if ( riseState++ > riseFrames ) {
 				state = State.NORMAL;
 				vector.hitY();
-				for ( int i = 0; i < 4; i++ ) {
+				for ( int i = 0; i < 6; i++ ) {
 					vector.moveRight(false);
 				}
 			}
@@ -83,7 +86,8 @@ public class Mushroom implements Item {
 		state = State.RISE;
 	}
 
-	public void eaten() {
+	@Override
+	public void end() {
 		state = State.EATEN;
 	}
 
