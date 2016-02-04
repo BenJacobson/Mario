@@ -116,8 +116,7 @@ public class Goomba implements Enemy {
 	public void reset() {
 		state = State.ALIVE;
 		this.pos = originalPos.copy();
-		vector.hitX();
-		vector.hitY();
+		vector.stop();
 		for ( int i = 0; i < 3; i++ ) {
 			vector.moveLeft(false);
 		}

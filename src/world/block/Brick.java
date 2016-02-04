@@ -56,7 +56,7 @@ public class Brick extends Block {
 		state = State.BOUNCE;
 		bounceState = 0;
 		int offset = World.getInstance().getOffest();
-		World.getInstance().enemyDeadByBlock(this.getRect(offset));
+		World.getInstance().findEnemyDeadByBlock(this.getRect(offset));
 	}
 
 	private enum State {

@@ -9,10 +9,15 @@ public class Pos {
 		set(x,y);
 	}
 
+	public Pos set(Pos example) {
+		this.x = example.getX();
+		this.y = example.getY();
+		return this;
+	}
+
 	public Pos set(double x, double y) {
 		this.x = x;
 		this.y = y;
-
 		return this;
 	}
 

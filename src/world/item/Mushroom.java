@@ -17,7 +17,7 @@ public class Mushroom implements Item {
 	Pos pos;
 	Vector vector = new Vector();
 	Image image;
-	State state = State.WAIT;
+	State state = State.READY;
 	int riseState;
 	int riseFrames = 40;
 
@@ -91,11 +91,25 @@ public class Mushroom implements Item {
 		state = State.EATEN;
 	}
 
+	@Override
+	public boolean ready() {
+		return state == State.READY;
+	}
+
 	public void reverse() {
 		vector.reverse();
 	}
 
+	@Override
+	public void reset() {
+		pos.set(originalPos);
+		state = State.READY;
+		riseState = 0;
+		vector.hitX();
+		vector.setDy((double)-GameFrame.blockDimension()/riseFrames);
+	}
+
 	private enum State {
-		WAIT, RISE, NORMAL, EATEN
+		READY, RISE, NORMAL, EATEN
 	}
 }

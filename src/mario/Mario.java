@@ -281,8 +281,7 @@ public class Mario {
 		movingRight = false;
 		canJumpAgain = false;
 		frameState = FrameState.DEAD;
-		vector.hitX();
-		vector.hitY();
+		vector.stop();
 		vector.jump();
 		Stats.getInstance().pause();
 	}
@@ -294,11 +293,9 @@ public class Mario {
 	private void reset() {
 		deadState = 0;
 		currentPos = originalPos.copy();
-		World.getInstance().resetOffset();
-		World.getInstance().resetEnemies();
+		World.getInstance().reset();
 		frameState = FrameState.STAND;
-		vector.hitX();
-		vector.hitY();
+		vector.stop();
 		lastDirectionForward = true;
 		canJumpAgain = true;
 		jump = false;

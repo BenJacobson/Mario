@@ -91,4 +91,9 @@ public class Vector {
 	public String toString() {
 		return String.format("dx:%f dy:%f", dx, dy);
 	}
+
+	public void stop() {
+		hitX();
+		hitY();
+	}
 }

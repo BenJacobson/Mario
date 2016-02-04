@@ -45,12 +45,22 @@ public class World {
 		offset += add;
 	}
 
-	public void resetOffset() {
+	public void reset() {
+		resetOffset();
+		resetEnemies();
+		resetItems();
+	}
+
+	private void resetOffset() {
 		offset = 0;
 	}
 
-	public void resetEnemies(){
+	private void resetEnemies() {
 		enemies.forEach( enemy -> enemy.reset() );
+	}
+
+	private void resetItems() {
+		items.forEach( item -> item.reset() );
 	}
 
 	public void draw(Graphics2D g2) {
@@ -153,11 +163,7 @@ public class World {
 		points.add(new Points(amount, pos));
 	}
 
-	public void addItem(Item item) {
-		items.add(item);
-	}
-
-	public void enemyDeadByBlock(Rectangle2D blockRect) {
+	public void findEnemyDeadByBlock(Rectangle2D blockRect) {
 		Rectangle2D deadRect = new Rectangle2D.Double(blockRect.getX(), blockRect.getY()-GameFrame.blockDimension(),
 				blockRect.getWidth(), blockRect.getHeight());
 

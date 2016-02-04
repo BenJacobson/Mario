@@ -43,7 +43,7 @@ public class Question extends Block {
 				y += 2 * GameFrame.pixelScale();
 			} else {
 				state = State.NORMAL;
-				doItem();
+				if (items != null) doItem();
 			}
 
 			bounceState++;
@@ -57,14 +57,15 @@ public class Question extends Block {
 		state = State.BOUNCE;
 		bounceState = 0;
 		int offset = World.getInstance().getOffest();
-		World.getInstance().enemyDeadByBlock(this.getRect(offset));
+		World.getInstance().findEnemyDeadByBlock(this.getRect(offset));
 	}
 
 	private void doItem() {
-		if ( items != null && items.size() > 0 ) {
-			Item item = items.get(items.size()-1);
-			items.remove(item);
-			item.start();
+		for ( Item item : items ) {
+			if ( item.ready() ) {
+				item.start();
+				return;
+			}
 		}
 	}
 
