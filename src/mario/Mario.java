@@ -249,6 +249,10 @@ public class Mario {
 		}
 	}
 
+	public boolean isBig() {
+		return !(powerState == PowerState.SMALL);
+	}
+
 	private void hit() {
 		if ( powerState == PowerState.FIRE ) {
 			powerState = PowerState.BIG;

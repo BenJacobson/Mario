@@ -49,7 +49,7 @@ public class Block {
 		return new Rectangle2D.Double(getX(offset), getY(), getWidth(), getHeight());
 	}
 
-	public void hit() {}
+	public void hit(boolean big) {}
 
 	public void addItem(Item item) {
 		if ( items == null ) {
