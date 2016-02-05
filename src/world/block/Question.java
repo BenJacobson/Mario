@@ -58,6 +58,7 @@ public class Question extends Block {
 		bounceState = 0;
 		int offset = World.getInstance().getOffest();
 		World.getInstance().findEnemyDeadByBlock(this.getRect(offset));
+		World.getInstance().findItemHitByBlock(this.getRect(offset));
 	}
 
 	private void doItem() {

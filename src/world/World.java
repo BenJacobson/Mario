@@ -170,4 +170,12 @@ public class World {
 		enemies.stream().filter( enemy -> enemy.getRect(offset).intersects(deadRect) )
 				.forEach( enemy -> enemy.blockHit() );
 	}
+
+	public void findItemHitByBlock(Rectangle2D blockRect) {
+		Rectangle2D hitRect = new Rectangle2D.Double(blockRect.getX(), blockRect.getY()-GameFrame.blockDimension(),
+				blockRect.getWidth(), blockRect.getHeight());
+
+		items.stream().filter( item -> item.getRect(offset).intersects(hitRect) )
+				.forEach( item -> item.bounce( hitRect.getCenterX() - item.getRect(offset).getCenterX() > 0 ) );
+	}
 }

@@ -9,6 +9,7 @@ public interface Item {
 	boolean ready();
 	void start();
 	void end();
+	void bounce(boolean front);
 
 	Rectangle2D getRect(int offset);
 

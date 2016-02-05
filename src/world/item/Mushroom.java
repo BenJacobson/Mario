@@ -101,6 +101,16 @@ public class Mushroom implements Item {
 	}
 
 	@Override
+	public void bounce(boolean front) {
+		if ( front && vector.getDx() > 0 ) {
+			vector.reverse();
+		} else if ( !front && vector.getDx() < 0 ) {
+			vector.reverse();
+		}
+		vector.jump();
+	}
+
+	@Override
 	public void reset() {
 		pos.set(originalPos);
 		state = State.READY;
