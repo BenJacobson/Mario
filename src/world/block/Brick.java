@@ -15,7 +15,7 @@ public class Brick extends Block {
 	private State state = State.NORMAL;
 	private int bounceState = 0;
 	private int breakState = 0;
-	private BrokenPositions brokenPositions;
+	private BrokenPositions brokenPositions = new BrokenPositions();
 	private Image brokenImage;
 
 	public Brick(Pos pos) {
@@ -79,7 +79,7 @@ public class Brick extends Block {
 		if ( big ) {
 			state = State.BREAK;
 			breakState = 0;
-			brokenPositions = new BrokenPositions(pos);
+			brokenPositions.set(pos);
 		} else {
 			state = State.BOUNCE;
 			bounceState = 0;
@@ -100,7 +100,7 @@ public class Brick extends Block {
 		double dx = 5;
 		double dy = -10;
 
-		private BrokenPositions(Pos startPos) {
+		public void set(Pos startPos) {
 			part1 = startPos.copy();
 			part2 = startPos.copy();
 			part3 = startPos.copy();
