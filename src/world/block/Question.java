@@ -53,7 +53,7 @@ public class Question extends Block {
 	}
 
 	@Override
-	public void hit() {
+	public void hit(boolean big) {
 		state = State.BOUNCE;
 		bounceState = 0;
 		int offset = World.getInstance().getOffest();

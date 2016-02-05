@@ -1,5 +1,6 @@
 package world.collision;
 
+import mario.Mario;
 import mechanics.Pos;
 import mechanics.Side;
 import mechanics.Vector;
@@ -89,7 +90,7 @@ public class CollisionOperator {
 
 			int inputCenter = (int) inputRect.getCenterX();
 			final Comparator<Block> comparator = (b1, b2) -> ( Integer.compare(Math.abs(b1.getCenter(offset).getX()-inputCenter), Math.abs(b2.getCenter(offset).getX()-inputCenter)));
-			bottomHit.stream().min(comparator).get().hit();
+			bottomHit.stream().min(comparator).get().hit(Mario.getInstance().isBig());
 		}
 		if ( leftHit != null && leftHit.size() > 0 ) {
 			result.setLeftHit(true);

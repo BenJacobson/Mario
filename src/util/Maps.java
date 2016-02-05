@@ -66,7 +66,7 @@ public class Maps {
 
 				char c = map[y][x];
 				int xcoord = x * GameFrame.blockDimension();
-				int ycoord = (212*GameFrame.pixelScale()) - (y*GameFrame.blockDimension());
+				int ycoord = (int)((13.3 - y)*GameFrame.blockDimension());
 				long start = System.currentTimeMillis();
 
 				if ( c == 'g' ) {

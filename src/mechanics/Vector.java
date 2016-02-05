@@ -23,6 +23,11 @@ public class Vector {
 		this.dy = dy;
 	}
 
+	public void set(double dx, double dy) {
+		this.dx = dx;
+		this.dy = dy;
+	}
+
 	public void hitX() {
 		dx = 0;
 	}

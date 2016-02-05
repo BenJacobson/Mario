@@ -2,25 +2,39 @@ package world.block;
 
 
 import mechanics.Pos;
+import mechanics.Vector;
 import util.Images;
 import window.GameFrame;
 import world.World;
 
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 
 public class Brick extends Block {
 
 	private State state = State.NORMAL;
 	private int bounceState = 0;
+	private int breakState = 0;
+	private BrokenPositions brokenPositions;
+	private Image brokenImage;
 
 	public Brick(Pos pos) {
 		super(pos);
 		image = Images.brick;
+		brokenImage = image.getScaledInstance(image.getWidth(null)/3, image.getHeight(null)/3, 0);
 	}
 
 	@Override
 	public void draw(Graphics2D g2, int offset) {
-		g2.drawImage(image, getX(offset), getBounceY(getY()), null);
+		if ( state == State.BREAK ) {
+			for ( Pos broken :  brokenPositions.get() ) {
+				g2.drawImage(brokenImage, broken.getX() - offset, broken.getY(), null);
+			}
+		} else if ( !(state == State.GONE) ) {
+			int x = getX(offset);
+			int y = getBounceY(getY());
+			g2.drawImage(image, x, y, null);
+		}
 	}
 
 	private int getBounceY(int y) {
@@ -52,14 +66,70 @@ public class Brick extends Block {
 	}
 
 	@Override
-	public void hit() {
-		state = State.BOUNCE;
-		bounceState = 0;
+	public Rectangle2D getRect(int offset) {
+		return state == State.GONE || state == State.BREAK ? new Rectangle2D.Double(0,0,0,0) : super.getRect(offset);
+	}
+
+	@Override
+	public void hit(boolean big) {
+		if ( state == State.GONE ) {
+			return;
+		}
+
+		if ( big ) {
+			state = State.BREAK;
+			breakState = 0;
+			brokenPositions = new BrokenPositions(pos);
+		} else {
+			state = State.BOUNCE;
+			bounceState = 0;
+		}
 		int offset = World.getInstance().getOffest();
 		World.getInstance().findEnemyDeadByBlock(this.getRect(offset));
 	}
 
 	private enum State {
-		NORMAL, BOUNCE
+		NORMAL, BOUNCE, BREAK, GONE
+	}
+
+	private class BrokenPositions {
+
+		Pos part1, part2, part3, part4;
+		Vector vector1 = new Vector(), vector2 = new Vector(), vector3 = new Vector(), vector4 = new Vector();
+		double dx = 5;
+		double dy = -10;
+
+		private BrokenPositions(Pos startPos) {
+			part1 = startPos.copy();
+			part2 = startPos.copy();
+			part3 = startPos.copy();
+			part4 = startPos.copy();
+
+			vector1.set(dx, dy);
+			vector2.set(dx, 2*dy);
+			vector3.set(-dx, 2*dy);
+			vector4.set(-dx, dy);
+		}
+
+		private void update() {
+			vector1.gravity();
+			vector2.gravity();
+			vector3.gravity();
+			vector4.gravity();
+
+			part1.move(vector1);
+			part2.move(vector2);
+			part3.move(vector3);
+			part4.move(vector4);
+
+			if ( breakState++ > 100 ) {
+				state = State.GONE;
+			}
+		}
+
+		public Pos[] get() {
+			update();
+			return new Pos[] {part1, part2, part3, part4};
+		}
 	}
 }
