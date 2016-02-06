@@ -40,6 +40,7 @@ public class Mario {
 	private int jumpHeldState = 0;
 	private int jumpHeldPasses = 0;
 	private int deadState = 0;
+	private int invincible = 0;
 
 	private FrameState frameState = FrameState.STAND;
 	private PowerState powerState = PowerState.SMALL;
@@ -254,12 +255,13 @@ public class Mario {
 	}
 
 	private void hit() {
-		if ( powerState == PowerState.FIRE ) {
-			powerState = PowerState.BIG;
-		} else if ( powerState == PowerState.BIG ) {
-			powerState = PowerState.SMALL;
-		} else {
+		if ( invincible > 0 ) {
+			
+		} else if ( powerState == PowerState.SMALL ) {
 			dead();
+		} else {
+			powerState = PowerState.SMALL;
+			invincible = 25;
 		}
 	}
 
@@ -333,6 +335,10 @@ public class Mario {
 		} else if ( currentPos.getX() > GameFrame.gameWidth()/2 ) {
 			World.getInstance().addOffset( currentPos.getX() - GameFrame.gameWidth()/2 );
 			currentPos.setX( GameFrame.gameWidth()/2 );
+		}
+
+		if ( invincible > 0 ) {
+			invincible--;
 		}
 	}
 
