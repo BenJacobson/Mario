@@ -27,6 +27,7 @@ public class Images {
 		}
 	}
 
+	// block images
 	public static final Image ground = initFrame("block_ground.png");
 	public static final Image brick = initFrame("block_brick.png");
 	public static final Image invisible = initFrame("block_invisible.png");
@@ -35,8 +36,10 @@ public class Images {
 	public static final Image question = initFrame("block_question.png");
 	public static final Image square = initFrame("block_square.png");
 
+	// coin images
 	public static final Image coin = initFrame("coin_normal.png");
 
+	// mario small images
 	public static final Image stand_frame = initFrame("mario_stand.png");
 	public static final Image jump_frame = initFrame("mario_jump.png");
 	public static final Image stand_frame_back = initFrame("mario_stand_back.png");
@@ -49,13 +52,20 @@ public class Images {
 	public static final Image run_frame_4_back = initFrame("mario_run_4_back.png");
 	public static final Image dead_frame = initFrame("mario_dead.png");
 
+	// mario big images
+	public static final Image stand_frame_big = initFrame("mario_stand_big.png");
+	public static final Image stand_frame_back_big = initFrame("mario_stand_back_big.png");
+
+	// goomba images
 	public static final Image goombaLeft = initFrame("enemy_goomba_left.png");
 	public static final Image goombaRight = initFrame("enemy_goomba_right.png");
 	public static final Image goombaSquished = initFrame("enemy_goomba_squished.png");
 	public static final Image goombaFlipped = initFrame("enemy_goomba_flipped.png");
 
+	// item images
 	public static final Image mushroom = initFrame("item_mushroom.png");
 
+	// background images
 	public static final Image hill_large = initFrame("hill_large.png");
 	public static final Image hill_small = initFrame("hill_small.png");
 }

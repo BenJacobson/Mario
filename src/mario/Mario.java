@@ -44,18 +44,8 @@ public class Mario {
 
 	private FrameState frameState = FrameState.STAND;
 	private PowerState powerState = PowerState.SMALL;
-	
-	private final Image stand_frame = Images.stand_frame;
-	private final Image jump_frame = Images.jump_frame;
-	private final Image stand_frame_back = Images.stand_frame_back;
-	private final Image jump_frame_back = Images.jump_frame_back;
-	private final Image run_frame_13 = Images.run_frame_13;
-	private final Image run_frame_13_back = Images.run_frame_13_back;
-	private final Image run_frame_2 = Images.run_frame_2;
-	private final Image run_frame_2_back = Images.run_frame_2_back;
-	private final Image run_frame_4 = Images.run_frame_4;
-	private final Image run_frame_4_back = Images.run_frame_4_back;
-	private final Image dead_frame = Images.dead_frame;
+
+	private final MarioFrames marioFrames = new MarioFrames();
 
 	private final int LEFT = 37;
 	private final int RIGHT = 39;
@@ -64,52 +54,6 @@ public class Mario {
 
 
 	private Mario() {}
-
-	private Image getCurrentFrame() {
-
-		switch (frameState) {
-			case JUMP:
-				if ( lastDirectionForward ) {
-					return jump_frame;
-				} else {
-					return jump_frame_back;
-				}
-			case STAND:
-				if ( lastDirectionForward ) {
-					return stand_frame;
-				} else {
-					return stand_frame_back;
-				}
-			case RUN1:
-				if ( lastDirectionForward ) {
-					return run_frame_13;
-				} else {
-					return run_frame_13_back;
-				}
-			case RUN2:
-				if ( lastDirectionForward ) {
-					return run_frame_2;
-				} else {
-					return run_frame_2_back;
-				}
-			case RUN3:
-				if ( lastDirectionForward ) {
-					return run_frame_13;
-				} else {
-					return run_frame_13_back;
-				}
-			case RUN4:
-				if ( lastDirectionForward ) {
-					return run_frame_4;
-				} else {
-					return run_frame_4_back;
-				}
-			case DEAD:
-				return dead_frame;
-		}
-
-		return stand_frame;
-	}
 
 	private void setRunFrame() {
 		if ( !canJumpAgain ) {
@@ -159,18 +103,16 @@ public class Mario {
 
 	public void draw(Graphics2D g2) {
 		move();
-		Image currentFrame = getCurrentFrame();
+		Image currentFrame = marioFrames.getFrame();
 
 		int extraX = 0, extraY = 0;
-		if ( currentFrame == jump_frame || currentFrame == jump_frame_back ||
-				currentFrame == run_frame_4 || currentFrame == run_frame_4_back ) {
+		if ( frameState == FrameState.JUMP || frameState == FrameState.RUN4 ) {
 			extraX = 2 * GameFrame.pixelScale();
-		} else if ( currentFrame == run_frame_13 || currentFrame == run_frame_13_back ) {
+		} else if ( frameState == FrameState.RUN1 || frameState == FrameState.RUN3 ) {
 			extraY = GameFrame.pixelScale();
 		}
 
-		g2.drawImage(currentFrame, currentPos.getX()-extraX, currentPos.getY()+extraY,
-				currentFrame.getWidth(null), currentFrame.getHeight(null), null);
+		g2.drawImage(currentFrame, currentPos.getX()-extraX, currentPos.getY()+extraY, null);
 	}
 
 	public void setDirection(int action) {
@@ -256,7 +198,7 @@ public class Mario {
 
 	private void hit() {
 		if ( invincible > 0 ) {
-			
+
 		} else if ( powerState == PowerState.SMALL ) {
 			dead();
 		} else {
@@ -344,7 +286,9 @@ public class Mario {
 
 
 	private Rectangle2D getRect() {
-		return new Rectangle2D.Double(currentPos.getX(), currentPos.getY(), stand_frame.getWidth(null), stand_frame.getHeight(null));
+		int width = 12 * GameFrame.pixelScale();
+		int height = (powerState == PowerState.SMALL ? 16 : 32) * GameFrame.pixelScale();
+		return new Rectangle2D.Double(currentPos.getX(), currentPos.getY(), width, height);
 	}
 
 	private boolean isInRunState() {
@@ -401,5 +345,112 @@ public class Mario {
 
 	private enum PowerState {
 		SMALL, BIG, FIRE
+	}
+
+	private class MarioFrames {
+
+		private Image[][][] frames = initFramesStructure();
+
+		private Image[][][] initFramesStructure() {
+			return new Image[][][] {
+					// small mario frame
+					{
+							// standing frames
+							{
+									Images.stand_frame_back, Images.stand_frame
+							},
+							// jumping frames
+							{
+								Images.jump_frame_back, Images.jump_frame
+							},
+							// running 1 frames
+							{
+								Images.run_frame_13_back, Images.run_frame_13
+							},
+							// running 2 frames
+							{
+									Images.run_frame_2_back, Images.run_frame_2
+							},
+							// running 3 frames
+							{
+								Images.run_frame_13_back, Images.run_frame_13
+							},
+							// running 4 frames
+							{
+								Images.run_frame_4_back, Images.run_frame_4
+							},
+							// dead frames
+							{
+								Images.dead_frame, Images.dead_frame
+							}
+					},
+					// big mario frames
+					{
+							// standing frames
+							{
+									Images.stand_frame_back_big, Images.stand_frame_big
+							},
+							// jumping frames
+							{
+									Images.stand_frame_back_big, Images.stand_frame_big
+							},
+							// running 1 frames
+							{
+									Images.stand_frame_back_big, Images.stand_frame_big
+							},
+							// running 2 frames
+							{
+									Images.stand_frame_back_big, Images.stand_frame_big
+							},
+							// running 3 frames
+							{
+									Images.stand_frame_back_big, Images.stand_frame_big
+							},
+							// running 4 frames
+							{
+									Images.stand_frame_back_big, Images.stand_frame_big
+							},
+							// dead frames
+							{
+									Images.stand_frame_back_big, Images.stand_frame_big
+							}
+					},
+					// fire mario frames
+					{
+							// standing frames
+							{
+									Images.stand_frame_back_big, Images.stand_frame_big
+							},
+							// jumping frames
+							{
+									Images.stand_frame_back_big, Images.stand_frame_big
+							},
+							// running 1 frames
+							{
+									Images.stand_frame_back_big, Images.stand_frame_big
+							},
+							// running 2 frames
+							{
+									Images.stand_frame_back_big, Images.stand_frame_big
+							},
+							// running 3 frames
+							{
+									Images.stand_frame_back_big, Images.stand_frame_big
+							},
+							// running 4 frames
+							{
+									Images.stand_frame_back_big, Images.stand_frame_big
+							},
+							// dead frames
+							{
+									Images.stand_frame_back_big, Images.stand_frame_big
+							}
+					}
+			};
+		}
+
+		public Image getFrame() {
+			return frames[powerState.ordinal()][frameState.ordinal()][lastDirectionForward ? 1 : 0];
+		}
 	}
 }

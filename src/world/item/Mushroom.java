@@ -88,6 +88,7 @@ public class Mushroom implements Item {
 
 	@Override
 	public void end() {
+		World.getInstance().addPoints(1000, pos.copy());
 		state = State.EATEN;
 	}
 
