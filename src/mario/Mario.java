@@ -237,6 +237,8 @@ public class Mario {
 		vector.stop();
 		vector.jump();
 		Stats.getInstance().pause();
+		GameFrame.stopTheme();
+		GameFrame.play("/sound/wav/mario_die.wav");
 	}
 
 	public boolean isNotDead() {
@@ -252,7 +254,9 @@ public class Mario {
 		lastDirectionForward = true;
 		canJumpAgain = true;
 		jump = false;
+		Stats.getInstance().resume();
 		Stats.getInstance().reset();
+		GameFrame.startTheme();
 	}
 
 	private void handleCollisions() {
@@ -330,12 +334,7 @@ public class Mario {
 			jump = false;
 			canJumpAgain = false;
 			frameState = FrameState.JUMP;
-			try {
-				AudioStream jumpSound = new AudioStream(Mario.class.getResourceAsStream("/sound/wav/jump.wav"));
-				GameFrame.play(jumpSound);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			GameFrame.play( powerState == PowerState.SMALL ? "/sound/wav/jump_small.wav" : "/sound/wav/jump_super.wav");
 		} else if (jumpHeld && jumpHeldState <= jumpHeldMax) {
 
 			int jumpPassesToWait = 0;

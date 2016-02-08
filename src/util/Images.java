@@ -68,4 +68,9 @@ public class Images {
 	// background images
 	public static final Image hill_large = initFrame("hill_large.png");
 	public static final Image hill_small = initFrame("hill_small.png");
+
+	//flagpole
+	public static final Image flagpole_pole = initFrame("flagpole_pole.png");
+	public static final Image flagpole_ball = initFrame("flagpole_ball.png");
+	public static final Image flagpole_flag = initFrame("flagpole_flag.png");
 }

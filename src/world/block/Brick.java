@@ -80,6 +80,7 @@ public class Brick extends Block {
 			state = State.BREAK;
 			breakState = 0;
 			brokenPositions.set(pos);
+			GameFrame.play("/sound/wav/break_block.wav");
 		} else {
 			state = State.BOUNCE;
 			bounceState = 0;

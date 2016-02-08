@@ -60,14 +60,18 @@ public class Stats {
 	}
 
 	public void pause() {
-		pauseTime = System.currentTimeMillis();
-		state = State.PAUSED;
+		if ( state != State.PAUSED ) {
+			pauseTime = System.currentTimeMillis();
+			state = State.PAUSED;
+		}
 	}
 
 	public void resume() {
-		long timeStopped = System.currentTimeMillis() - pauseTime;
-		startTime += timeStopped;
-		state = State.NORMAL;
+		if ( state == State.PAUSED ) {
+			long timeStopped = System.currentTimeMillis() - pauseTime;
+			startTime += timeStopped;
+			state = State.NORMAL;
+		}
 	}
 
 	public void reset() {

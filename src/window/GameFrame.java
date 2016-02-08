@@ -30,8 +30,30 @@ public class GameFrame extends JFrame {
 	public static int blockDimension() { return PIXEL_SCALE*16; }
 	public static int pixelScale() { return PIXEL_SCALE; }
 
-	public static void play(AudioStream audioStream) {
-		AudioPlayer.player.start(audioStream);
+	private static AudioStream theme;
+	public static void play(String file) {
+		try {
+			AudioStream audioStream = new AudioStream(GameFrame.class.getResourceAsStream(file));
+			AudioPlayer.player.start(audioStream);
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
+	}
+
+	public static void stopTheme() {
+		AudioPlayer.player.stop(theme);
+	}
+
+	public static void startTheme() {
+		try {
+			AudioStream audioStream = new AudioStream(GameFrame.class.getResourceAsStream("/sound/wav/mario theme.wav"));
+			theme = audioStream;
+			AudioPlayer.player.start(audioStream);
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
 	}
 
 	public static void loop(AudioStream audioStream) {
@@ -63,7 +85,7 @@ public class GameFrame extends JFrame {
 
 		setVisible(true);
 
-		loopMusic();
+		startTheme();
 	}
 
 	private void setApplicationIcon(final String fileName) {
@@ -101,15 +123,6 @@ public class GameFrame extends JFrame {
 		int windowHeight = windowSize.height;
 
 		super.setLocation( (screenWidth-windowWidth)/2, (screenHeight-windowHeight)/2 );
-	}
-
-	private void loopMusic() {
-		try {
-			AudioStream mainTheme = new AudioStream(Mario.class.getResourceAsStream("/sound/wav/mario theme.wav"));
-			play(mainTheme);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	private class NextFrameTask extends TimerTask {

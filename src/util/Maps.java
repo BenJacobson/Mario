@@ -1,5 +1,6 @@
 package util;
 
+import world.Flagpole;
 import world.World;
 import world.background.Background;
 import world.enemy.Enemy;
@@ -22,6 +23,7 @@ public class Maps {
 	public static List<Coin> coins;
 	public static List<Background> backgrounds;
 	public static List<Item> items;
+	public static Flagpole flagpole;
 
 	private static char[][] getMap(String mapName) {
 
@@ -97,6 +99,8 @@ public class Maps {
 					items.add(item);
 					block.addItem(item);
 					blocks.add(block);
+				} else if ( c == 'f' ) {
+					flagpole = new Flagpole(new Pos(xcoord, ycoord));
 				}
 
 				long end = System.currentTimeMillis();

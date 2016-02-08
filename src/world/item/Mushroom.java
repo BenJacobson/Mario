@@ -84,12 +84,14 @@ public class Mushroom implements Item {
 	@Override
 	public void start() {
 		state = State.RISE;
+		GameFrame.play("/sound/wav/powerup_appears.wav");
 	}
 
 	@Override
 	public void end() {
 		World.getInstance().addPoints(1000, pos.copy());
 		state = State.EATEN;
+		GameFrame.play("/sound/wav/powerup_eaten.wav");
 	}
 
 	@Override
