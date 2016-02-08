@@ -3,14 +3,16 @@ package mario;
 import mechanics.Pos;
 import mechanics.Vector;
 import stats.Stats;
-import util.Images;
-import window.GameCanvas;
+import sun.audio.AudioPlayer;
+import sun.audio.AudioStream;
 import window.GameFrame;
 import world.collision.CollisionResult;
 import world.World;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
+import java.io.IOException;
+import java.io.InputStream;
 
 // contains the information and subclasses about mario on screen
 public class Mario {
@@ -18,15 +20,15 @@ public class Mario {
 	private static Mario instance;
 
 	public static Mario getInstance() {
-		if ( instance == null ) {
+		if (instance == null) {
 			instance = new Mario();
 		}
 		return instance;
 	}
 
-	Pos originalPos = new Pos(25*GameFrame.pixelScale(), 180*GameFrame.pixelScale());
-	Pos currentPos = originalPos.copy();
-	Vector vector = new Vector();
+	private Pos originalPos = new Pos(25 * GameFrame.pixelScale(), 180 * GameFrame.pixelScale());
+	private Pos currentPos = originalPos.copy();
+	private Vector vector = new Vector();
 
 	private boolean movingLeft = false;
 	private boolean movingRight = false;
@@ -56,13 +58,13 @@ public class Mario {
 	private Mario() {}
 
 	private void setRunFrame() {
-		if ( !canJumpAgain ) {
+		if (!canJumpAgain) {
 			// do nothing because you can't run in the air
 			return;
 		}
 
-		if ( frameState != FrameState.RUN1 && frameState != FrameState.RUN2 &&
-				frameState != FrameState.RUN3 && frameState != FrameState.RUN4 ) {
+		if (frameState != FrameState.RUN1 && frameState != FrameState.RUN2 &&
+				frameState != FrameState.RUN3 && frameState != FrameState.RUN4) {
 			// start running frames
 			frameState = FrameState.RUN1;
 		}
@@ -70,10 +72,10 @@ public class Mario {
 
 	private void updateRunFrame() {
 
-		if ( frameState == FrameState.RUN1 || frameState == FrameState.RUN2 ||
-				 frameState == FrameState.RUN3 || frameState == FrameState.RUN4 ) {
+		if (frameState == FrameState.RUN1 || frameState == FrameState.RUN2 ||
+				frameState == FrameState.RUN3 || frameState == FrameState.RUN4) {
 
-			if ( !canJumpAgain ) {
+			if (!canJumpAgain) {
 				// falling while running, switch frame to jump frame
 				frameState = FrameState.JUMP;
 			}
@@ -81,7 +83,7 @@ public class Mario {
 			numberOfPasses++;
 
 			int passesToWait = vector.isFast() ? 3 : 5;
-			if ( numberOfPasses <= passesToWait ) {
+			if (numberOfPasses <= passesToWait) {
 				// don't change the frame yet
 				return;
 			}
@@ -103,32 +105,32 @@ public class Mario {
 
 	public void draw(Graphics2D g2) {
 		move();
-		Image currentFrame = marioFrames.getFrame();
+		Image currentFrame = marioFrames.getFrame(powerState, frameState, lastDirectionForward);
 
 		int extraX = 0, extraY = 0;
-		if ( frameState == FrameState.JUMP || frameState == FrameState.RUN4 ) {
+		if (frameState == FrameState.JUMP || frameState == FrameState.RUN4) {
 			extraX = 2 * GameFrame.pixelScale();
-		} else if ( frameState == FrameState.RUN1 || frameState == FrameState.RUN3 ) {
+		} else if (frameState == FrameState.RUN1 || frameState == FrameState.RUN3) {
 			extraY = GameFrame.pixelScale();
 		}
 
-		g2.drawImage(currentFrame, currentPos.getX()-extraX, currentPos.getY()+extraY, null);
+		g2.drawImage(currentFrame, currentPos.getX() - extraX, currentPos.getY() + extraY, null);
 	}
 
 	public void setDirection(int action) {
 
-		if ( action == LEFT ) {
+		if (action == LEFT) {
 			movingLeft = true;
 			movingRight = false;
 			if (canJumpAgain) lastDirectionForward = false;
-		} else if ( action == RIGHT ) {
+		} else if (action == RIGHT) {
 			movingRight = true;
 			movingLeft = false;
 			if (canJumpAgain) lastDirectionForward = true;
-		} else if ( action == RUN  && canJumpAgain ) {
+		} else if (action == RUN && canJumpAgain) {
 			running = true;
-		} else if ( action == SPACE ) {
-			if ( vector.getDy() == 0 && canJumpAgain && !jumpHeld ) {
+		} else if (action == SPACE) {
+			if (vector.getDy() == 0 && canJumpAgain && !jumpHeld) {
 				jump = true;
 				jumpHeld = true;
 				jumpHeldState = 0;
@@ -137,20 +139,20 @@ public class Mario {
 	}
 
 	public void unsetDirection(int action) {
-		if ( action == LEFT ) {
+		if (action == LEFT) {
 			movingLeft = false;
-		} else if ( action == RIGHT ) {
+		} else if (action == RIGHT) {
 			movingRight = false;
-		} else if ( action == RUN ) {
+		} else if (action == RUN) {
 			running = false;
-		} else if ( action == SPACE ) {
+		} else if (action == SPACE) {
 			jumpHeld = false;
 		}
 	}
 
 	private void move() {
 
-		if ( frameState != FrameState.DEAD ) {
+		if (frameState != FrameState.DEAD) {
 
 			handleJump();
 
@@ -168,10 +170,10 @@ public class Mario {
 
 		} else {
 
-			if ( deadState++ > 50 && deadState < 100 ) {
+			if (deadState++ > 50 && deadState < 100) {
 				vector.gravity();
 				currentPos.move(vector);
-			} else if ( deadState > 150 ) {
+			} else if (deadState > 150) {
 				reset();
 			}
 
@@ -179,15 +181,16 @@ public class Mario {
 	}
 
 	private void handleItems() {
-		if ( World.getInstance().findMarioItemCollisions(getRect()) ) {
+		if (World.getInstance().findMarioItemCollisions(getRect())) {
 			powerUp();
 		}
 	}
 
 	private void powerUp() {
-		if ( powerState == PowerState.SMALL ) {
+		if (powerState == PowerState.SMALL) {
 			powerState = PowerState.BIG;
-		} else if ( powerState == PowerState.BIG ) {
+			currentPos.moveDown(-GameFrame.blockDimension());
+		} else if (powerState == PowerState.BIG) {
 			powerState = PowerState.FIRE;
 		}
 	}
@@ -197,12 +200,13 @@ public class Mario {
 	}
 
 	private void hit() {
-		if ( invincible > 0 ) {
+		if (invincible > 0) {
 
-		} else if ( powerState == PowerState.SMALL ) {
+		} else if (powerState == PowerState.SMALL) {
 			dead();
 		} else {
 			powerState = PowerState.SMALL;
+			currentPos.moveDown(GameFrame.blockDimension());
 			invincible = 25;
 		}
 	}
@@ -210,16 +214,16 @@ public class Mario {
 	private void handleEnemies() {
 		Boolean[] hits = World.getInstance().findMarioEnemyCollisions(getRect());
 
-		if ( hits[0] ) {
+		if (hits[0]) {
 			hit();
 		}
-		if ( hits[1] ) {
+		if (hits[1]) {
 			vector.bounce();
 		}
 	}
 
 	private void checkDead() {
-		if ( currentPos.getY() > 250*GameFrame.pixelScale() ) {
+		if ( currentPos.getY() > 250 * GameFrame.pixelScale() || Stats.getInstance().getTime().equals("0") ) {
 			dead();
 		}
 	}
@@ -229,6 +233,7 @@ public class Mario {
 		movingRight = false;
 		canJumpAgain = false;
 		frameState = FrameState.DEAD;
+		deadState = 0;
 		vector.stop();
 		vector.jump();
 		Stats.getInstance().pause();
@@ -239,47 +244,47 @@ public class Mario {
 	}
 
 	private void reset() {
-		deadState = 0;
 		currentPos = originalPos.copy();
 		World.getInstance().reset();
 		frameState = FrameState.STAND;
+		powerState = PowerState.SMALL;
 		vector.stop();
 		lastDirectionForward = true;
 		canJumpAgain = true;
 		jump = false;
-		Stats.getInstance().resume();
-   	}
+		Stats.getInstance().reset();
+	}
 
 	private void handleCollisions() {
 
 		CollisionResult collisionResult = World.getInstance().blockCollisions(getRect(), vector);
 
-		currentPos.moveDown( collisionResult.getDy() );
-		currentPos.moveRight( collisionResult.getDx() );
+		currentPos.moveDown(collisionResult.getDy());
+		currentPos.moveRight(collisionResult.getDx());
 
 		canJumpAgain = collisionResult.isTopHit();
 
-		if ( collisionResult.isTopHit() && !isInRunState() && isNotDead() ) {
+		if (collisionResult.isTopHit() && !isInRunState() && isNotDead()) {
 			frameState = FrameState.STAND;
 		}
 
 		// stop moving if you hit something
-		if ( collisionResult.isTopHit() || collisionResult.isBottomHit() ) {
+		if (collisionResult.isTopHit() || collisionResult.isBottomHit()) {
 			vector.hitY();
 		}
-		if ( collisionResult.isLeftHit() || collisionResult.isRightHit() ) {
+		if (collisionResult.isLeftHit() || collisionResult.isRightHit()) {
 			vector.hitX();
 		}
 
 		// keep mario within the left half of the screen
-		if ( currentPos.getX() < 2*GameFrame.pixelScale() ) {
-			currentPos.setX( 2*GameFrame.pixelScale() );
-		} else if ( currentPos.getX() > GameFrame.gameWidth()/2 ) {
-			World.getInstance().addOffset( currentPos.getX() - GameFrame.gameWidth()/2 );
-			currentPos.setX( GameFrame.gameWidth()/2 );
+		if (currentPos.getX() < 2 * GameFrame.pixelScale()) {
+			currentPos.setX(2 * GameFrame.pixelScale());
+		} else if (currentPos.getX() > GameFrame.gameWidth() / 2) {
+			World.getInstance().addOffset(currentPos.getX() - GameFrame.gameWidth() / 2);
+			currentPos.setX(GameFrame.gameWidth() / 2);
 		}
 
-		if ( invincible > 0 ) {
+		if (invincible > 0) {
 			invincible--;
 		}
 	}
@@ -298,11 +303,11 @@ public class Mario {
 
 	private void updateVector() {
 
-		if ( movingLeft ) {
+		if (movingLeft) {
 			vector.moveLeft(running);
 			setRunFrame();
 			updateRunFrame();
-		} else if ( movingRight ) {
+		} else if (movingRight) {
 			vector.moveRight(running);
 			setRunFrame();
 			updateRunFrame();
@@ -312,7 +317,7 @@ public class Mario {
 		}
 		vector.gravity();
 
-		if ( vector.getDx() == 0 && canJumpAgain ) {
+		if (vector.getDx() == 0 && canJumpAgain) {
 			frameState = FrameState.STAND;
 		}
 	}
@@ -320,15 +325,21 @@ public class Mario {
 	private void handleJump() {
 		int jumpHeldMax = 12;
 
-		if ( jump ) {
+		if (jump) {
 			vector.jump();
 			jump = false;
 			canJumpAgain = false;
 			frameState = FrameState.JUMP;
-		} else if ( jumpHeld && jumpHeldState <= jumpHeldMax ) {
+			try {
+				AudioStream jumpSound = new AudioStream(Mario.class.getResourceAsStream("/sound/wav/jump.wav"));
+				GameFrame.play(jumpSound);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} else if (jumpHeld && jumpHeldState <= jumpHeldMax) {
 
 			int jumpPassesToWait = 0;
-			if ( jumpHeldPasses <= jumpPassesToWait ) {
+			if (jumpHeldPasses <= jumpPassesToWait) {
 				jumpHeldPasses++;
 				return;
 			}
@@ -339,118 +350,12 @@ public class Mario {
 		}
 	}
 
-	private enum FrameState {
+	enum FrameState {
 		STAND, JUMP, RUN1, RUN2, RUN3, RUN4, DEAD
 	}
 
-	private enum PowerState {
+	enum PowerState {
 		SMALL, BIG, FIRE
 	}
 
-	private class MarioFrames {
-
-		private Image[][][] frames = initFramesStructure();
-
-		private Image[][][] initFramesStructure() {
-			return new Image[][][] {
-					// small mario frame
-					{
-							// standing frames
-							{
-									Images.stand_frame_back, Images.stand_frame
-							},
-							// jumping frames
-							{
-								Images.jump_frame_back, Images.jump_frame
-							},
-							// running 1 frames
-							{
-								Images.run_frame_13_back, Images.run_frame_13
-							},
-							// running 2 frames
-							{
-									Images.run_frame_2_back, Images.run_frame_2
-							},
-							// running 3 frames
-							{
-								Images.run_frame_13_back, Images.run_frame_13
-							},
-							// running 4 frames
-							{
-								Images.run_frame_4_back, Images.run_frame_4
-							},
-							// dead frames
-							{
-								Images.dead_frame, Images.dead_frame
-							}
-					},
-					// big mario frames
-					{
-							// standing frames
-							{
-									Images.stand_frame_back_big, Images.stand_frame_big
-							},
-							// jumping frames
-							{
-									Images.stand_frame_back_big, Images.stand_frame_big
-							},
-							// running 1 frames
-							{
-									Images.stand_frame_back_big, Images.stand_frame_big
-							},
-							// running 2 frames
-							{
-									Images.stand_frame_back_big, Images.stand_frame_big
-							},
-							// running 3 frames
-							{
-									Images.stand_frame_back_big, Images.stand_frame_big
-							},
-							// running 4 frames
-							{
-									Images.stand_frame_back_big, Images.stand_frame_big
-							},
-							// dead frames
-							{
-									Images.stand_frame_back_big, Images.stand_frame_big
-							}
-					},
-					// fire mario frames
-					{
-							// standing frames
-							{
-									Images.stand_frame_back_big, Images.stand_frame_big
-							},
-							// jumping frames
-							{
-									Images.stand_frame_back_big, Images.stand_frame_big
-							},
-							// running 1 frames
-							{
-									Images.stand_frame_back_big, Images.stand_frame_big
-							},
-							// running 2 frames
-							{
-									Images.stand_frame_back_big, Images.stand_frame_big
-							},
-							// running 3 frames
-							{
-									Images.stand_frame_back_big, Images.stand_frame_big
-							},
-							// running 4 frames
-							{
-									Images.stand_frame_back_big, Images.stand_frame_big
-							},
-							// dead frames
-							{
-									Images.stand_frame_back_big, Images.stand_frame_big
-							}
-					}
-			};
-		}
-
-		public Image getFrame() {
-			return frames[powerState.ordinal()][frameState.ordinal()][lastDirectionForward ? 1 : 0];
-		}
-	}
 }

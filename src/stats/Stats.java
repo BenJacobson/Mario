@@ -43,7 +43,7 @@ public class Stats {
 		g2.drawString(getTime(), GameFrame.gameWidth()*13/16, 100 + metrics.getHeight());
 	}
 
-	private String getTime() {
+	public String getTime() {
 
 		long timeToUse;
 
@@ -68,6 +68,10 @@ public class Stats {
 		long timeStopped = System.currentTimeMillis() - pauseTime;
 		startTime += timeStopped;
 		state = State.NORMAL;
+	}
+
+	public void reset() {
+		startTime = System.currentTimeMillis();
 	}
 
 	public void gotCoin() {

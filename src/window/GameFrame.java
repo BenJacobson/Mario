@@ -2,6 +2,8 @@ package window;
 
 import mario.Mario;
 import main.MarioNes;
+import sun.audio.AudioPlayer;
+import sun.audio.AudioStream;
 import util.Images;
 import util.Maps;
 
@@ -23,13 +25,20 @@ public class GameFrame extends JFrame {
 	private static final int UNSCALED_WIDTH = 256;
 	private static final int UNSCALED_HEIGHT = 230;
 
-
 	public static int gameWidth() { return UNSCALED_WIDTH*PIXEL_SCALE; }
 	public static int gameHeight() { return UNSCALED_HEIGHT*PIXEL_SCALE; }
 	public static int blockDimension() { return PIXEL_SCALE*16; }
 	public static int pixelScale() { return PIXEL_SCALE; }
 
-	Timer timer = new Timer();
+	public static void play(AudioStream audioStream) {
+		AudioPlayer.player.start(audioStream);
+	}
+
+	public static void loop(AudioStream audioStream) {
+
+	}
+
+	private Timer timer = new Timer();
 
 	public GameFrame() {
 
@@ -53,6 +62,8 @@ public class GameFrame extends JFrame {
 		timer.schedule(new NextFrameTask(), 0, 20);
 
 		setVisible(true);
+
+		loopMusic();
 	}
 
 	private void setApplicationIcon(final String fileName) {
@@ -92,6 +103,14 @@ public class GameFrame extends JFrame {
 		super.setLocation( (screenWidth-windowWidth)/2, (screenHeight-windowHeight)/2 );
 	}
 
+	private void loopMusic() {
+		try {
+			AudioStream mainTheme = new AudioStream(Mario.class.getResourceAsStream("/sound/wav/mario theme.wav"));
+			play(mainTheme);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	private class NextFrameTask extends TimerTask {
 		public void run() {
