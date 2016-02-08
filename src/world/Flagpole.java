@@ -29,7 +29,7 @@ public class Flagpole {
 
 		g2.drawImage(ball, getX(offset), getY() - GameFrame.blockDimension(), null);
 
-		for ( int i = 0; i < 8; i++ ) {
+		for ( int i = 0; i < 9; i++ ) {
 			g2.drawImage(pole, getX(offset), getY() + GameFrame.blockDimension()*i, null);
 		}
 

@@ -90,7 +90,7 @@ public class Goomba implements Enemy {
 	public void hit() {
 		state = State.SQUISHED;
 		drawSquished = 0;
-
+		GameFrame.play("/sound/wav/stomp_enemy.wav");
 		World.getInstance().addPoints(100,pos.copy());
 	}
 

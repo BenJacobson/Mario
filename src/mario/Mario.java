@@ -170,11 +170,11 @@ public class Mario {
 
 		} else {
 
-			if (deadState++ > 50 && deadState < 100) {
+			if (deadState++ > 200) {
+				reset();
+			} else if (deadState > 50) {
 				vector.gravity();
 				currentPos.move(vector);
-			} else if (deadState > 150) {
-				reset();
 			}
 
 		}
