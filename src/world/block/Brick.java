@@ -84,10 +84,18 @@ public class Brick extends Block {
 		} else {
 			state = State.BOUNCE;
 			bounceState = 0;
+			GameFrame.play("/sound/wav/block_bump.wav");
 		}
 		int offset = World.getInstance().getOffest();
 		World.getInstance().findEnemyDeadByBlock(this.getRect(offset));
 		World.getInstance().findItemHitByBlock(this.getRect(offset));
+	}
+
+	@Override
+	public void reset() {
+		state = State.NORMAL;
+		bounceState = 0;
+		breakState = 0;
 	}
 
 	private enum State {

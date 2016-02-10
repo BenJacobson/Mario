@@ -3,7 +3,6 @@ package mario;
 import mechanics.Pos;
 import mechanics.Vector;
 import stats.Stats;
-import sun.audio.AudioPlayer;
 import sun.audio.AudioStream;
 import window.GameFrame;
 import world.collision.CollisionResult;
@@ -11,8 +10,6 @@ import world.World;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
-import java.io.IOException;
-import java.io.InputStream;
 
 // contains the information and subclasses about mario on screen
 public class Mario {
@@ -48,6 +45,7 @@ public class Mario {
 	private PowerState powerState = PowerState.SMALL;
 
 	private final MarioFrames marioFrames = new MarioFrames();
+	private AudioStream jumpSound;
 
 	private final int LEFT = 37;
 	private final int RIGHT = 39;
@@ -76,8 +74,8 @@ public class Mario {
 				frameState == FrameState.RUN3 || frameState == FrameState.RUN4) {
 
 			if (!canJumpAgain) {
-				// falling while running, switch frame to jump frame
-				frameState = FrameState.JUMP;
+				// falling while running, stay on frame
+				return;
 			}
 
 			numberOfPasses++;
@@ -309,19 +307,27 @@ public class Mario {
 
 		if (movingLeft) {
 			vector.moveLeft(running);
-			setRunFrame();
-			updateRunFrame();
+			if ( vector.getDx() > 0 && canJumpAgain ) {
+				frameState = FrameState.TURN;
+			} else {
+				setRunFrame();
+				updateRunFrame();
+			}
 		} else if (movingRight) {
 			vector.moveRight(running);
-			setRunFrame();
-			updateRunFrame();
+			if ( vector.getDx() < 0 && canJumpAgain ) {
+				frameState = FrameState.TURN;
+			} else {
+				setRunFrame();
+				updateRunFrame();
+			}
 		} else {
 			vector.reduceSpeed();
 			updateRunFrame();
 		}
 		vector.gravity();
 
-		if (vector.getDx() == 0 && canJumpAgain) {
+		if ( vector.getDx() == 0 && canJumpAgain && !movingLeft && !movingRight ) {
 			frameState = FrameState.STAND;
 		}
 	}
@@ -334,7 +340,7 @@ public class Mario {
 			jump = false;
 			canJumpAgain = false;
 			frameState = FrameState.JUMP;
-			GameFrame.play( powerState == PowerState.SMALL ? "/sound/wav/jump_small.wav" : "/sound/wav/jump_super.wav");
+			jumpSound = GameFrame.play( powerState == PowerState.SMALL ? "/sound/wav/jump_small_q.wav" : "/sound/wav/jump_super.wav");
 		} else if (jumpHeld && jumpHeldState <= jumpHeldMax) {
 
 			int jumpPassesToWait = 0;
@@ -349,8 +355,12 @@ public class Mario {
 		}
 	}
 
+	public void stopJumpSound() {
+		// GameFrame.stop(jumpSound);
+	}
+
 	enum FrameState {
-		STAND, JUMP, RUN1, RUN2, RUN3, RUN4, DEAD
+		STAND, JUMP, RUN1, RUN2, RUN3, RUN4, TURN, DEAD
 	}
 
 	enum PowerState {

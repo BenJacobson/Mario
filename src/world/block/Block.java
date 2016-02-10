@@ -1,6 +1,7 @@
 package world.block;
 
 import mechanics.Pos;
+import window.GameFrame;
 import world.item.Item;
 
 import java.awt.*;
@@ -15,7 +16,9 @@ public class Block {
 
 	protected Image image;
 
-	protected List<Item> items = null;
+	protected Item item = null;
+
+	protected boolean big;
 
 	protected Block(Pos pos) {
 		this.pos = pos;
@@ -49,13 +52,15 @@ public class Block {
 		return new Rectangle2D.Double(getX(offset), getY(), getWidth(), getHeight());
 	}
 
-	public void hit(boolean big) {}
+	public void hit(boolean big) {
+		this.big = big;
+		GameFrame.play("/sound/wav/block_bump.wav");
+	}
+
+	public void reset() {}
 
 	public void addItem(Item item) {
-		if ( items == null ) {
-			items = new LinkedList<>();
-		}
-		items.add(item);
+		this.item = item;
 	}
 
 }

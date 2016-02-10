@@ -11,20 +11,21 @@ import world.collision.CollisionResult;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 
-public class Mushroom implements Item {
+public class PowerUp implements Item {
 
 	Pos originalPos;
 	Pos pos;
 	Vector vector = new Vector();
-	Image image;
+	Image imageMushroom = Images.mushroom;
+	Image imageFireFlower = Images.fireflower;
 	State state = State.READY;
 	int riseState;
 	int riseFrames = 40;
+	boolean mushroom = true;
 
-	public Mushroom(Pos pos) {
+	public PowerUp(Pos pos) {
 		this.pos = pos;
 		this.originalPos = pos.copy();
-		this.image = Images.mushroom;
 		this.vector.setDy((double)-GameFrame.blockDimension()/riseFrames);
 	}
 
@@ -39,7 +40,7 @@ public class Mushroom implements Item {
 	public void draw(Graphics2D g2, int offset) {
 		update();
 		if ( state == State.RISE || state == State.NORMAL ) {
-			g2.drawImage(image, getX(offset), getY(), null);
+			g2.drawImage((mushroom ? imageMushroom : imageFireFlower), getX(offset), getY(), null);
 		}
 
 	}
@@ -47,14 +48,14 @@ public class Mushroom implements Item {
 	private void update() {
 		if ( state == State.RISE ) {
 			pos.move(vector);
-			if ( riseState++ > riseFrames ) {
+			if ( ++riseState >= riseFrames ) {
 				state = State.NORMAL;
 				vector.hitY();
 				for ( int i = 0; i < 6; i++ ) {
 					vector.moveRight(false);
 				}
 			}
-		} else if ( state == State.NORMAL ) {
+		} else if ( state == State.NORMAL && mushroom ) {
 			vector.gravity();
 			pos.move(vector);
 			checkCollision();
@@ -75,14 +76,15 @@ public class Mushroom implements Item {
 
 	public Rectangle2D getRect(int offset) {
 		if ( state == State.NORMAL ) {
-			return new Rectangle2D.Double(pos.getX() - offset, pos.getY(), image.getWidth(null), image.getHeight(null));
+			return new Rectangle2D.Double(pos.getX() - offset, pos.getY(), imageMushroom.getWidth(null), imageMushroom.getHeight(null));
 		} else {
 			return new Rectangle2D.Double(0,0,0,0);
 		}
 	}
 
 	@Override
-	public void start() {
+	public void start(boolean big) {
+		mushroom = !big;
 		state = State.RISE;
 		GameFrame.play("/sound/wav/powerup_appears.wav");
 	}

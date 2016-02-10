@@ -1,7 +1,6 @@
 package window;
 
 import mario.Mario;
-import main.MarioNes;
 import sun.audio.AudioPlayer;
 import sun.audio.AudioStream;
 import util.Images;
@@ -12,9 +11,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -31,33 +28,40 @@ public class GameFrame extends JFrame {
 	public static int pixelScale() { return PIXEL_SCALE; }
 
 	private static AudioStream theme;
-	public static void play(String file) {
+
+	public static AudioStream play(String file) {
 		try {
 			AudioStream audioStream = new AudioStream(GameFrame.class.getResourceAsStream(file));
 			AudioPlayer.player.start(audioStream);
+			return audioStream;
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(1);
+			return null;
 		}
+	}
+
+	public static void stop(AudioStream audioStream) {
+		AudioPlayer.player.stop(audioStream);
 	}
 
 	public static void stopTheme() {
-		AudioPlayer.player.stop(theme);
+		stop(theme);
 	}
 
 	public static void startTheme() {
-		try {
-			AudioStream audioStream = new AudioStream(GameFrame.class.getResourceAsStream("/sound/wav/mario theme.wav"));
-			theme = audioStream;
-			AudioPlayer.player.start(audioStream);
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.exit(1);
-		}
+		theme = play("/sound/wav/mario theme.wav");
 	}
 
-	public static void loop(AudioStream audioStream) {
-
+	public static void loopTheme() {
+		try {
+			if (theme != null && theme.available() < 3000) {
+				stopTheme();
+				startTheme();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private Timer timer = new Timer();
@@ -127,6 +131,7 @@ public class GameFrame extends JFrame {
 
 	private class NextFrameTask extends TimerTask {
 		public void run() {
+			loopTheme();
 			repaint();
 		}
 	}

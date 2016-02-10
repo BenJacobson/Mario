@@ -1,5 +1,6 @@
 package world.block;
 
+import mario.Mario;
 import mechanics.Pos;
 import util.Images;
 import window.GameFrame;
@@ -11,7 +12,8 @@ import java.awt.*;
 public class Question extends Block {
 
 	private State state = State.NORMAL;
-	private int bounceState = 0;
+	private int bounceState = -1;
+	private Image usedImage = Images.used;
 
 	public Question(Pos pos) {
 		super(pos);
@@ -20,12 +22,12 @@ public class Question extends Block {
 
 	@Override
 	public void draw(Graphics2D g2, int offset) {
-		g2.drawImage(image, getX(offset), getBounceY(getY()), null);
+		g2.drawImage( (state != State.USED ? image : usedImage), getX(offset), getBounceY(getY()), null);
 	}
 
 	private int getBounceY(int y) {
 
-		if ( state == State.BOUNCE ) {
+		if ( bounceState > -1 ) {
 
 			if ( bounceState < 2 ) {
 				y -= 2 * GameFrame.pixelScale();
@@ -42,8 +44,9 @@ public class Question extends Block {
 			} else if ( bounceState < 10 ) {
 				y += 2 * GameFrame.pixelScale();
 			} else {
-				state = State.NORMAL;
-				if (items != null) doItem();
+				doItem();
+				bounceState = -1;
+				return y;
 			}
 
 			bounceState++;
@@ -54,23 +57,32 @@ public class Question extends Block {
 
 	@Override
 	public void hit(boolean big) {
-		state = State.BOUNCE;
-		bounceState = 0;
-		int offset = World.getInstance().getOffest();
-		World.getInstance().findEnemyDeadByBlock(this.getRect(offset));
-		World.getInstance().findItemHitByBlock(this.getRect(offset));
-	}
-
-	private void doItem() {
-		for ( Item item : items ) {
-			if ( item.ready() ) {
-				item.start();
-				return;
+		this.big = big;
+		Mario.getInstance().stopJumpSound();
+		GameFrame.play("/sound/wav/block_bump.wav");
+		if ( state != State.USED ) {
+			bounceState = 0;
+			int offset = World.getInstance().getOffest();
+			World.getInstance().findEnemyDeadByBlock(this.getRect(offset));
+			World.getInstance().findItemHitByBlock(this.getRect(offset));
+			if ( item == null || !item.ready() ) {
+				state = State.USED;
 			}
 		}
 	}
 
+	@Override
+	public void reset() {
+		state = State.NORMAL;
+	}
+
+	private void doItem() {
+		if ( item != null && item.ready() ) {
+			item.start(big);
+		}
+	}
+
 	private enum State {
-		NORMAL, BOUNCE
+		NORMAL, USED
 	}
 }

@@ -1,17 +1,15 @@
 package util;
 
 import world.Flagpole;
-import world.World;
 import world.background.Background;
 import world.enemy.Enemy;
 import world.enemy.Goomba;
-import main.MarioNes;
 import mechanics.Pos;
 import window.GameFrame;
-import world.Coin;
+import world.BlockCoin;
 import world.block.*;
 import world.item.Item;
-import world.item.Mushroom;
+import world.item.PowerUp;
 
 import java.io.*;
 import java.util.*;
@@ -20,7 +18,7 @@ public class Maps {
 
 	public static List<Block> blocks;
 	public static List<Enemy> enemies;
-	public static List<Coin> coins;
+	public static List<BlockCoin> coins;
 	public static List<Background> backgrounds;
 	public static List<Item> items;
 	public static Flagpole flagpole;
@@ -53,7 +51,7 @@ public class Maps {
 
 		List<Block> blocks = new LinkedList<>();
 		List<Enemy> enemies = new LinkedList<>();
-		List<Coin> coins = new LinkedList<>();
+		List<BlockCoin> coins = new LinkedList<>();
 		List<Background> backgrounds = new LinkedList<>();
 		List<Item> items = new LinkedList<>();
 
@@ -88,14 +86,14 @@ public class Maps {
 				} else if ( c == 'e' ) {
 					enemies.add(new Goomba(new Pos(xcoord, ycoord)));
 				} else if ( c == 'c' ) {
-					coins.add(new Coin(new Pos(xcoord, ycoord)));
+					// coins.add();
 				} else if ( c == 'l' ) {
 					backgrounds.add(new Background(Images.hill_large, new Pos(xcoord, ycoord)));
 				} else if ( c == 'h' ) {
 					backgrounds.add(new Background(Images.hill_small, new Pos(xcoord, ycoord)));
 				} else if ( c == 'm' ) {
 					Block block = new Question(new Pos(xcoord, ycoord));
-					Item item = new Mushroom(new Pos(xcoord, ycoord));
+					Item item = new PowerUp(new Pos(xcoord, ycoord));
 					items.add(item);
 					block.addItem(item);
 					blocks.add(block);

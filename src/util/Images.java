@@ -34,6 +34,7 @@ public class Images {
 	public static final Image pipeBottom = initFrame("pipe_bottom.png");
 	public static final Image pipeTop = initFrame("pipe_top.png");
 	public static final Image question = initFrame("block_question.png");
+	public static final Image used = initFrame("block_used.png");
 	public static final Image square = initFrame("block_square.png");
 
 	// coin images
@@ -50,6 +51,8 @@ public class Images {
 	public static final Image run_frame_2_back = initFrame("mario_run_2_back.png");
 	public static final Image run_frame_4 = initFrame("mario_run_4.png");
 	public static final Image run_frame_4_back = initFrame("mario_run_4_back.png");
+	public static final Image turn_frame = initFrame("mario_turning.png");
+	public static final Image turn_frame_back = initFrame("mario_turning_back.png");
 	public static final Image dead_frame = initFrame("mario_dead.png");
 
 	// mario big images
@@ -64,6 +67,7 @@ public class Images {
 
 	// item images
 	public static final Image mushroom = initFrame("item_mushroom.png");
+	public static final Image fireflower = initFrame("item_fireflower.png");
 
 	// background images
 	public static final Image hill_large = initFrame("hill_large.png");

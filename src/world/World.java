@@ -49,6 +49,11 @@ public class World {
 		resetOffset();
 		resetEnemies();
 		resetItems();
+		resetBlocks();
+	}
+
+	private void resetBlocks() {
+		blocks.forEach( block -> block.reset() );
 	}
 
 	private void resetOffset() {

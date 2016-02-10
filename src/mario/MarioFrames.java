@@ -7,7 +7,7 @@ import java.awt.*;
 class MarioFrames {
 
 	private Image	[/* small, big, fire */]
-					[/* stand, jump, run1, run2, run3, run4, dead*/]
+					[/* stand, jump, run1, run2, run3, run4, turn, dead*/]
 					[/* back, forward */]
 			frames = initFramesStructure();
 
@@ -38,6 +38,10 @@ class MarioFrames {
 						// running 4 frames
 						{
 								Images.run_frame_4_back, Images.run_frame_4
+						},
+						// turn frames
+						{
+								Images.turn_frame, Images.turn_frame_back
 						},
 						// dead frames
 						{
@@ -70,6 +74,10 @@ class MarioFrames {
 						{
 								Images.stand_frame_back_big, Images.stand_frame_big
 						},
+						// turning frames
+						{
+								Images.stand_frame_back_big, Images.stand_frame_big
+						},
 						// dead frames
 						{
 								Images.stand_frame_back_big, Images.stand_frame_big
@@ -98,6 +106,10 @@ class MarioFrames {
 								Images.stand_frame_back_big, Images.stand_frame_big
 						},
 						// running 4 frames
+						{
+								Images.stand_frame_back_big, Images.stand_frame_big
+						},
+						// turning frames
 						{
 								Images.stand_frame_back_big, Images.stand_frame_big
 						},

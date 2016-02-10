@@ -7,7 +7,7 @@ public interface Item {
 
 	void draw(Graphics2D g2, int offset);
 	boolean ready();
-	void start();
+	void start(boolean big);
 	void end();
 	void bounce(boolean front);
 
