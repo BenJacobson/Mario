@@ -95,7 +95,7 @@ public class Maps {
 					Block block = new Question(new Pos(xcoord, ycoord));
 					Item item = new PowerUp(new Pos(xcoord, ycoord));
 					items.add(item);
-					block.addItem(item);
+					block.setItem(item);
 					blocks.add(block);
 				} else if ( c == 'f' ) {
 					flagpole = new Flagpole(new Pos(xcoord, ycoord));

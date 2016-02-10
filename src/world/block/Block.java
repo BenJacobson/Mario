@@ -59,7 +59,7 @@ public class Block {
 
 	public void reset() {}
 
-	public void addItem(Item item) {
+	public void setItem(Item item) {
 		this.item = item;
 	}
 

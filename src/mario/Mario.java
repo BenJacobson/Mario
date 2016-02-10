@@ -221,7 +221,7 @@ public class Mario {
 	}
 
 	private void checkDead() {
-		if ( currentPos.getY() > 250 * GameFrame.pixelScale() || Stats.getInstance().getTime().equals("0") ) {
+		if ( currentPos.getY() > 250 * GameFrame.pixelScale() || Integer.valueOf(Stats.getInstance().getTime()) < 1 ) {
 			dead();
 		}
 	}
@@ -266,7 +266,7 @@ public class Mario {
 
 		canJumpAgain = collisionResult.isTopHit();
 
-		if (collisionResult.isTopHit() && !isInRunState() && isNotDead()) {
+		if (collisionResult.isTopHit() && !movingLeft && !movingRight && isNotDead()) {
 			frameState = FrameState.STAND;
 		}
 
@@ -308,6 +308,7 @@ public class Mario {
 		if (movingLeft) {
 			vector.moveLeft(running);
 			if ( vector.getDx() > 0 && canJumpAgain ) {
+				vector.reduceSpeed();
 				frameState = FrameState.TURN;
 			} else {
 				setRunFrame();
@@ -316,6 +317,7 @@ public class Mario {
 		} else if (movingRight) {
 			vector.moveRight(running);
 			if ( vector.getDx() < 0 && canJumpAgain ) {
+				vector.reduceSpeed();
 				frameState = FrameState.TURN;
 			} else {
 				setRunFrame();

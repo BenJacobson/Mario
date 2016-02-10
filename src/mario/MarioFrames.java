@@ -41,7 +41,7 @@ class MarioFrames {
 						},
 						// turn frames
 						{
-								Images.turn_frame, Images.turn_frame_back
+								Images.turn_frame_back, Images.turn_frame
 						},
 						// dead frames
 						{

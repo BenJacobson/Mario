@@ -4,6 +4,7 @@ import mario.Mario;
 import mechanics.Pos;
 import util.Images;
 import window.GameFrame;
+import world.BlockCoin;
 import world.World;
 import world.item.Item;
 
@@ -18,6 +19,7 @@ public class Question extends Block {
 	public Question(Pos pos) {
 		super(pos);
 		image = Images.question;
+		item = new BlockCoin(pos.copy(), 1);
 	}
 
 	@Override
@@ -65,9 +67,7 @@ public class Question extends Block {
 			int offset = World.getInstance().getOffest();
 			World.getInstance().findEnemyDeadByBlock(this.getRect(offset));
 			World.getInstance().findItemHitByBlock(this.getRect(offset));
-			if ( item == null || !item.ready() ) {
-				state = State.USED;
-			}
+			state = State.USED;
 		}
 	}
 
