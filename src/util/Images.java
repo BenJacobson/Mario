@@ -33,7 +33,9 @@ public class Images {
 	public static final Image invisible = initFrame("block_invisible.png");
 	public static final Image pipeBottom = initFrame("pipe_bottom.png");
 	public static final Image pipeTop = initFrame("pipe_top.png");
-	public static final Image question = initFrame("block_question.png");
+	public static final Image question_normal = initFrame("block_question_normal.png");
+	public static final Image question_dark = initFrame("block_question_dark.png");
+	public static final Image question_brown = initFrame("block_question_brown.png");
 	public static final Image used = initFrame("block_used.png");
 	public static final Image square = initFrame("block_square.png");
 

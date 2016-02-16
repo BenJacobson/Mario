@@ -49,6 +49,7 @@ public class Stats {
 	private Image getCoinImage() {
 		switch(FlashState.getFlashState()) {
 			case TWO:
+			case FOUR:
 				return Images.coin_brown;
 			case THREE:
 				return Images.coin_dark;

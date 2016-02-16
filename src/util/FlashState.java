@@ -10,7 +10,7 @@ public class FlashState {
 	}
 
 	public static void advanceState() {
-		if ( state++ > 5 ) {
+		if ( state++ > 4 ) {
 			state = 0;
 
 			switch (curState) {
@@ -23,6 +23,12 @@ public class FlashState {
 				case THREE:
 					curState = State.FOUR;
 					break;
+				case FOUR:
+					curState = State.FIVE;
+					break;
+				case FIVE:
+					curState = State.SIX;
+					break;
 				default:
 					curState = State.ONE;
 			}
@@ -30,7 +36,7 @@ public class FlashState {
 	}
 
 	public enum State {
-		ONE, TWO, THREE, FOUR;
+		ONE, TWO, THREE, FOUR, FIVE, SIX
 	}
 
 }

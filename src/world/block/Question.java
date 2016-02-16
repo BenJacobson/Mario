@@ -3,6 +3,7 @@ package world.block;
 import mario.Mario;
 import mechanics.Pos;
 import util.AudioController;
+import util.FlashState;
 import util.Images;
 import window.GameFrame;
 import world.BlockCoin;
@@ -16,16 +17,30 @@ public class Question extends Block {
 	private State state = State.NORMAL;
 	private int bounceState = -1;
 	private Image usedImage = Images.used;
+	private Image darkImage = Images.question_dark;
+	private Image brownImage = Images.question_brown;
 
 	public Question(Pos pos) {
 		super(pos);
-		image = Images.question;
+		image = Images.question_normal;
 		item = new BlockCoin(pos.copy(), 1);
 	}
 
 	@Override
 	public void draw(Graphics2D g2, int offset) {
-		g2.drawImage( (state != State.USED ? image : usedImage), getX(offset), getBounceY(getY()), null);
+		g2.drawImage( (state != State.USED ? getFlashImage() : usedImage), getX(offset), getBounceY(getY()), null);
+	}
+
+	private Image getFlashImage() {
+		switch (FlashState.getFlashState()) {
+			case TWO:
+			case FOUR:
+				return brownImage;
+			case THREE:
+				return darkImage;
+			default:
+				return image;
+		}
 	}
 
 	private int getBounceY(int y) {
