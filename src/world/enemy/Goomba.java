@@ -4,6 +4,7 @@ package world.enemy;
 import mario.Mario;
 import mechanics.Pos;
 import mechanics.Vector;
+import util.AudioController;
 import util.Images;
 import window.GameFrame;
 import world.World;
@@ -90,7 +91,7 @@ public class Goomba implements Enemy {
 	public void hit() {
 		state = State.SQUISHED;
 		drawSquished = 0;
-		GameFrame.play("/sound/wav/stomp_enemy.wav");
+		AudioController.play("/sound/wav/stomp_enemy.wav");
 		World.getInstance().addPoints(100,pos.copy());
 	}
 

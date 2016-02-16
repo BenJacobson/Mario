@@ -1,5 +1,6 @@
 package stats;
 
+import util.FlashState;
 import util.Images;
 import window.GameFrame;
 
@@ -29,18 +30,31 @@ public class Stats {
 		g2.setColor(Color.WHITE);
 		g2.setFont(font);
 		FontMetrics metrics = g2.getFontMetrics();
+		int y = GameFrame.blockDimension();
+		int line2 = metrics.getHeight()/2 + GameFrame.pixelScale();
 
-		g2.drawString("MARIO", GameFrame.gameWidth()/16, 100);
-		g2.drawString(String.format("%05d", score), GameFrame.gameWidth()/16, 100 + metrics.getHeight());
+		g2.drawString("MARIO", GameFrame.gameWidth()/16, y);
+		g2.drawString(String.format("%05d", score), GameFrame.gameWidth()/16, y + line2);
 
-		g2.drawImage(Images.coin, GameFrame.gameWidth()*5/16, 100 + metrics.getHeight() - GameFrame.blockDimension()/2, null);
-		g2.drawString("x"+coins, GameFrame.gameWidth()*6/16, 100 + metrics.getHeight());
+		g2.drawImage(getCoinImage(), GameFrame.gameWidth()*5/16, y + line2 - GameFrame.blockDimension()/2, null);
+		g2.drawString(String.format("x%02d",coins), GameFrame.gameWidth()*11/32, y + line2);
 
-		g2.drawString("WORLD", GameFrame.gameWidth()*9/16, 100);
-		g2.drawString(" 1-1", GameFrame.gameWidth()*9/16, 100 + metrics.getHeight());
+		g2.drawString("WORLD", GameFrame.gameWidth()*9/16, y);
+		g2.drawString(" 1-1", GameFrame.gameWidth()*9/16, y + line2);
 
-		g2.drawString("TIME", GameFrame.gameWidth()*13/16, 100);
-		g2.drawString(getTime(), GameFrame.gameWidth()*13/16, 100 + metrics.getHeight());
+		g2.drawString("TIME", GameFrame.gameWidth()*13/16, y);
+		g2.drawString(" "+getTime(), GameFrame.gameWidth()*13/16, y + line2);
+	}
+
+	private Image getCoinImage() {
+		switch(FlashState.getFlashState()) {
+			case TWO:
+				return Images.coin_brown;
+			case THREE:
+				return Images.coin_dark;
+			default:
+				return Images.coin_normal;
+		}
 	}
 
 	public String getTime() {

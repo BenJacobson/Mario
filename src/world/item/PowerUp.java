@@ -3,6 +3,7 @@ package world.item;
 
 import mechanics.Pos;
 import mechanics.Vector;
+import util.AudioController;
 import util.Images;
 import window.GameFrame;
 import world.World;
@@ -86,14 +87,14 @@ public class PowerUp implements Item {
 	public void start(boolean big) {
 		mushroom = !big;
 		state = State.RISE;
-		GameFrame.play("/sound/wav/powerup_appears.wav");
+		AudioController.play("/sound/wav/powerup_appears.wav");
 	}
 
 	@Override
 	public void end() {
 		World.getInstance().addPoints(1000, pos.copy());
 		state = State.EATEN;
-		GameFrame.play("/sound/wav/powerup_eaten.wav");
+		AudioController.play("/sound/wav/powerup_eaten.wav");
 	}
 
 	@Override

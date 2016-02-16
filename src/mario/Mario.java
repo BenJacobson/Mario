@@ -4,6 +4,7 @@ import mechanics.Pos;
 import mechanics.Vector;
 import stats.Stats;
 import sun.audio.AudioStream;
+import util.AudioController;
 import window.GameFrame;
 import world.collision.CollisionResult;
 import world.World;
@@ -235,8 +236,8 @@ public class Mario {
 		vector.stop();
 		vector.jump();
 		Stats.getInstance().pause();
-		GameFrame.stopTheme();
-		GameFrame.play("/sound/wav/mario_die.wav");
+		AudioController.stopTheme();
+		AudioController.play("/sound/wav/mario_die.wav");
 	}
 
 	public boolean isNotDead() {
@@ -254,7 +255,7 @@ public class Mario {
 		jump = false;
 		Stats.getInstance().resume();
 		Stats.getInstance().reset();
-		GameFrame.startTheme();
+		AudioController.startTheme();
 	}
 
 	private void handleCollisions() {
@@ -342,7 +343,7 @@ public class Mario {
 			jump = false;
 			canJumpAgain = false;
 			frameState = FrameState.JUMP;
-			jumpSound = GameFrame.play( powerState == PowerState.SMALL ? "/sound/wav/jump_small.wav" : "/sound/wav/jump_super.wav");
+			jumpSound = AudioController.play( powerState == PowerState.SMALL ? "/sound/wav/jump_small.wav" : "/sound/wav/jump_super.wav");
 		} else if (jumpHeld && jumpHeldState <= jumpHeldMax) {
 
 			int jumpPassesToWait = 0;

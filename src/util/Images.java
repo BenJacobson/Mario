@@ -38,7 +38,9 @@ public class Images {
 	public static final Image square = initFrame("block_square.png");
 
 	// coin images
-	public static final Image coin = initFrame("coin_normal.png");
+	public static final Image coin_normal = initFrame("coin_normal.png");
+	public static final Image coin_dark = initFrame("coin_dark.png");
+	public static final Image coin_brown = initFrame("coin_brown.png");
 
 	// mario small images
 	public static final Image stand_frame = initFrame("mario_stand.png");

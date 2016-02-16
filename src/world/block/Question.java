@@ -2,6 +2,7 @@ package world.block;
 
 import mario.Mario;
 import mechanics.Pos;
+import util.AudioController;
 import util.Images;
 import window.GameFrame;
 import world.BlockCoin;
@@ -61,7 +62,7 @@ public class Question extends Block {
 	public void hit(boolean big) {
 		this.big = big;
 		Mario.getInstance().stopJumpSound();
-		GameFrame.play("/sound/wav/block_bump.wav");
+		AudioController.play("/sound/wav/block_bump.wav");
 		if ( state != State.USED ) {
 			bounceState = 0;
 			int offset = World.getInstance().getOffest();

@@ -18,7 +18,7 @@ public class BlockCoin implements Item {
 
 	public BlockCoin(Pos pos, int numCoins) {
 		this.pos = pos;
-		this.image = Images.coin;
+		this.image = Images.coin_normal;
 		this.numCoins = numCoins;
 		this.numCoinsLeft = numCoins;
 	}

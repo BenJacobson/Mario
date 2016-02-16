@@ -3,6 +3,7 @@ package world.block;
 
 import mechanics.Pos;
 import mechanics.Vector;
+import util.AudioController;
 import util.Images;
 import window.GameFrame;
 import world.World;
@@ -80,11 +81,11 @@ public class Brick extends Block {
 			state = State.BREAK;
 			breakState = 0;
 			brokenPositions.set(pos);
-			GameFrame.play("/sound/wav/break_block.wav");
+			AudioController.play("/sound/wav/break_block.wav");
 		} else {
 			state = State.BOUNCE;
 			bounceState = 0;
-			GameFrame.play("/sound/wav/block_bump.wav");
+			AudioController.play("/sound/wav/block_bump.wav");
 		}
 		int offset = World.getInstance().getOffest();
 		World.getInstance().findEnemyDeadByBlock(this.getRect(offset));
