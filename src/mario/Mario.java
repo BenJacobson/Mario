@@ -342,7 +342,7 @@ public class Mario {
 			jump = false;
 			canJumpAgain = false;
 			frameState = FrameState.JUMP;
-			jumpSound = GameFrame.play( powerState == PowerState.SMALL ? "/sound/wav/jump_small_q.wav" : "/sound/wav/jump_super.wav");
+			jumpSound = GameFrame.play( powerState == PowerState.SMALL ? "/sound/wav/jump_small.wav" : "/sound/wav/jump_super.wav");
 		} else if (jumpHeld && jumpHeldState <= jumpHeldMax) {
 
 			int jumpPassesToWait = 0;
