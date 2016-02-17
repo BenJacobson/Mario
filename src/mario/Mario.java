@@ -222,7 +222,7 @@ public class Mario {
 	}
 
 	private void checkDead() {
-		if ( currentPos.getY() > 250 * GameFrame.pixelScale() || Integer.valueOf(Stats.getInstance().getTime()) < 1 ) {
+		if ( currentPos.getY() > 250 * GameFrame.pixelScale() || Stats.getInstance().getTime() < 1 ) {
 			dead();
 		}
 	}
