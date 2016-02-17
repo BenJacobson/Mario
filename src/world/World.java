@@ -31,6 +31,8 @@ public class World {
 	private CollisionOperator collisionOperator = new CollisionOperator();
 
 	private int offset = 0;
+	private final int halfway = 1300*GameFrame.pixelScale();
+	private boolean madeHalfway = false;
 
 	private List<Block> blocks = Maps.blocks;
 	private List<Enemy> enemies = Maps.enemies;
@@ -43,6 +45,10 @@ public class World {
 
 	public void addOffset(int add) {
 		offset += add;
+
+		if (offset > halfway) {
+			madeHalfway = true;
+		}
 	}
 
 	public void reset() {
@@ -57,7 +63,11 @@ public class World {
 	}
 
 	private void resetOffset() {
-		offset = 0;
+		if ( madeHalfway ) {
+			offset = halfway;
+		} else {
+			offset = 0;
+		}
 	}
 
 	private void resetEnemies() {

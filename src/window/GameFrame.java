@@ -29,8 +29,6 @@ public class GameFrame extends JFrame {
 	public static int blockDimension() { return PIXEL_SCALE*16; }
 	public static int pixelScale() { return PIXEL_SCALE; }
 
-	private Timer timer = new Timer();
-
 	public GameFrame() {
 
 		Maps.initBlocks("1-1");
@@ -50,6 +48,7 @@ public class GameFrame extends JFrame {
 
 		setContentPane(new GameCanvas());
 
+		Timer timer = new Timer();
 		timer.schedule(new NextFrameTask(), 0, 20);
 
 		setVisible(true);

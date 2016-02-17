@@ -1,14 +1,10 @@
 package util;
 
-import main.MarioNes;
-import window.GameCanvas;
 import window.GameFrame;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 
 public class Images {
@@ -43,6 +39,10 @@ public class Images {
 	public static final Image coin_normal = initFrame("coin_normal.png");
 	public static final Image coin_dark = initFrame("coin_dark.png");
 	public static final Image coin_brown = initFrame("coin_brown.png");
+	public static final Image coin_spin1 = initFrame("coin_spin1.png");
+	public static final Image coin_spin2 = initFrame("coin_spin2.png");
+	public static final Image coin_spin3 = initFrame("coin_spin3.png");
+	public static final Image coin_spin4 = initFrame("coin_spin4.png");
 
 	// mario small images
 	public static final Image stand_frame = initFrame("mario_stand.png");

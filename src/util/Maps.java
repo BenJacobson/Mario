@@ -80,7 +80,11 @@ public class Maps {
 				} else if ( c == 'r' ) {
 					blocks.add(new Brick(new Pos(xcoord, ycoord)));
 				} else if ( c == '?' ) {
-					blocks.add(new Question(new Pos(xcoord, ycoord)));
+					Block block = new Question(new Pos(xcoord, ycoord));
+					Item item = new BlockCoin(new Pos(xcoord, ycoord), 1);
+					items.add(item);
+					block.setItem(item);
+					blocks.add(block);
 				} else if ( c == 's' ) {
 					blocks.add(new Square(new Pos(xcoord, ycoord)));
 				} else if ( c == 'e' ) {

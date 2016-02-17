@@ -23,7 +23,6 @@ public class Question extends Block {
 	public Question(Pos pos) {
 		super(pos);
 		image = Images.question_normal;
-		item = new BlockCoin(pos.copy(), 1);
 	}
 
 	@Override
