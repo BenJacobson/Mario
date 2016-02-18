@@ -299,11 +299,6 @@ public class Mario {
 		return new Rectangle2D.Double(currentPos.getX(), currentPos.getY(), width, height);
 	}
 
-	private boolean isInRunState() {
-		return frameState == FrameState.RUN1 || frameState == FrameState.RUN2 ||
-				frameState == FrameState.RUN3 || frameState == FrameState.RUN4;
-	}
-
 	private void updateVector() {
 
 		if (movingLeft) {

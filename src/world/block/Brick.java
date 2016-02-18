@@ -17,12 +17,13 @@ public class Brick extends Block {
 	private int bounceState = 0;
 	private int breakState = 0;
 	private BrokenPositions brokenPositions = new BrokenPositions();
-	private Image brokenImage;
+	private Image brokenImage, usedImage;
 
 	public Brick(Pos pos) {
 		super(pos);
 		image = Images.brick;
 		brokenImage = image.getScaledInstance(image.getWidth(null)/3, image.getHeight(null)/3, 0);
+		usedImage = Images.used;
 	}
 
 	@Override
@@ -34,7 +35,7 @@ public class Brick extends Block {
 		} else if ( !(state == State.GONE) ) {
 			int x = getX(offset);
 			int y = getBounceY(getY());
-			g2.drawImage(image, x, y, null);
+			g2.drawImage((state == State.USED ? usedImage : image), x, y, null);
 		}
 	}
 
@@ -77,8 +78,15 @@ public class Brick extends Block {
 			return;
 		} else if ( state == State.USED ) {
 			AudioController.play("/sound/wav/block_bump.wav");
-		} else if ( item != null && item.ready() ) {
-
+		} else if ( item != null ) {
+			item.start(big);
+			if ( item.ready() ) {
+				state = State.BOUNCE;
+			} else {
+				state = State.USED;
+			}
+			bounceState = 0;
+			AudioController.play("/sound/wav/block_bump.wav");
 		} else if ( big ) {
 			state = State.BREAK;
 			breakState = 0;
@@ -99,6 +107,7 @@ public class Brick extends Block {
 		state = State.NORMAL;
 		bounceState = 0;
 		breakState = 0;
+		if ( item != null ) item.reset();
 	}
 
 	private enum State {

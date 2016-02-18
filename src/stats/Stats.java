@@ -95,7 +95,13 @@ public class Stats {
 	}
 
 	public void gotCoin() {
-		coins++;
+		if ( coins < 99 ) {
+			coins++;
+		} else {
+			coins = 0;
+			// add 1up
+		}
+
 	}
 
 	public void addPoints(int amount) {

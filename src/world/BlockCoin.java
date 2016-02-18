@@ -75,7 +75,9 @@ public class BlockCoin implements Item {
 	@Override
 	public void start(boolean big) {
 		if ( numCoinsLeft > 0 && state == State.WAIT) {
+			numCoinsLeft--;
 			state = State.FLING;
+			flingState = 0;
 			initVector();
 			pos = originalPos.copy();
 			AudioController.play("/sound/wav/coin.wav");
@@ -85,8 +87,9 @@ public class BlockCoin implements Item {
 	private void initVector() {
 		vector.stop();
 		vector.jump();
-		vector.jumpHold();
-		vector.jumpHold();
+		for ( int i = 0; i < 5; i++ ) {
+			vector.jumpHold();
+		}
 	}
 
 	@Override
