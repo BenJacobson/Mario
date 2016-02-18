@@ -6,7 +6,7 @@ import mechanics.Vector;
 import stats.Stats;
 import util.AudioController;
 import util.Images;
-import window.GameCanvas;
+import window.GameFrame;
 import world.item.Item;
 
 import java.awt.*;
@@ -14,10 +14,10 @@ import java.awt.geom.Rectangle2D;
 
 public class BlockCoin implements Item {
 
-	Image image1 = Images.coin_spin1;
-	Image image2 = Images.coin_spin2;
-	Image image3 = Images.coin_spin3;
-	Image image4 = Images.coin_spin4;
+	private Image image1 = Images.coin_spin1;
+	private Image image2 = Images.coin_spin2;
+	private Image image3 = Images.coin_spin3;
+	private Image image4 = Images.coin_spin4;
 
 	private Pos originalPos;
 	private Pos pos;
@@ -41,7 +41,7 @@ public class BlockCoin implements Item {
 	}
 
 	private Image getImage() {
-		updateFlingstate();
+		updateFlingState();
 		int imageSelector = (flingState/2) % 4;
 		switch (imageSelector) {
 			case 0:
@@ -55,10 +55,11 @@ public class BlockCoin implements Item {
 		}
 	}
 
-	private void updateFlingstate() {
-		if ( pos.getY() > originalPos.getY() ) {
+	private void updateFlingState() {
+		if ( pos.getY() > originalPos.getY() - GameFrame.blockDimension() && flingState > 10 ) {
 			state = State.WAIT;
 			Stats.getInstance().gotCoin();
+			World.getInstance().addPoints(100, pos.copy());
 		} else {
 			flingState++;
 			pos.move(vector);

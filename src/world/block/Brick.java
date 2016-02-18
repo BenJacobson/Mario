@@ -75,9 +75,11 @@ public class Brick extends Block {
 	public void hit(boolean big) {
 		if ( state == State.GONE ) {
 			return;
-		}
+		} else if ( state == State.USED ) {
+			AudioController.play("/sound/wav/block_bump.wav");
+		} else if ( item != null && item.ready() ) {
 
-		if ( big ) {
+		} else if ( big ) {
 			state = State.BREAK;
 			breakState = 0;
 			brokenPositions.set(pos);
@@ -100,7 +102,7 @@ public class Brick extends Block {
 	}
 
 	private enum State {
-		NORMAL, BOUNCE, BREAK, GONE
+		NORMAL, BOUNCE, BREAK, USED, GONE
 	}
 
 	private class BrokenPositions {

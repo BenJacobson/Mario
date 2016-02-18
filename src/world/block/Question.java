@@ -9,6 +9,7 @@ import window.GameFrame;
 import world.BlockCoin;
 import world.World;
 import world.item.Item;
+import world.item.PowerUp;
 
 import java.awt.*;
 
@@ -61,7 +62,7 @@ public class Question extends Block {
 			} else if ( bounceState < 10 ) {
 				y += 2 * GameFrame.pixelScale();
 			} else {
-				doItem();
+				if (item instanceof PowerUp )doItem();
 				bounceState = -1;
 				return y;
 			}
@@ -78,6 +79,7 @@ public class Question extends Block {
 		Mario.getInstance().stopJumpSound();
 		AudioController.play("/sound/wav/block_bump.wav");
 		if ( state != State.USED ) {
+			if ( item instanceof BlockCoin ) doItem();
 			bounceState = 0;
 			int offset = World.getInstance().getOffest();
 			World.getInstance().findEnemyDeadByBlock(this.getRect(offset));

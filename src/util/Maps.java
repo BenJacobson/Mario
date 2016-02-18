@@ -79,6 +79,13 @@ public class Maps {
 					blocks.add(new Invisible(new Pos(xcoord, ycoord)));
 				} else if ( c == 'r' ) {
 					blocks.add(new Brick(new Pos(xcoord, ycoord)));
+				} else if ( Integer.getInteger(String.valueOf(c),-1) != -1 ) {
+					int numCoins = Integer.getInteger(String.valueOf(c), 1);
+					Block block = new Brick(new Pos(xcoord, ycoord));
+					Item item = new BlockCoin(new Pos(xcoord, ycoord), numCoins);
+					items.add(item);
+					block.setItem(item);
+					blocks.add(block);
 				} else if ( c == '?' ) {
 					Block block = new Question(new Pos(xcoord, ycoord));
 					Item item = new BlockCoin(new Pos(xcoord, ycoord), 1);
