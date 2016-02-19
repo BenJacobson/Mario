@@ -62,6 +62,14 @@ public class Images {
 	// mario big images
 	public static final Image stand_frame_big = initFrame("mario_stand_big.png");
 	public static final Image stand_frame_back_big = initFrame("mario_stand_back_big.png");
+	public static final Image jump_frame_big = initFrame("mario_jump_big.png");
+	public static final Image jump_frame_big_back = initFrame("mario_jump_big_back.png");
+	public static final Image run_frame_13_big = initFrame("mario_run_13_big.png");
+	public static final Image run_frame_13_big_back = initFrame("mario_run_13_big_back.png");
+	public static final Image run_frame_2_big = initFrame("mario_run_2_big.png");
+	public static final Image run_frame_2_big_back = initFrame("mario_run_2_big_back.png");
+	public static final Image run_frame_4_big = initFrame("mario_run_4_big.png");
+	public static final Image run_frame_4_big_back = initFrame("mario_run_4_big_back.png");
 
 	// goomba images
 	public static final Image goombaLeft = initFrame("enemy_goomba_left.png");
