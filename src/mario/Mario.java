@@ -71,18 +71,15 @@ public class Mario {
 
 	private void updateRunFrame() {
 
-		if (frameState == FrameState.RUN1 || frameState == FrameState.RUN2 ||
-				frameState == FrameState.RUN3 || frameState == FrameState.RUN4) {
+		if ( isInRunState() ) {
 
 			if (!canJumpAgain) {
 				// falling while running, stay on frame
 				return;
 			}
 
-			numberOfPasses++;
-
 			int passesToWait = vector.isFast() ? 3 : 5;
-			if (numberOfPasses <= passesToWait) {
+			if (++numberOfPasses <= passesToWait) {
 				// don't change the frame yet
 				return;
 			}
@@ -268,7 +265,11 @@ public class Mario {
 		canJumpAgain = collisionResult.isTopHit();
 
 		if (collisionResult.isTopHit() && !movingLeft && !movingRight && isNotDead()) {
-			frameState = FrameState.STAND;
+			if ( vector.getDx() == 0 ) {
+				frameState = FrameState.STAND;
+			} else if ( !isInRunState() ) {
+				frameState = FrameState.RUN1;
+			}
 		}
 
 		// stop moving if you hit something
@@ -290,6 +291,11 @@ public class Mario {
 		if (invincible > 0) {
 			invincible--;
 		}
+	}
+
+	private boolean isInRunState() {
+		return frameState == FrameState.RUN1 || frameState == FrameState.RUN2 ||
+				frameState == FrameState.RUN3 || frameState == FrameState.RUN4;
 	}
 
 
@@ -319,7 +325,7 @@ public class Mario {
 				setRunFrame();
 				updateRunFrame();
 			}
-		} else {
+		} else if ( canJumpAgain ) {
 			vector.reduceSpeed();
 			updateRunFrame();
 		}

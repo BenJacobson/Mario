@@ -13,7 +13,8 @@ import java.awt.geom.Rectangle2D;
 
 public class Brick extends Block {
 
-	private State state = State.NORMAL;
+	private BlockState blockState = BlockState.NORMAL;
+	private ImageState imageState = ImageState.NORMAL;
 	private int bounceState = 0;
 	private int breakState = 0;
 	private BrokenPositions brokenPositions = new BrokenPositions();
@@ -28,20 +29,20 @@ public class Brick extends Block {
 
 	@Override
 	public void draw(Graphics2D g2, int offset) {
-		if ( state == State.BREAK ) {
+		if ( imageState == ImageState.USED ) {
+			g2.drawImage(usedImage, getX(offset), getBounceY(getY()), null);
+		} else if ( blockState == BlockState.BREAK ) {
 			for ( Pos broken :  brokenPositions.get() ) {
 				g2.drawImage(brokenImage, broken.getX() - offset, broken.getY(), null);
 			}
-		} else if ( !(state == State.GONE) ) {
-			int x = getX(offset);
-			int y = getBounceY(getY());
-			g2.drawImage((state == State.USED ? usedImage : image), x, y, null);
+		} else if ( !(blockState == BlockState.GONE) ) {
+			g2.drawImage(image, getX(offset), getBounceY(getY()), null);
 		}
 	}
 
 	private int getBounceY(int y) {
 
-		if ( state == State.BOUNCE ) {
+		if ( blockState == BlockState.BOUNCE ) {
 			
 			if ( bounceState < 2 ) {
 				y -= 2 * GameFrame.pixelScale();
@@ -58,7 +59,7 @@ public class Brick extends Block {
 			} else if ( bounceState < 10 ) {
 				y += 2 * GameFrame.pixelScale();
 			} else {
-				state = State.NORMAL;
+				blockState = BlockState.NORMAL;
 			}
 
 			bounceState++;
@@ -69,31 +70,34 @@ public class Brick extends Block {
 
 	@Override
 	public Rectangle2D getRect(int offset) {
-		return state == State.GONE || state == State.BREAK ? new Rectangle2D.Double(0,0,0,0) : super.getRect(offset);
+		return blockState == BlockState.GONE || blockState == BlockState.BREAK ? new Rectangle2D.Double(0,0,0,0) : super.getRect(offset);
 	}
 
 	@Override
 	public void hit(boolean big) {
-		if ( state == State.GONE ) {
+		if ( blockState == BlockState.GONE ) {
 			return;
-		} else if ( state == State.USED ) {
+		} else if ( imageState == ImageState.USED ) {
 			AudioController.play("/sound/wav/block_bump.wav");
 		} else if ( item != null ) {
-			item.start(big);
+			// if the block has more items, do it
 			if ( item.ready() ) {
-				state = State.BOUNCE;
-			} else {
-				state = State.USED;
+				item.start(big);
+				blockState = BlockState.BOUNCE;
+			}
+			// if there are no more items now, the block goes blank
+			if ( !item.ready() ) {
+				imageState = ImageState.USED;
 			}
 			bounceState = 0;
 			AudioController.play("/sound/wav/block_bump.wav");
 		} else if ( big ) {
-			state = State.BREAK;
+			blockState = BlockState.BREAK;
 			breakState = 0;
 			brokenPositions.set(pos);
 			AudioController.play("/sound/wav/break_block.wav");
 		} else {
-			state = State.BOUNCE;
+			blockState = BlockState.BOUNCE;
 			bounceState = 0;
 			AudioController.play("/sound/wav/block_bump.wav");
 		}
@@ -104,22 +108,26 @@ public class Brick extends Block {
 
 	@Override
 	public void reset() {
-		state = State.NORMAL;
+		blockState = BlockState.NORMAL;
 		bounceState = 0;
 		breakState = 0;
 		if ( item != null ) item.reset();
 	}
 
-	private enum State {
-		NORMAL, BOUNCE, BREAK, USED, GONE
+	private enum BlockState {
+		NORMAL, BOUNCE, BREAK, GONE
+	}
+
+	private enum ImageState {
+		NORMAL, USED
 	}
 
 	private class BrokenPositions {
 
 		Pos part1, part2, part3, part4;
 		Vector vector1 = new Vector(), vector2 = new Vector(), vector3 = new Vector(), vector4 = new Vector();
-		double dx = 5;
-		double dy = -10;
+		double dx = 4;
+		double dy = -15;
 
 		public void set(Pos startPos) {
 			part1 = startPos.copy();
@@ -145,7 +153,7 @@ public class Brick extends Block {
 			part4.move(vector4);
 
 			if ( breakState++ > 100 ) {
-				state = State.GONE;
+				blockState = BlockState.GONE;
 			}
 		}
 
