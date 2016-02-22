@@ -91,7 +91,7 @@ public class Goomba implements Enemy {
 	public void hit() {
 		state = State.SQUISHED;
 		drawSquished = 0;
-		AudioController.play("/sound/wav/stomp_enemy.wav");
+		AudioController.play("/sound/stomp_enemy.wav");
 		World.getInstance().addPoints(100,pos.copy());
 	}
 

@@ -55,7 +55,7 @@ public class Block {
 
 	public void hit(boolean big) {
 		this.big = big;
-		AudioController.play("/sound/wav/block_bump.wav");
+		AudioController.play("/sound/block_bump.wav");
 	}
 
 	public void reset() {}

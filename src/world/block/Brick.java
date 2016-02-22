@@ -78,7 +78,7 @@ public class Brick extends Block {
 		if ( blockState == BlockState.GONE ) {
 			return;
 		} else if ( imageState == ImageState.USED ) {
-			AudioController.play("/sound/wav/block_bump.wav");
+			AudioController.play("/sound/block_bump.wav");
 		} else if ( item != null ) {
 			// if the block has more items, do it
 			if ( item.ready() ) {
@@ -90,16 +90,16 @@ public class Brick extends Block {
 				imageState = ImageState.USED;
 			}
 			bounceState = 0;
-			AudioController.play("/sound/wav/block_bump.wav");
+			AudioController.play("/sound/block_bump.wav");
 		} else if ( big ) {
 			blockState = BlockState.BREAK;
 			breakState = 0;
 			brokenPositions.set(pos);
-			AudioController.play("/sound/wav/break_block.wav");
+			AudioController.play("/sound/break_block.wav");
 		} else {
 			blockState = BlockState.BOUNCE;
 			bounceState = 0;
-			AudioController.play("/sound/wav/block_bump.wav");
+			AudioController.play("/sound/block_bump.wav");
 		}
 		int offset = World.getInstance().getOffest();
 		World.getInstance().findEnemyDeadByBlock(this.getRect(offset));

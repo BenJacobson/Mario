@@ -30,14 +30,15 @@ public class AudioController {
 	}
 
 	public static void startTheme() {
-		theme = play("/sound/wav/mario theme.wav");
+		theme = play("/sound/mario theme.wav");
 	}
 
 	public static void loopTheme() {
 		try {
-			if (theme != null && theme.available() < 3000) {
-				stopTheme();
+			if (theme != null && theme.available() < 110000) {
+				AudioStream themeToStop = theme;
 				startTheme();
+				stop(themeToStop);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

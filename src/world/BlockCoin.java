@@ -54,7 +54,7 @@ public class BlockCoin implements Item {
 		if ( numCoinsLeft > 0 ) {
 			numCoinsLeft--;
 			flingingCoins.add(new FlingingCoin(originalPos.copy()));
-			AudioController.play("/sound/wav/coin.wav");
+			AudioController.play("/sound/coin.wav");
 		}
 	}
 

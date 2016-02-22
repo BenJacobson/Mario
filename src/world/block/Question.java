@@ -77,7 +77,7 @@ public class Question extends Block {
 	public void hit(boolean big) {
 		this.big = big;
 		Mario.getInstance().stopJumpSound();
-		AudioController.play("/sound/wav/block_bump.wav");
+		AudioController.play("/sound/block_bump.wav");
 		if ( state != State.USED ) {
 			if ( item instanceof BlockCoin ) doItem();
 			bounceState = 0;
