@@ -74,8 +74,11 @@ public class Vector {
 		return speedy ? fast : slow;
 	}
 
-	public boolean isFast() {
-		return Math.abs(dx) > genSpeed*(slow+1);
+	public double getFast() {
+		double curDX = Math.abs(dx);
+		double maxSpeed = genSpeed*getSpeed(true);
+		double ratio = curDX / maxSpeed;
+		return ratio;
 	}
 
 	public void reduceSpeed() {
@@ -92,13 +95,13 @@ public class Vector {
 		dx = -dx;
 	}
 
-	@Override
-	public String toString() {
-		return String.format("dx:%f dy:%f", dx, dy);
-	}
-
 	public void stop() {
 		hitX();
 		hitY();
+	}
+
+	@Override
+	public String toString() {
+		return String.format("dx:%f dy:%f", dx, dy);
 	}
 }

@@ -78,7 +78,7 @@ public class Mario {
 				return;
 			}
 
-			int passesToWait = vector.isFast() ? 3 : 5;
+			int passesToWait = (int)(6 * (1-vector.getFast())) + 2;
 			if (++numberOfPasses <= passesToWait) {
 				// don't change the frame yet
 				return;
@@ -94,7 +94,11 @@ public class Mario {
 			} else if (frameState == FrameState.RUN3) {
 				frameState = FrameState.RUN4;
 			} else {
-				frameState = FrameState.RUN1;
+				if ( powerState == PowerState.SMALL ) {
+					frameState = FrameState.RUN1;
+				} else {
+					frameState = FrameState.RUN2;
+				}
 			}
 		}
 	}
