@@ -46,7 +46,6 @@ public class Mario {
 	private PowerState powerState = PowerState.SMALL;
 
 	private final MarioFrames marioFrames = new MarioFrames();
-	private AudioStream jumpSound;
 
 	private final int LEFT = 37;
 	private final int RIGHT = 39;
@@ -348,7 +347,7 @@ public class Mario {
 			jump = false;
 			canJumpAgain = false;
 			frameState = FrameState.JUMP;
-			jumpSound = AudioController.play( powerState == PowerState.SMALL ? "/sound/jump_small.wav" : "/sound/jump_super.wav");
+			AudioController.play( powerState == PowerState.SMALL ? "/sound/jump_small.wav" : "/sound/jump_super.wav");
 		} else if (jumpHeld && jumpHeldState <= jumpHeldMax) {
 
 			int jumpPassesToWait = 0;
