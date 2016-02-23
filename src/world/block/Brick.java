@@ -109,6 +109,7 @@ public class Brick extends Block {
 	@Override
 	public void reset() {
 		blockState = BlockState.NORMAL;
+		imageState = ImageState.NORMAL;
 		bounceState = 0;
 		breakState = 0;
 		if ( item != null ) item.reset();

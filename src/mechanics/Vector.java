@@ -80,9 +80,9 @@ public class Vector {
 
 	public void reduceSpeed() {
 		if ( dx >= genSpeed) {
-			dx -= genSpeed;
+			dx -= genSpeed/1.5;
 		} else if ( dx <= -genSpeed) {
-			dx += genSpeed;
+			dx += genSpeed/1.5;
 		} else {
 			dx = 0;
 		}

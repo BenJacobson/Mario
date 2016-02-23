@@ -85,9 +85,9 @@ public class World {
 		points.stream().forEach( p -> p.draw(g2, offset) );
 		points = points.stream().filter( p -> p.getState() < 50 ).collect(Collectors.toList());
 
-		items.stream().forEach( item -> item.draw(g2, offset));
-
 		Maps.flagpole.draw(g2, offset);
+
+		items.stream().forEach( item -> item.draw(g2, offset));
 
 		blocks.stream()
 				.filter( block -> block.getX(offset) > -GameFrame.gameWidth() && block.getX(offset) < GameFrame.gameWidth()*2 )

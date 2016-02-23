@@ -35,7 +35,7 @@ public class AudioController {
 
 	public static void loopTheme() {
 		try {
-			if (theme != null && theme.available() < 110000) {
+			if (theme != null && theme.available() < 3000) {
 				AudioStream themeToStop = theme;
 				startTheme();
 				stop(themeToStop);
