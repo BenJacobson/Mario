@@ -87,31 +87,31 @@ class MarioFrames {
 				{
 						// standing frames
 						{
-								Images.stand_frame_back_big, Images.stand_frame_big
+								Images.stand_frame_back_fire, Images.stand_frame_fire
 						},
 						// jumping frames
 						{
-								Images.jump_frame_big_back, Images.jump_frame_big
+								Images.jump_frame_fire_back, Images.jump_frame_fire
 						},
 						// running 1 frames
 						{
-								Images.run_frame_13_big_back, Images.run_frame_13_big
+								Images.run_frame_13_fire_back, Images.run_frame_13_fire
 						},
 						// running 2 frames
 						{
-								Images.run_frame_2_big_back, Images.run_frame_2_big
+								Images.run_frame_2_fire_back, Images.run_frame_2_fire
 						},
 						// running 3 frames
 						{
-								Images.run_frame_13_big_back, Images.run_frame_13_big
+								Images.run_frame_13_fire_back, Images.run_frame_13_fire
 						},
 						// running 4 frames
 						{
-								Images.run_frame_4_big_back, Images.run_frame_4_big
+								Images.run_frame_4_fire_back, Images.run_frame_4_fire
 						},
 						// turning frames
 						{
-								Images.stand_frame_back_big, Images.stand_frame_big
+								Images.stand_frame_back_fire, Images.stand_frame_fire
 						},
 						// dead frames
 						{
