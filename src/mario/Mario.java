@@ -118,6 +118,11 @@ public class Mario {
 		}
 
 		g2.drawImage(currentFrame, currentPos.getX() - extraX, currentPos.getY() + extraY, null);
+		drawFireballs(g2);
+	}
+
+	private void drawFireballs(Graphics2D g2) {
+		fireballs.forEach( fireball -> fireball.draw(g2, 0));
 	}
 
 	public void setKey(int action) {
@@ -194,7 +199,10 @@ public class Mario {
 
 	private void handleShoot() {
 		if ( shoot ) {
-
+			Pos firePos = currentPos.copy();
+			firePos.moveRight(GameFrame.blockDimension());
+			fireballs.add(new Fireball(firePos));
+			shoot = false;
 		}
 	}
 
@@ -379,10 +387,6 @@ public class Mario {
 			vector.jumpHold();
 			jumpHeldState++;
 		}
-	}
-
-	public void stopJumpSound() {
-		// GameFrame.stop(jumpSound);
 	}
 
 	enum FrameState {
