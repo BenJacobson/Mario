@@ -82,6 +82,7 @@ public class Images {
 	public static final Image run_frame_2_fire_back = initFrame("mario_run_2_fire_back.png");
 	public static final Image run_frame_4_fire = initFrame("mario_run_4_fire.png");
 	public static final Image run_frame_4_fire_back = initFrame("mario_run_4_fire_back.png");
+	public static final Image fireball = initFrame("fireball.png");
 
 	// goomba images
 	public static final Image goombaLeft = initFrame("enemy_goomba_left.png");
