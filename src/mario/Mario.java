@@ -3,11 +3,13 @@ package mario;
 import mechanics.Pos;
 import mechanics.Vector;
 import stats.Stats;
-import sun.audio.AudioStream;
 import util.AudioController;
 import window.GameFrame;
 import world.collision.CollisionResult;
 import world.World;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
@@ -35,6 +37,8 @@ public class Mario {
 	private boolean jump = false;
 	private boolean canJumpAgain = false;
 	private boolean jumpHeld = false;
+	private boolean canShootAgain = false;
+	private boolean shoot = false;
 
 	private int numberOfPasses = 0;
 	private int jumpHeldState = 0;
@@ -46,12 +50,12 @@ public class Mario {
 	private PowerState powerState = PowerState.SMALL;
 
 	private final MarioFrames marioFrames = new MarioFrames();
+	private List<Fireball> fireballs = new ArrayList<Fireball>();
 
-	private final int LEFT = 37;
-	private final int RIGHT = 39;
-	private final int RUN = 88;
-	private final int SPACE = 32;
-
+	private final int D_LEFT = 37;
+	private final int D_RIGHT = 39;
+	private final int BUTTON_A = 32;
+	private final int BUTTON_B = 88;
 
 	private Mario() {}
 
@@ -116,19 +120,25 @@ public class Mario {
 		g2.drawImage(currentFrame, currentPos.getX() - extraX, currentPos.getY() + extraY, null);
 	}
 
-	public void setDirection(int action) {
+	public void setKey(int action) {
 
-		if (action == LEFT) {
+		if (action == D_LEFT) {
 			movingLeft = true;
 			movingRight = false;
 			if (canJumpAgain) lastDirectionForward = false;
-		} else if (action == RIGHT) {
+		} else if (action == D_RIGHT) {
 			movingRight = true;
 			movingLeft = false;
 			if (canJumpAgain) lastDirectionForward = true;
-		} else if (action == RUN && canJumpAgain) {
-			running = true;
-		} else if (action == SPACE) {
+		} else if (action == BUTTON_B) {
+			if (canJumpAgain) {
+				running = true;				
+			}
+			if ( powerState == PowerState.FIRE && canShootAgain ) {
+				canShootAgain = false;
+				shoot = true;
+			}
+		} else if (action == BUTTON_A) {
 			if (vector.getDy() == 0 && canJumpAgain && !jumpHeld) {
 				jump = true;
 				jumpHeld = true;
@@ -137,14 +147,15 @@ public class Mario {
 		}
 	}
 
-	public void unsetDirection(int action) {
-		if (action == LEFT) {
+	public void unsetKey(int action) {
+		if (action == D_LEFT) {
 			movingLeft = false;
-		} else if (action == RIGHT) {
+		} else if (action == D_RIGHT) {
 			movingRight = false;
-		} else if (action == RUN) {
+		} else if (action == BUTTON_B) {
+			canShootAgain = true;
 			running = false;
-		} else if (action == SPACE) {
+		} else if (action == BUTTON_A) {
 			jumpHeld = false;
 		}
 	}
@@ -154,6 +165,8 @@ public class Mario {
 		if (frameState != FrameState.DEAD) {
 
 			handleJump();
+
+			handleShoot();
 
 			handleEnemies();
 
@@ -175,6 +188,12 @@ public class Mario {
 				vector.gravity();
 				currentPos.move(vector);
 			}
+
+		}
+	}
+
+	private void handleShoot() {
+		if ( shoot ) {
 
 		}
 	}

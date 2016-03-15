@@ -1,8 +1,6 @@
 package window;
 
 import mario.Mario;
-import sun.audio.AudioPlayer;
-import sun.audio.AudioStream;
 import util.AudioController;
 import util.FlashState;
 import util.Images;
@@ -20,7 +18,7 @@ import java.util.TimerTask;
 // window the surrounds the game
 public class GameFrame extends JFrame {
 
-	private static final int PIXEL_SCALE = 6;
+	private static final int PIXEL_SCALE = 4;
 	private static final int UNSCALED_WIDTH = 256;
 	private static final int UNSCALED_HEIGHT = 230;
 
@@ -71,12 +69,12 @@ public class GameFrame extends JFrame {
 		this.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				Mario.getInstance().setDirection(e.getKeyCode());
+				Mario.getInstance().setKey(e.getKeyCode());
 			}
 
 			@Override
 			public void keyReleased(KeyEvent e) {
-				Mario.getInstance().unsetDirection(e.getKeyCode());
+				Mario.getInstance().unsetKey(e.getKeyCode());
 			}
 		});
 	}
