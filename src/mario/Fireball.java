@@ -3,8 +3,10 @@ package mario;
 import mechanics.Pos;
 import mechanics.Vector;
 import util.Images;
+import world.World;
 
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 
 class Fireball {
 
@@ -25,7 +27,13 @@ class Fireball {
 	}
 
 	private void update() {
+		vector.gravity();
 		pos.move(vector);
+		World.getInstance().blockCollisions(getRect(), vector);
+	}
+
+	private Rectangle2D getRect() {
+		return new Rectangle2D.Double();
 	}
 
 }
