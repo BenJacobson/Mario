@@ -9,10 +9,12 @@ import world.collision.CollisionResult;
 import world.World;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
+import java.util.stream.Collectors;
 
 // contains the information and subclasses about mario on screen
 public class Mario {
@@ -123,6 +125,8 @@ public class Mario {
 
 	private void drawFireballs(Graphics2D g2) {
 		fireballs.forEach( fireball -> fireball.draw(g2, 0));
+		fireballs = fireballs.stream().filter(fireball -> !fireball.isDone()).collect(Collectors.toList());
+		System.out.println(fireballs.size());
 	}
 
 	public void setKey(int action) {
@@ -199,9 +203,7 @@ public class Mario {
 
 	private void handleShoot() {
 		if ( shoot ) {
-			Pos firePos = currentPos.copy();
-			firePos.moveRight(GameFrame.blockDimension());
-			fireballs.add(new Fireball(firePos));
+			fireballs.add(new Fireball(currentPos.copy(), lastDirectionForward));
 			shoot = false;
 		}
 	}

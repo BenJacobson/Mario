@@ -3,37 +3,81 @@ package mario;
 import mechanics.Pos;
 import mechanics.Vector;
 import util.Images;
+import window.GameFrame;
 import world.World;
+import world.collision.CollisionResult;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 
 class Fireball {
 
-	private Image image = Images.fireball;
 	private Pos pos;
 	private Vector vector = new Vector();
+	private boolean done = false;
 
-	Fireball(Pos pos) {
+	private Image[] images = { Images.fireball1, Images.fireball2, Images.fireball3, Images.fireball4 };
+	private State state = State.ONE;
+	private int holdState = 0;
+
+	Fireball(Pos pos, boolean forward) {
 		this.pos = pos;
-		for ( int i = 0; i < 3; i++ ) {
-			vector.moveRight(false);
+		if ( forward ) {
+			pos.moveRight(GameFrame.blockDimension());
+			vector.set(25.0, 0.0);
+		} else {
+			vector.set(-25.0, 0.0);
 		}
 	}
 
 	public void draw(Graphics2D g2, int offset) {
-		update();
-		g2.drawImage(image, pos.getX() - offset, pos.getY(), null);
+		if ( !done ) {
+			update(offset);
+			g2.drawImage(images[state.ordinal()], pos.getX() - offset, pos.getY(), null);
+		}
 	}
 
-	private void update() {
+	private void update(int offset) {
+
+		CollisionResult collisions = World.getInstance().blockCollisions(getRect(offset), vector);
+		if ( collisions.isTopHit() ) {
+			vector.hitY();
+			vector.bounce();
+		} else if ( collisions.isLeftHit() || collisions.isRightHit() || pos.getY() > GameFrame.gameHeight() ) {
+			done = true;
+		}
+
 		vector.gravity();
 		pos.move(vector);
-		World.getInstance().blockCollisions(getRect(), vector);
+
+		int holdMax = 2;
+		if ( holdState++ > holdMax) {
+			holdState = 0;
+			switch (state) {
+				case ONE:
+					state = State.TWO;
+					break;
+				case TWO:
+					state = State.THREE;
+					break;
+				case THREE:
+					state = State.FOUR;
+					break;
+				default:
+					state = State.ONE;
+			}
+		}
 	}
 
-	private Rectangle2D getRect() {
-		return new Rectangle2D.Double();
+	private Rectangle2D getRect(int offset) {
+		return new Rectangle2D.Double(pos.getX() - offset, pos.getY(), GameFrame.blockDimension(), GameFrame.blockDimension());
 	}
 
+	public boolean isDone() {
+		return done;
+	}
+
+	private enum State {
+		ONE, TWO, THREE, FOUR
+	}
 }
