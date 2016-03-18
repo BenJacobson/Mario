@@ -96,7 +96,7 @@ public class Goomba implements Enemy {
 	}
 
 	@Override
-	public void blockHit() {
+	public void flip() {
 		state = State.FLIPPED;
 
 		vector.jump();

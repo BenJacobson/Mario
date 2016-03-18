@@ -24,9 +24,9 @@ class Fireball {
 		this.pos = pos;
 		if ( forward ) {
 			pos.moveRight(GameFrame.blockDimension());
-			vector.set(25.0, 0.0);
+			vector.set(20.0, 0.0);
 		} else {
-			vector.set(-25.0, 0.0);
+			vector.set(-20.0, 0.0);
 		}
 	}
 
@@ -47,7 +47,11 @@ class Fireball {
 			done = true;
 		}
 
-		vector.gravity();
+		if ( World.getInstance().findFireEnemyCollisions(this.getRect(World.getInstance().getOffest())) ) {
+			done = true;
+		}
+
+		vector.gravity(0.8);
 		pos.move(vector);
 
 		int holdMax = 2;

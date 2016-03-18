@@ -13,6 +13,6 @@ public interface Enemy {
 
 	void reverse();
 	void hit();
-	void blockHit();
+	void flip();
 	void reset();
 }

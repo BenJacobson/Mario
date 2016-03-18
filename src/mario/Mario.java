@@ -110,6 +110,11 @@ public class Mario {
 
 	public void draw(Graphics2D g2) {
 		move();
+		drawMario(g2);
+		drawFireballs(g2);
+	}
+
+	private void drawMario(Graphics2D g2) {
 		Image currentFrame = marioFrames.getFrame(powerState, frameState, lastDirectionForward);
 
 		int extraX = 0, extraY = 0;
@@ -120,13 +125,11 @@ public class Mario {
 		}
 
 		g2.drawImage(currentFrame, currentPos.getX() - extraX, currentPos.getY() + extraY, null);
-		drawFireballs(g2);
 	}
 
 	private void drawFireballs(Graphics2D g2) {
-		fireballs.forEach( fireball -> fireball.draw(g2, 0));
+		fireballs.forEach( fireball -> fireball.draw(g2, World.getInstance().getOffest()));
 		fireballs = fireballs.stream().filter(fireball -> !fireball.isDone()).collect(Collectors.toList());
-		System.out.println(fireballs.size());
 	}
 
 	public void setKey(int action) {
@@ -203,7 +206,9 @@ public class Mario {
 
 	private void handleShoot() {
 		if ( shoot ) {
-			fireballs.add(new Fireball(currentPos.copy(), lastDirectionForward));
+			Pos firePos = currentPos.copy();
+			firePos.moveRight(World.getInstance().getOffest());
+			fireballs.add(new Fireball(firePos, lastDirectionForward));
 			shoot = false;
 		}
 	}

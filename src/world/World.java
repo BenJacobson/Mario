@@ -185,7 +185,7 @@ public class World {
 				blockRect.getWidth(), blockRect.getHeight());
 
 		enemies.stream().filter( enemy -> enemy.getRect(offset).intersects(deadRect) )
-				.forEach( enemy -> enemy.blockHit() );
+				.forEach( enemy -> enemy.flip() );
 	}
 
 	public void findItemHitByBlock(Rectangle2D blockRect) {
@@ -194,5 +194,16 @@ public class World {
 
 		items.stream().filter( item -> item.getRect(offset).intersects(hitRect) )
 				.forEach( item -> item.bounce( hitRect.getCenterX() - item.getRect(offset).getCenterX() > 0 ) );
+	}
+
+	public boolean findFireEnemyCollisions(Rectangle2D fireRect) {
+		boolean hit = false;
+		for ( Enemy enemy : enemies ) {
+			if ( enemy.getRect(offset).intersects(fireRect) ) {
+				enemy.flip();
+				hit = true;
+			}
+		}
+		return hit;
 	}
 }
