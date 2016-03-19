@@ -82,8 +82,7 @@ public class World {
 
 		findEnemyEnemyCollisions();
 
-		points.stream().forEach( p -> p.draw(g2, offset) );
-		points = points.stream().filter( p -> p.getState() < 50 ).collect(Collectors.toList());
+		drawPoints(g2);
 
 		Maps.flagpole.draw(g2, offset);
 
@@ -96,6 +95,11 @@ public class World {
 		enemies.stream()
 				.filter( enemy -> enemy.getX(offset) > -GameFrame.gameWidth()/2 && enemy.getX(offset) < GameFrame.gameWidth()*1.5 )
 				.forEach( enemy -> enemy.draw(g2, offset) );
+	}
+
+	private void drawPoints(Graphics2D g2) {
+		points.stream().forEach( p -> p.draw(g2, offset) );
+		points = points.stream().filter( p -> !p.isDone() ).collect(Collectors.toList());
 	}
 
 	private void findEnemyEnemyCollisions() {

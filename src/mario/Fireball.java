@@ -22,12 +22,7 @@ class Fireball {
 
 	Fireball(Pos pos, boolean forward) {
 		this.pos = pos;
-		if ( forward ) {
-			pos.moveRight(GameFrame.blockDimension());
-			vector.set(20.0, 0.0);
-		} else {
-			vector.set(-20.0, 0.0);
-		}
+		vector.set( (forward ? 20.0 : -20.0), 0.0);
 	}
 
 	public void draw(Graphics2D g2, int offset) {

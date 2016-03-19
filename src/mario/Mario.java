@@ -110,8 +110,8 @@ public class Mario {
 
 	public void draw(Graphics2D g2) {
 		move();
-		drawMario(g2);
 		drawFireballs(g2);
+		drawMario(g2);
 	}
 
 	private void drawMario(Graphics2D g2) {

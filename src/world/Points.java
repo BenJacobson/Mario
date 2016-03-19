@@ -1,6 +1,7 @@
 package world;
 
 import mechanics.Pos;
+import window.GameFrame;
 
 import java.awt.*;
 
@@ -9,7 +10,7 @@ public class Points {
 	String amount;
 	Pos pos;
 	int state;
-	Font font = new Font(Font.MONOSPACED, Font.BOLD, 30);
+	Font font = new Font(Font.MONOSPACED, Font.BOLD, 7*GameFrame.pixelScale());
 
 	public Points(int amount, Pos pos) {
 		this.amount = String.valueOf(amount);
@@ -22,7 +23,7 @@ public class Points {
 		state++;
 	}
 
-	public int getState() {
-		return state;
+	public boolean isDone() {
+		return state > 50;
 	}
 }
