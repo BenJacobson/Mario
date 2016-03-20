@@ -134,6 +134,15 @@ public class Maps {
 					case 'u':
 						backgrounds.add(new Background(Images.cloud_large, new Pos(xcoord, ycoord)));
 						break;
+					case 'n':
+						backgrounds.add(new Background(Images.bush_small, new Pos(xcoord+GameFrame.blockDimension()/2, ycoord)));
+						break;
+					case 'v':
+						backgrounds.add(new Background(Images.bush_medium, new Pos(xcoord+GameFrame.blockDimension()/2, ycoord)));
+						break;
+					case 'x':
+						backgrounds.add(new Background(Images.bush_large, new Pos(xcoord+GameFrame.blockDimension()/2, ycoord)));
+						break;
 					case 'm':
 						block = new Question(new Pos(xcoord, ycoord));
 						item = new PowerUp(new Pos(xcoord, ycoord));

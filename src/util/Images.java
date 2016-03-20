@@ -105,6 +105,9 @@ public class Images {
 	public static final Image cloud_small = initFrame("cloud_small.png");
 	public static final Image cloud_medium = initFrame("cloud_medium.png");
 	public static final Image cloud_large = initFrame("cloud_large.png");
+	public static final Image bush_small = initFrame("bush_small.png");
+	public static final Image bush_medium = initFrame("bush_medium.png");
+	public static final Image bush_large = initFrame("bush_large.png");
 
 	//flagpole
 	public static final Image flagpole_pole = initFrame("flagpole_pole.png");
