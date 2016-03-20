@@ -22,7 +22,7 @@ class Fireball {
 
 	Fireball(Pos pos, boolean forward) {
 		this.pos = pos;
-		vector.set( (forward ? 20.0 : -20.0), 0.0);
+		vector.set( (forward ? 30.0 : -30.0), 0.0);
 	}
 
 	public void draw(Graphics2D g2, int offset) {
@@ -37,16 +37,10 @@ class Fireball {
 		CollisionResult collisions = World.getInstance().blockCollisions(getRect(offset), vector);
 		if ( collisions.isTopHit() ) {
 			vector.hitY();
-			vector.bounce();
-		} else if ( collisions.isLeftHit() || collisions.isRightHit() || pos.getY() > GameFrame.gameHeight() ) {
-			done = true;
+			vector.jump(0.6);
 		}
 
-		if ( World.getInstance().findFireEnemyCollisions(this.getRect(World.getInstance().getOffest())) ) {
-			done = true;
-		}
-
-		vector.gravity(0.8);
+		vector.gravity(0.7);
 		pos.move(vector);
 
 		int holdMax = 2;
@@ -65,6 +59,14 @@ class Fireball {
 				default:
 					state = State.ONE;
 			}
+		}
+
+		if ( World.getInstance().findFireEnemyCollisions(this.getRect(World.getInstance().getOffest())) ||
+				collisions.isLeftHit() || collisions.isRightHit() ||
+				pos.getY() > GameFrame.gameHeight() ||
+				pos.getX() > World.getInstance().getOffest() + GameFrame.gameWidth() ||
+				pos.getX() < World.getInstance().getOffest() ) {
+			done = true;
 		}
 	}
 

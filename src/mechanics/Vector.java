@@ -44,10 +44,6 @@ public class Vector {
 		dy = -genSpeed*33*factor;
 	}
 
-	public void bounce() {
-		dy = -genSpeed*20;
-	}
-
 	public void jumpHold() {
 		dy -= genSpeed*3.75;
 	}

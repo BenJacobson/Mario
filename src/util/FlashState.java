@@ -1,6 +1,12 @@
 package util;
 
+import window.GameFrame;
+
 public class FlashState {
+
+	static {
+		GameFrame.addPeriodicTask(FlashState::advanceState);
+	}
 
 	private static int state = 0;
 	private static State curState = State.ONE;

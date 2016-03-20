@@ -2,10 +2,16 @@ package util;
 
 import sun.audio.AudioPlayer;
 import sun.audio.AudioStream;
+import window.GameFrame;
+import window.PeriodicTask;
 
 import java.io.IOException;
 
 public class AudioController {
+
+	static {
+		GameFrame.addPeriodicTask(AudioController::loopTheme);
+	}
 
 	private static AudioStream theme;
 

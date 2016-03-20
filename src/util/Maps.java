@@ -125,6 +125,15 @@ public class Maps {
 					case 'h':
 						backgrounds.add(new Background(Images.hill_small, new Pos(xcoord, ycoord)));
 						break;
+					case 'p':
+						backgrounds.add(new Background(Images.cloud_small, new Pos(xcoord, ycoord)));
+						break;
+					case 'o':
+						backgrounds.add(new Background(Images.cloud_medium, new Pos(xcoord, ycoord)));
+						break;
+					case 'u':
+						backgrounds.add(new Background(Images.cloud_large, new Pos(xcoord, ycoord)));
+						break;
 					case 'm':
 						block = new Question(new Pos(xcoord, ycoord));
 						item = new PowerUp(new Pos(xcoord, ycoord));
@@ -134,6 +143,7 @@ public class Maps {
 						break;
 					case 'f':
 						flagpole = new Flagpole(new Pos(xcoord, ycoord));
+						break;
 				}
 
 				long end = System.currentTimeMillis();

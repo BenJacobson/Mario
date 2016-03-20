@@ -9,7 +9,6 @@ import world.collision.CollisionResult;
 import world.World;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import java.awt.*;
@@ -47,6 +46,11 @@ public class Mario {
 	private int jumpHeldPasses = 0;
 	private int deadState = 0;
 	private int invincible = 0;
+
+	private final int waitShootShort = 5;
+	private final int waitShootLong = 30;
+	private int oneShotAgo = waitShootShort;
+	private int twoShotsAgo = waitShootLong;
 
 	private FrameState frameState = FrameState.STAND;
 	private PowerState powerState = PowerState.SMALL;
@@ -115,7 +119,7 @@ public class Mario {
 	}
 
 	private void drawMario(Graphics2D g2) {
-		Image currentFrame = marioFrames.getFrame(powerState, frameState, lastDirectionForward);
+		Image currentFrame = marioFrames.getFrame(powerState, frameState, lastDirectionForward, shoot);
 
 		int extraX = 0, extraY = 0;
 		if (frameState == FrameState.JUMP || frameState == FrameState.RUN4) {
@@ -205,12 +209,17 @@ public class Mario {
 	}
 
 	private void handleShoot() {
-		if ( shoot ) {
+		if ( shoot && oneShotAgo > waitShootShort && twoShotsAgo > waitShootLong ) {
+			twoShotsAgo = oneShotAgo;
+			oneShotAgo = 0;
 			Pos firePos = currentPos.copy();
 			firePos.moveRight(World.getInstance().getOffest());
 			fireballs.add(new Fireball(firePos, lastDirectionForward));
-			shoot = false;
+			AudioController.play("/sound/fireball.wav");
 		}
+		shoot = false;
+		oneShotAgo++;
+		twoShotsAgo++;
 	}
 
 	private void handleItems() {
@@ -234,13 +243,13 @@ public class Mario {
 
 	private void hit() {
 		if (invincible > 0) {
-
+			return;
 		} else if (powerState == PowerState.SMALL) {
 			dead();
 		} else {
 			powerState = PowerState.SMALL;
 			currentPos.moveDown(GameFrame.blockDimension());
-			invincible = 25;
+			invincible = 100;
 		}
 	}
 
@@ -251,7 +260,7 @@ public class Mario {
 			hit();
 		}
 		if (hits[1]) {
-			vector.bounce();
+			vector.jump(0.6);
 		}
 	}
 
@@ -265,6 +274,7 @@ public class Mario {
 		movingLeft = false;
 		movingRight = false;
 		canJumpAgain = false;
+		shoot = false;
 		frameState = FrameState.DEAD;
 		deadState = 0;
 		vector.stop();

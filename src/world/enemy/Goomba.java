@@ -109,7 +109,7 @@ public class Goomba implements Enemy {
 				vector.moveLeft(false);
 			}
 		}
-
+		AudioController.play("/sound/kick.wav");
 		World.getInstance().addPoints(100,pos.copy());
 	}
 
