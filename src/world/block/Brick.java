@@ -127,8 +127,8 @@ public class Brick extends Block {
 
 		Pos part1, part2, part3, part4;
 		Vector vector1 = new Vector(), vector2 = new Vector(), vector3 = new Vector(), vector4 = new Vector();
-		double dx = 4;
-		double dy = -15;
+		double dx = GameFrame.pixelScale();
+		double dy = -4*GameFrame.pixelScale();
 
 		public void set(Pos startPos) {
 			part1 = startPos.copy();

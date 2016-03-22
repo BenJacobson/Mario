@@ -48,7 +48,7 @@ public class Mario {
 	private int invincible = 0;
 
 	private final int waitShootShort = 5;
-	private final int waitShootLong = 30;
+	private final int waitShootLong = 40;
 	private int oneShotAgo = waitShootShort;
 	private int twoShotsAgo = waitShootLong;
 

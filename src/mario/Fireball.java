@@ -22,7 +22,8 @@ class Fireball {
 
 	Fireball(Pos pos, boolean forward) {
 		this.pos = pos;
-		vector.set( (forward ? 30.0 : -30.0), 0.0);
+		double fireballSpeed = 5.0*GameFrame.pixelScale();
+		vector.set( (forward ? fireballSpeed : -fireballSpeed), 0.0);
 	}
 
 	public void draw(Graphics2D g2, int offset) {
