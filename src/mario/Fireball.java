@@ -72,7 +72,8 @@ class Fireball {
 	}
 
 	private Rectangle2D getRect(int offset) {
-		return new Rectangle2D.Double(pos.getX() - offset, pos.getY(), GameFrame.blockDimension(), GameFrame.blockDimension());
+		double fouthBlock = GameFrame.blockDimension()/4;
+		return new Rectangle2D.Double(pos.getX() - offset + fouthBlock, pos.getY() + fouthBlock, fouthBlock*2, fouthBlock*2);
 	}
 
 	public boolean isDone() {
