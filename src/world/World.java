@@ -84,7 +84,7 @@ public class World {
 
 		drawPoints(g2);
 
-		Maps.flagpole.draw(g2, offset);
+		if ( Maps.flagpole != null ) Maps.flagpole.draw(g2, offset);
 
 		items.stream().forEach( item -> item.draw(g2, offset));
 
