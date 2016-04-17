@@ -359,6 +359,7 @@ public class Mario {
 			if ( vector.getDx() > 0 && canJumpAgain ) {
 				vector.reduceSpeed();
 				frameState = FrameState.TURN;
+				lastDirectionForward = false;
 			} else {
 				setRunFrame();
 				updateRunFrame();
@@ -368,6 +369,7 @@ public class Mario {
 			if ( vector.getDx() < 0 && canJumpAgain ) {
 				vector.reduceSpeed();
 				frameState = FrameState.TURN;
+				lastDirectionForward = true;
 			} else {
 				setRunFrame();
 				updateRunFrame();

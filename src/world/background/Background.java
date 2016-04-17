@@ -6,8 +6,8 @@ import java.awt.*;
 
 public class Background {
 
-	Image image;
-	Pos pos;
+	private Image image;
+	private Pos pos;
 
 	public Background(Image image, Pos pos) {
 		this.image = image;

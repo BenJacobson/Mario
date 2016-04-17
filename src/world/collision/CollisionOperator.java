@@ -49,7 +49,9 @@ public class CollisionOperator {
 
 		// find the blocks that are hit
 		for ( Block block : blocks ) {
-			if ( block.getX(offset) > -GameFrame.gameWidth() && block.getX(offset) < GameFrame.gameWidth()*2 ) {
+			int blockX = block.getX(offset);
+			int gameWidth = GameFrame.gameWidth();
+			if ( blockX > -gameWidth && blockX < gameWidth*2 ) {
 				if ( inputRect.intersects( block.getRect(offset) ) ) {
 
 					switch ( getSide(new Pos((int)inputRect.getCenterX(), (int)inputRect.getCenterY()), block.getCenter(offset), vector) ) {

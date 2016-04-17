@@ -15,6 +15,8 @@ public class Block {
 
 	protected Pos pos;
 
+	protected Rectangle2D rect = new Rectangle2D.Double(0,0,0,0);
+
 	protected Image image;
 
 	protected Item item = null;
@@ -50,7 +52,8 @@ public class Block {
 	}
 
 	public Rectangle2D getRect(int offset) {
-		return new Rectangle2D.Double(getX(offset), getY(), getWidth(), getHeight());
+		rect.setRect(getX(offset), getY(), getWidth(), getHeight());
+		return rect;
 	}
 
 	public void hit(boolean big) {

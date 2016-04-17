@@ -46,10 +46,11 @@ public class GameFrame extends JFrame {
 
 		setContentPane(new GameCanvas());
 
+		setVisible(true);
+
 		Timer timer = new Timer();
 		timer.schedule(new TaskExecutor(), 0, 20);
-
-		setVisible(true);
+		addPeriodicTask(()->repaint());
 
 		AudioController.startTheme();
 	}
@@ -101,7 +102,6 @@ public class GameFrame extends JFrame {
 	private class TaskExecutor extends TimerTask {
 		public void run() {
 			periodicTaskList.forEach(PeriodicTask::run);
-			repaint();
 		}
 	}
 }

@@ -6,8 +6,7 @@ import java.awt.*;
 
 // starts the main frame of game
 public class MarioNes {
-
 	public static void main(String args[]) {
-		EventQueue.invokeLater( () -> new GameFrame() );
+		EventQueue.invokeLater( GameFrame::new );
 	}
 }

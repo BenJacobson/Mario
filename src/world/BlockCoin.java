@@ -3,6 +3,7 @@ package world;
 
 import mechanics.Pos;
 import mechanics.Vector;
+import org.w3c.dom.css.Rect;
 import stats.Stats;
 import util.AudioController;
 import util.Images;
@@ -17,6 +18,7 @@ import java.util.List;
 public class BlockCoin implements Item {
 
 	private Pos originalPos;
+	private Rectangle2D rect = new Rectangle2D.Double(0,0,0,0);
 	private final int numCoins;
 	private int numCoinsLeft;
 	private List<FlingingCoin> flingingCoins = new LinkedList<>();
@@ -66,7 +68,7 @@ public class BlockCoin implements Item {
 
 	@Override
 	public Rectangle2D getRect(int offset) {
-		return new Rectangle2D.Double(0,0,0,0);
+		return rect;
 	}
 
 	@Override

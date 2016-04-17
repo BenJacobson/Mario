@@ -15,7 +15,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 // class to handle the painting of the game
-public class GameCanvas extends JComponent {
+class GameCanvas extends JComponent {
+
+	private Color backgroundColor = new Color(86, 151, 255);
 
 	@Override
 	protected void paintComponent(Graphics g) {
@@ -29,7 +31,7 @@ public class GameCanvas extends JComponent {
 	}
 
 	private void drawBackground(Graphics2D g2) {
-		g2.setColor(new Color(86, 151, 255));
+		g2.setColor(backgroundColor);
 		g2.fillRect(0, 0, getWidth(), getHeight());
 
 		for (Background background : Maps.backgrounds ) {

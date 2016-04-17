@@ -18,6 +18,7 @@ public class Goomba implements Enemy {
 	private final Pos originalPos;
 	private Pos pos;
 	private Vector vector = new Vector();
+	private Rectangle2D rect = new Rectangle2D.Double();
 
 	private final Image imageLeft = Images.goombaLeft;
 	private final Image imageRight = Images.goombaRight;
@@ -76,10 +77,11 @@ public class Goomba implements Enemy {
 	@Override
 	public Rectangle2D getRect(int offset) {
 		if ( state == State.ALIVE ) {
-			return new Rectangle2D.Double(pos.getX() - offset, pos.getY(), imageLeft.getWidth(null), imageLeft.getHeight(null));
+			rect.setRect(pos.getX() - offset, pos.getY(), imageLeft.getWidth(null), imageLeft.getHeight(null));
 		} else {
-			return new Rectangle2D.Double(0,0,0,0);
+			rect.setRect(0,0,0,0);
 		}
+		return rect;
 	}
 
 	@Override
