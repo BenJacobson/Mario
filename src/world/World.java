@@ -1,11 +1,11 @@
 package world;
 
 import world.enemy.Enemy;
-import mechanics.Pos;
-import mechanics.Side;
-import mechanics.Vector;
+import util.mechanics.Pos;
+import util.mechanics.Side;
+import util.mechanics.Vector;
 import stats.Stats;
-import util.Maps;
+import util.map.MapLoader;
 import window.GameFrame;
 import world.block.Block;
 import world.collision.*;
@@ -34,10 +34,10 @@ public class World {
 	private final int halfway = 1300*GameFrame.pixelScale();
 	private boolean madeHalfway = false;
 
-	private List<Block> blocks = Maps.blocks;
-	private List<Enemy> enemies = Maps.enemies;
+	private List<Block> blocks = MapLoader.blocks;
+	private List<Enemy> enemies = MapLoader.enemies;
 	private List<Points> points = new ArrayList<>();
-	private List<Item> items = Maps.items;
+	private List<Item> items = MapLoader.items;
 
 	public int getOffest() {
 		return offset;
@@ -84,7 +84,7 @@ public class World {
 
 		drawPoints(g2);
 
-		if ( Maps.flagpole != null ) Maps.flagpole.draw(g2, offset);
+		if ( MapLoader.flagpole != null ) MapLoader.flagpole.draw(g2, offset);
 
 		items.stream().forEach( item -> item.draw(g2, offset));
 

@@ -1,7 +1,7 @@
 package mario;
 
-import mechanics.Pos;
-import mechanics.Vector;
+import util.mechanics.Pos;
+import util.mechanics.Vector;
 import stats.Stats;
 import util.AudioController;
 import window.GameFrame;
@@ -30,6 +30,7 @@ public class Mario {
 	private Pos originalPos = new Pos(25 * GameFrame.pixelScale(), 180 * GameFrame.pixelScale());
 	private Pos currentPos = originalPos.copy();
 	private Vector vector = new Vector();
+	private Rectangle2D rect = new Rectangle2D.Double();
 
 	private boolean movingLeft = false;
 	private boolean movingRight = false;
@@ -347,9 +348,10 @@ public class Mario {
 
 
 	private Rectangle2D getRect() {
-		int width = 12 * GameFrame.pixelScale();
-		int height = (powerState == PowerState.SMALL ? 16 : 32) * GameFrame.pixelScale();
-		return new Rectangle2D.Double(currentPos.getX(), currentPos.getY(), width, height);
+		int width = (powerState == PowerState.SMALL ? 12 : 16) * GameFrame.pixelScale();
+		int height = (powerState == PowerState.SMALL ? 1 : 2) * GameFrame.blockDimension();
+		rect.setRect(currentPos.getX(), currentPos.getY(), width, height);
+		return rect;
 	}
 
 	private void updateVector() {

@@ -1,9 +1,9 @@
 package world.collision;
 
 import mario.Mario;
-import mechanics.Pos;
-import mechanics.Side;
-import mechanics.Vector;
+import util.mechanics.Pos;
+import util.mechanics.Side;
+import util.mechanics.Vector;
 import window.GameFrame;
 import world.block.Block;
 
@@ -19,7 +19,7 @@ public class CollisionOperator {
 		int upDown = shape.getY() - block.getY();
 		int leftRight = shape.getX() - block.getX();
 
-		int favorUpDown = 4*GameFrame.pixelScale();
+		int favorUpDown = 5*GameFrame.pixelScale();
 
 		if ( Math.abs(upDown)+favorUpDown >= Math.abs(leftRight) ) {
 			// top or bottom hit

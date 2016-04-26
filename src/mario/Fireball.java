@@ -1,7 +1,7 @@
 package mario;
 
-import mechanics.Pos;
-import mechanics.Vector;
+import util.mechanics.Pos;
+import util.mechanics.Vector;
 import util.Images;
 import window.GameFrame;
 import world.World;

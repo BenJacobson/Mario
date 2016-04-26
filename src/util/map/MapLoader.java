@@ -1,10 +1,11 @@
-package util;
+package util.map;
 
+import util.Images;
 import world.Flagpole;
 import world.background.Background;
 import world.enemy.Enemy;
 import world.enemy.Goomba;
-import mechanics.Pos;
+import util.mechanics.Pos;
 import window.GameFrame;
 import world.BlockCoin;
 import world.block.*;
@@ -14,7 +15,7 @@ import world.item.PowerUp;
 import java.io.*;
 import java.util.*;
 
-public class Maps {
+public class MapLoader {
 
 	public static List<Block> blocks;
 	public static List<Enemy> enemies;
@@ -27,7 +28,7 @@ public class Maps {
 
 		String mapFile = mapName + ".dat";
 		String mapPath = "/map/";
-		Scanner mapScan = new Scanner(new BufferedInputStream(Maps.class.getResourceAsStream(mapPath + mapFile)));
+		Scanner mapScan = new Scanner(new BufferedInputStream(MapLoader.class.getResourceAsStream(mapPath + mapFile)));
 
 		List<char[]> linesList = new LinkedList<>();
 
@@ -182,10 +183,10 @@ public class Maps {
 			System.out.printf("'%c' : %f\n", entry.getKey(), sum/times.size());
 		}
 
-		Maps.blocks = blocks;
-		Maps.enemies = enemies;
-		Maps.coins = coins;
-		Maps.backgrounds = backgrounds;
-		Maps.items = items;
+		MapLoader.blocks = blocks;
+		MapLoader.enemies = enemies;
+		MapLoader.coins = coins;
+		MapLoader.backgrounds = backgrounds;
+		MapLoader.items = items;
 	}
 }

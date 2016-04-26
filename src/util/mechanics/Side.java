@@ -1,4 +1,4 @@
-package mechanics;
+package util.mechanics;
 
 // which side of the block is hit in a blockCollisions
 public enum Side {

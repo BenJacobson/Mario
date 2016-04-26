@@ -1,6 +1,6 @@
 package world.background;
 
-import mechanics.Pos;
+import util.mechanics.Pos;
 
 import java.awt.*;
 

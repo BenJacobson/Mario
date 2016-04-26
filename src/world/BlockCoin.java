@@ -1,9 +1,8 @@
 package world;
 
 
-import mechanics.Pos;
-import mechanics.Vector;
-import org.w3c.dom.css.Rect;
+import util.mechanics.Pos;
+import util.mechanics.Vector;
 import stats.Stats;
 import util.AudioController;
 import util.Images;

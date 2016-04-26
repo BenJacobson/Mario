@@ -1,6 +1,6 @@
 package world;
 
-import mechanics.Pos;
+import util.mechanics.Pos;
 import util.Images;
 import window.GameFrame;
 

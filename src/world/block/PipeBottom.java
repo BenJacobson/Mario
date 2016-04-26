@@ -1,6 +1,6 @@
 package world.block;
 
-import mechanics.Pos;
+import util.mechanics.Pos;
 import util.Images;
 
 public class PipeBottom extends Block {

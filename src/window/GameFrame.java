@@ -3,7 +3,7 @@ package window;
 import mario.Mario;
 import util.AudioController;
 import util.Images;
-import util.Maps;
+import util.map.MapLoader;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,7 +29,7 @@ public class GameFrame extends JFrame {
 
 	public GameFrame() {
 
-		Maps.initBlocks("1-1");
+		MapLoader.initBlocks("1-1");
 
 		setTitle("Super Mario Bros.");
 

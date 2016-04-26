@@ -1,14 +1,12 @@
 package world.block;
 
-import mario.Mario;
-import mechanics.Pos;
+import util.mechanics.Pos;
 import util.AudioController;
 import util.FlashState;
 import util.Images;
 import window.GameFrame;
 import world.BlockCoin;
 import world.World;
-import world.item.Item;
 import world.item.PowerUp;
 
 import java.awt.*;

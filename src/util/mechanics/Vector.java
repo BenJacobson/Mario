@@ -1,4 +1,4 @@
-package mechanics;
+package util.mechanics;
 
 import window.GameFrame;
 

@@ -1,14 +1,11 @@
 package world.block;
 
-import mechanics.Pos;
+import util.mechanics.Pos;
 import util.AudioController;
-import window.GameFrame;
 import world.item.Item;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
-import java.util.LinkedList;
-import java.util.List;
 
 
 public class Block {

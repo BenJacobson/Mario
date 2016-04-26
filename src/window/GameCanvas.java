@@ -1,18 +1,13 @@
 package window;
 
 import mario.Mario;
-import main.MarioNes;
 import stats.Stats;
-import util.Maps;
+import util.map.MapLoader;
 import world.World;
 import world.background.Background;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 
 // class to handle the painting of the game
 class GameCanvas extends JComponent {
@@ -34,8 +29,9 @@ class GameCanvas extends JComponent {
 		g2.setColor(backgroundColor);
 		g2.fillRect(0, 0, getWidth(), getHeight());
 
-		for (Background background : Maps.backgrounds ) {
-			background.draw(g2, World.getInstance().getOffest());
+		int offset = World.getInstance().getOffest();
+		for (Background background : MapLoader.backgrounds ) {
+			background.draw(g2, offset);
 		}
 	}
 

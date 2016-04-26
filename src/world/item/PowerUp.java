@@ -1,8 +1,8 @@
 package world.item;
 
 
-import mechanics.Pos;
-import mechanics.Vector;
+import util.mechanics.Pos;
+import util.mechanics.Vector;
 import util.AudioController;
 import util.Images;
 import window.GameFrame;
