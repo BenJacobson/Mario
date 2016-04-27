@@ -58,10 +58,6 @@ public class World {
 		resetBlocks();
 	}
 
-	private void resetBlocks() {
-		blocks.forEach( block -> block.reset() );
-	}
-
 	private void resetOffset() {
 		if ( madeHalfway ) {
 			offset = halfway;
@@ -71,11 +67,15 @@ public class World {
 	}
 
 	private void resetEnemies() {
-		enemies.forEach( enemy -> enemy.reset() );
+		enemies.forEach(Enemy::reset);
 	}
 
 	private void resetItems() {
-		items.forEach( item -> item.reset() );
+		items.forEach(Item::reset);
+	}
+
+	private void resetBlocks() {
+		blocks.forEach(Block::reset);
 	}
 
 	public void draw(Graphics2D g2) {
@@ -189,7 +189,7 @@ public class World {
 				blockRect.getWidth(), blockRect.getHeight());
 
 		enemies.stream().filter( enemy -> enemy.getRect(offset).intersects(deadRect) )
-				.forEach( enemy -> enemy.flip() );
+				.forEach(Enemy::flip);
 	}
 
 	public void findItemHitByBlock(Rectangle2D blockRect) {

@@ -20,7 +20,7 @@ public class GameFrame extends JFrame {
 	private static final int UNSCALED_WIDTH = 256;
 	private static final int UNSCALED_HEIGHT = 230;
 
-	private static List<PeriodicTask> periodicTaskList = new LinkedList<PeriodicTask>();
+	private static List<PeriodicTask> periodicTaskList = new LinkedList<>();
 
 	public static int gameWidth() { return UNSCALED_WIDTH*PIXEL_SCALE; }
 	public static int gameHeight() { return UNSCALED_HEIGHT*PIXEL_SCALE; }
@@ -50,7 +50,7 @@ public class GameFrame extends JFrame {
 
 		Timer timer = new Timer();
 		timer.schedule(new TaskExecutor(), 0, 20);
-		addPeriodicTask(()->repaint());
+		addPeriodicTask(this::repaint);
 
 		AudioController.startTheme();
 	}
@@ -101,7 +101,7 @@ public class GameFrame extends JFrame {
 
 	private class TaskExecutor extends TimerTask {
 		public void run() {
-			periodicTaskList.forEach(PeriodicTask::run);
+			periodicTaskList.stream().parallel().forEach(PeriodicTask::run);
 		}
 	}
 }

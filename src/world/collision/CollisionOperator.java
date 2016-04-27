@@ -14,7 +14,7 @@ import java.util.List;
 
 public class CollisionOperator {
 
-	public Side getSide(Pos shape, Pos block, Vector vector) {
+	private Side getSide(Pos shape, Pos block, Vector vector) {
 
 		int upDown = shape.getY() - block.getY();
 		int leftRight = shape.getX() - block.getX();

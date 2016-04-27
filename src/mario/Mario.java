@@ -57,14 +57,16 @@ public class Mario {
 	private PowerState powerState = PowerState.SMALL;
 
 	private final MarioFrames marioFrames = new MarioFrames();
-	private List<Fireball> fireballs = new ArrayList<Fireball>();
+	private List<Fireball> fireballs = new ArrayList<>();
 
 	private final int D_LEFT = 37;
 	private final int D_RIGHT = 39;
 	private final int BUTTON_A = 32;
 	private final int BUTTON_B = 88;
 
-	private Mario() {}
+	private Mario() {
+		GameFrame.addPeriodicTask(this::move);
+	}
 
 	private void setRunFrame() {
 		if (!canJumpAgain) {
@@ -114,12 +116,14 @@ public class Mario {
 	}
 
 	public void draw(Graphics2D g2) {
-		move();
 		drawFireballs(g2);
 		drawMario(g2);
 	}
 
 	private void drawMario(Graphics2D g2) {
+		// Flash mario while he is invincible
+		if ( invincible > 0 && (invincible/5)%2 == 0 ) { return; }
+
 		Image currentFrame = marioFrames.getFrame(powerState, frameState, lastDirectionForward, shoot);
 
 		int extraX = 0, extraY = 0;
@@ -243,14 +247,14 @@ public class Mario {
 	}
 
 	private void hit() {
-		if (invincible > 0) {
-			return;
-		} else if (powerState == PowerState.SMALL) {
-			dead();
-		} else {
-			powerState = PowerState.SMALL;
-			currentPos.moveDown(GameFrame.blockDimension());
-			invincible = 100;
+		if (invincible <= 0) { // not invincible
+			if (powerState == PowerState.SMALL) {
+				dead();
+			} else {
+				powerState = PowerState.SMALL;
+				currentPos.moveDown(GameFrame.blockDimension());
+				invincible = 100;
+			}
 		}
 	}
 

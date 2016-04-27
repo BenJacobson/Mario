@@ -17,12 +17,12 @@ public class Stats {
 		return instance;
 	}
 
-	int score = 0;
-	int coins = 0;
-	long startTime = System.currentTimeMillis();
-	long pauseTime;
-	State state = State.NORMAL;
-	Font font = new Font(Font.MONOSPACED, Font.BOLD, 10*GameFrame.pixelScale());
+	private int score = 0;
+	private int coins = 0;
+	private long startTime = System.currentTimeMillis();
+	private long pauseTime;
+	private State state = State.NORMAL;
+	private Font font = new Font(Font.MONOSPACED, Font.BOLD, 10*GameFrame.pixelScale());
 
 	private Stats() {}
 
@@ -32,19 +32,20 @@ public class Stats {
 		FontMetrics metrics = g2.getFontMetrics();
 		int y = GameFrame.blockDimension();
 		int line2 = metrics.getHeight()/2 + GameFrame.pixelScale();
+		int width = GameFrame.gameWidth();
 
-		g2.drawString("MARIO", GameFrame.gameWidth()/16, y);
-		g2.drawString(String.format("%06d", score), GameFrame.gameWidth()/16, y + line2);
+		g2.drawString("MARIO", width/16, y);
+		g2.drawString(String.format("%06d", score), width/16, y + line2);
 
-		g2.drawImage(getCoinImage(), GameFrame.gameWidth()*5/16 + GameFrame.pixelScale()*2,
-				y + line2 - GameFrame.blockDimension()/2 + GameFrame.pixelScale(), null);
-		g2.drawString(String.format("×%02d",coins), GameFrame.gameWidth()*11/32, y + line2);
+		g2.drawImage(getCoinImage(), width*5/16 + GameFrame.pixelScale()*2,
+				y/2 + line2 + GameFrame.pixelScale(), null);
+		g2.drawString(String.format("×%02d",coins), width*11/32, y + line2);
 
-		g2.drawString("WORLD", GameFrame.gameWidth()*9/16, y);
-		g2.drawString(" 1-1", GameFrame.gameWidth()*9/16, y + line2);
+		g2.drawString("WORLD", width*9/16, y);
+		g2.drawString(" 1-1", width*9/16, y + line2);
 
-		g2.drawString("TIME", GameFrame.gameWidth()*13/16, y);
-		g2.drawString(String.format(" %03d",getTime()), GameFrame.gameWidth()*13/16, y + line2);
+		g2.drawString("TIME", width*13/16, y);
+		g2.drawString(String.format(" %03d",getTime()), width*13/16, y + line2);
 	}
 
 	private Image getCoinImage() {

@@ -60,7 +60,7 @@ public class Question extends Block {
 			} else if ( bounceState < 10 ) {
 				y += 2 * GameFrame.pixelScale();
 			} else {
-				if (item instanceof PowerUp )doItem();
+				if (item instanceof PowerUp) doItem();
 				bounceState = -1;
 				return y;
 			}

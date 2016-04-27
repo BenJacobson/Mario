@@ -28,7 +28,7 @@ public class Goomba implements Enemy {
 
 	private State state = State.ALIVE;
 
-	boolean useLeftImage;
+	private boolean useLeftImage;
 	private int numberOfPasses = 0;
 	private int drawSquished = 0;
 	public Goomba(Pos pos) {

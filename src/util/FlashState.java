@@ -15,7 +15,7 @@ public class FlashState {
 		return curState;
 	}
 
-	public static void advanceState() {
+	private static void advanceState() {
 		if ( state++ > 4 ) {
 			state = 0;
 
