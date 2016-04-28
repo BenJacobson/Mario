@@ -1,5 +1,7 @@
 package world;
 
+import util.map.MapBlocks;
+import world.background.Background;
 import world.enemy.Enemy;
 import util.mechanics.Pos;
 import util.mechanics.Side;
@@ -34,10 +36,26 @@ public class World {
 	private final int halfway = 1300*GameFrame.pixelScale();
 	private boolean madeHalfway = false;
 
-	private List<Block> blocks = MapLoader.blocks;
-	private List<Enemy> enemies = MapLoader.enemies;
+	private Color backgroundColor = new Color(86, 151, 255);
+
+	private List<Block> blocks;
+	private List<Enemy> enemies;
+	private List<BlockCoin> coins;
+	private List<Background> backgrounds;
+	private List<Item> items;
+	private Flagpole flagpole;
+
 	private List<Points> points = new ArrayList<>();
-	private List<Item> items = MapLoader.items;
+
+	public void loadMap(String mapName) {
+		MapBlocks mapBlocks = MapLoader.loadMap(mapName);
+		blocks = mapBlocks.getBlocks();
+		enemies = mapBlocks.getEnemies();
+		coins = mapBlocks.getCoins();
+		backgrounds = mapBlocks.getBackgrounds();
+		items = mapBlocks.getItems();
+		flagpole = mapBlocks.getFlagpole();
+	}
 
 	public int getOffest() {
 		return offset;
@@ -80,11 +98,15 @@ public class World {
 
 	public void draw(Graphics2D g2) {
 
+		drawBackground(g2);
+
+		drawStats(g2);
+
 		findEnemyEnemyCollisions();
 
 		drawPoints(g2);
 
-		if ( MapLoader.flagpole != null ) MapLoader.flagpole.draw(g2, offset);
+		if ( flagpole != null ) flagpole.draw(g2, offset);
 
 		items.stream().forEach( item -> item.draw(g2, offset));
 
@@ -100,6 +122,20 @@ public class World {
 	private void drawPoints(Graphics2D g2) {
 		points.stream().forEach( p -> p.draw(g2, offset) );
 		points = points.stream().filter( p -> !p.isDone() ).collect(Collectors.toList());
+	}
+
+	private void drawBackground(Graphics2D g2) {
+		g2.setColor(backgroundColor);
+		g2.fillRect(0, 0, GameFrame.gameWidth(), GameFrame.gameHeight());
+
+		int offset = World.getInstance().getOffest();
+		for (Background background : backgrounds ) {
+			background.draw(g2, offset);
+		}
+	}
+
+	private void drawStats(Graphics2D g2) {
+		Stats.getInstance().draw(g2);
 	}
 
 	private void findEnemyEnemyCollisions() {

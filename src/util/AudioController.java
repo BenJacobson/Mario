@@ -3,7 +3,6 @@ package util;
 import sun.audio.AudioPlayer;
 import sun.audio.AudioStream;
 import window.GameFrame;
-import window.PeriodicTask;
 
 import java.io.IOException;
 
@@ -22,12 +21,11 @@ public class AudioController {
 			return audioStream;
 		} catch (IOException e) {
 			e.printStackTrace();
-			System.exit(1);
 			return null;
 		}
 	}
 
-	public static void stop(AudioStream audioStream) {
+	private static void stop(AudioStream audioStream) {
 		AudioPlayer.player.stop(audioStream);
 	}
 
@@ -39,7 +37,7 @@ public class AudioController {
 		theme = play("/sound/mario theme.wav");
 	}
 
-	public static void loopTheme() {
+	private static void loopTheme() {
 		try {
 			if (theme != null && theme.available() < 3000) {
 				AudioStream themeToStop = theme;

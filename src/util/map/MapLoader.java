@@ -17,13 +17,6 @@ import java.util.*;
 
 public class MapLoader {
 
-	public static List<Block> blocks;
-	public static List<Enemy> enemies;
-	public static List<BlockCoin> coins;
-	public static List<Background> backgrounds;
-	public static List<Item> items;
-	public static Flagpole flagpole;
-
 	private static char[][] getMap(String mapName) {
 
 		String mapFile = mapName + ".dat";
@@ -48,13 +41,14 @@ public class MapLoader {
 		return map;
 	}
 
-	public static void initBlocks(String mapName) {
+	public static MapBlocks loadMap(String mapName) {
 
 		List<Block> blocks = new LinkedList<>();
 		List<Enemy> enemies = new LinkedList<>();
 		List<BlockCoin> coins = new LinkedList<>();
 		List<Background> backgrounds = new LinkedList<>();
 		List<Item> items = new LinkedList<>();
+		Flagpole flagpole = null;
 
 		char[][] map = getMap(mapName);
 
@@ -183,10 +177,6 @@ public class MapLoader {
 			System.out.printf("'%c' : %f\n", entry.getKey(), sum/times.size());
 		}
 
-		MapLoader.blocks = blocks;
-		MapLoader.enemies = enemies;
-		MapLoader.coins = coins;
-		MapLoader.backgrounds = backgrounds;
-		MapLoader.items = items;
+		return new MapBlocks(blocks, enemies, coins, backgrounds, items, flagpole);
 	}
 }

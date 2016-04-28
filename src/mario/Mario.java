@@ -41,12 +41,15 @@ public class Mario {
 	private boolean jumpHeld = false;
 	private boolean canShootAgain = false;
 	private boolean shoot = false;
+	private boolean lastPowerChangeDown = false;
+	private boolean powerChange = false;
 
 	private int numberOfPasses = 0;
 	private int jumpHeldState = 0;
 	private int jumpHeldPasses = 0;
 	private int deadState = 0;
 	private int invincible = 0;
+	private int powerChangeState = 0;
 
 	private final int waitShootShort = 5;
 	private final int waitShootLong = 40;
@@ -122,18 +125,32 @@ public class Mario {
 
 	private void drawMario(Graphics2D g2) {
 		// Flash mario while he is invincible
-		if ( invincible > 0 && (invincible/5)%2 == 0 ) { return; }
+		if ( invincible > 0 && invincible%2 == 0 ) { return; }
 
-		Image currentFrame = marioFrames.getFrame(powerState, frameState, lastDirectionForward, shoot);
+		PowerState imagePowerState = powerChange ? getPowerChangePowerState() : powerState;
+		Image currentFrame = marioFrames.getFrame(imagePowerState, frameState, lastDirectionForward, shoot);
 
 		int extraX = 0, extraY = 0;
 		if (frameState == FrameState.JUMP || frameState == FrameState.RUN4) {
-			extraX = 2 * GameFrame.pixelScale();
+			extraX += 2 * GameFrame.pixelScale();
 		} else if (frameState == FrameState.RUN1 || frameState == FrameState.RUN3) {
-			extraY = GameFrame.pixelScale();
+			extraY += GameFrame.pixelScale();
+		}
+		if (imagePowerState != PowerState.SMALL) {
+			extraY -= GameFrame.blockDimension();
 		}
 
 		g2.drawImage(currentFrame, currentPos.getX() - extraX, currentPos.getY() + extraY, null);
+	}
+
+	private PowerState getPowerChangePowerState() {
+		if (lastPowerChangeDown) {
+			return powerChangeState%2 == 0 ? PowerState.BIG : PowerState.SMALL;
+		} else if ( powerState == PowerState.BIG ) {
+			return powerChangeState%2 == 0 ? PowerState.BIG : PowerState.SMALL;
+		} else {
+			return powerChangeState%2 == 0 ? PowerState.BIG : PowerState.FIRE;
+		}
 	}
 
 	private void drawFireballs(Graphics2D g2) {
@@ -142,7 +159,9 @@ public class Mario {
 	}
 
 	public void setKey(int action) {
-
+		if (isPaused()) {
+			return;
+		}
 		if (action == D_LEFT) {
 			movingLeft = true;
 			movingRight = false;
@@ -153,7 +172,7 @@ public class Mario {
 			if (canJumpAgain) lastDirectionForward = true;
 		} else if (action == BUTTON_B) {
 			if (canJumpAgain) {
-				running = true;				
+				running = true;
 			}
 			if ( powerState == PowerState.FIRE && canShootAgain ) {
 				canShootAgain = false;
@@ -183,7 +202,14 @@ public class Mario {
 
 	private void move() {
 
-		if (frameState != FrameState.DEAD) {
+		if ( powerChange ) {
+			if ( --powerChangeState == 0 ) {
+				powerChange = false;
+				if (lastPowerChangeDown) {
+					invincible = 100;
+				}
+			}
+		} else if (frameState != FrameState.DEAD) {
 
 			handleJump();
 
@@ -234,11 +260,15 @@ public class Mario {
 	}
 
 	private void powerUp() {
-		if (powerState == PowerState.SMALL) {
-			powerState = PowerState.BIG;
-			currentPos.moveDown(-GameFrame.blockDimension());
-		} else if (powerState == PowerState.BIG) {
-			powerState = PowerState.FIRE;
+		if (powerState != PowerState.FIRE) {
+			if (powerState == PowerState.SMALL) {
+				powerState = PowerState.BIG;
+			} else if (powerState == PowerState.BIG) {
+				powerState = PowerState.FIRE;
+			}
+			powerChange = true;
+			powerChangeState = 50;
+			lastPowerChangeDown = false;
 		}
 	}
 
@@ -252,21 +282,22 @@ public class Mario {
 				dead();
 			} else {
 				powerState = PowerState.SMALL;
-				currentPos.moveDown(GameFrame.blockDimension());
-				invincible = 100;
+				powerChange = true;
+				powerChangeState = 50;
+				lastPowerChangeDown = true;
+				AudioController.play("/sound/pipe-powerdown.wav");
 			}
 		}
 	}
 
 	private void handleEnemies() {
+		if (invincible>0)
+			return;
 		Boolean[] hits = World.getInstance().findMarioEnemyCollisions(getRect());
-
-		if (hits[0]) {
+		if (hits[0])
 			hit();
-		}
-		if (hits[1]) {
+		if (hits[1])
 			vector.jump(0.6);
-		}
 	}
 
 	private void checkDead() {
@@ -289,8 +320,8 @@ public class Mario {
 		AudioController.play("/sound/mario_die.wav");
 	}
 
-	public boolean isNotDead() {
-		return frameState != FrameState.DEAD;
+	public boolean isPaused() {
+		return frameState == FrameState.DEAD || powerChange;
 	}
 
 	private void reset() {
@@ -316,7 +347,7 @@ public class Mario {
 
 		canJumpAgain = collisionResult.isTopHit();
 
-		if (collisionResult.isTopHit() && !movingLeft && !movingRight && isNotDead()) {
+		if (collisionResult.isTopHit() && !movingLeft && !movingRight && !isPaused()) {
 			if ( vector.getDx() == 0 ) {
 				frameState = FrameState.STAND;
 			} else if ( !isInRunState() ) {
@@ -352,9 +383,10 @@ public class Mario {
 
 
 	private Rectangle2D getRect() {
+		int y = powerState == PowerState.SMALL ? currentPos.getY() : currentPos.getY() - GameFrame.blockDimension();
 		int width = (powerState == PowerState.SMALL ? 12 : 16) * GameFrame.pixelScale();
 		int height = (powerState == PowerState.SMALL ? 1 : 2) * GameFrame.blockDimension();
-		rect.setRect(currentPos.getX(), currentPos.getY(), width, height);
+		rect.setRect(currentPos.getX(), y, width, height);
 		return rect;
 	}
 

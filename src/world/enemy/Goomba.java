@@ -126,7 +126,7 @@ public class Goomba implements Enemy {
 	}
 
 	private void update() {
-		if ( (state == State.ALIVE || state == State.FLIPPED) && Mario.getInstance().isNotDead() ) {
+		if ( (state == State.ALIVE || state == State.FLIPPED) && !Mario.getInstance().isPaused() ) {
 			vector.gravity();
 			pos.move(vector);
 			checkCollision();
@@ -147,7 +147,7 @@ public class Goomba implements Enemy {
 	}
 
 	private void updateFrame() {
-		if ( state == State.ALIVE && Mario.getInstance().isNotDead()) {
+		if ( state == State.ALIVE && !Mario.getInstance().isPaused()) {
 			numberOfPasses++;
 
 			int passesBetweenFrames = 5;
