@@ -340,7 +340,7 @@ public class Mario {
 
 	private void handleCollisions() {
 
-		CollisionResult collisionResult = World.getInstance().blockCollisions(getRect(), vector);
+		CollisionResult collisionResult = World.getInstance().blockCollisions(getRect(), vector, true);
 
 		currentPos.moveDown(collisionResult.getDy());
 		// Prevent the collision from shifting mario if he is hitting the bottom of things with his head

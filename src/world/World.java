@@ -1,7 +1,7 @@
 package world;
 
 import util.map.MapBlocks;
-import world.background.Background;
+import world.background.Backgrounds;
 import world.enemy.Enemy;
 import util.mechanics.Pos;
 import util.mechanics.Side;
@@ -41,7 +41,7 @@ public class World {
 	private List<Block> blocks;
 	private List<Enemy> enemies;
 	private List<BlockCoin> coins;
-	private List<Background> backgrounds;
+	private List<Backgrounds> backgrounds;
 	private List<Item> items;
 	private Flagpole flagpole;
 
@@ -129,7 +129,7 @@ public class World {
 		g2.fillRect(0, 0, GameFrame.gameWidth(), GameFrame.gameHeight());
 
 		int offset = World.getInstance().getOffest();
-		for (Background background : backgrounds ) {
+		for (Backgrounds background : backgrounds ) {
 			background.draw(g2, offset);
 		}
 	}
@@ -222,8 +222,8 @@ public class World {
 		}
 	}
 
-	public CollisionResult blockCollisions(Rectangle2D inputRect, Vector vector) {
-		return collisionOperator.collision(blocks, inputRect, vector, offset);
+	public CollisionResult blockCollisions(Rectangle2D inputRect, Vector vector, boolean isMario) {
+		return collisionOperator.collision(blocks, inputRect, vector, offset, isMario);
 	}
 
 	public void addPoints(int amount, Pos pos) {

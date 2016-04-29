@@ -3,6 +3,8 @@ package util.map;
 import util.Images;
 import world.Flagpole;
 import world.background.Background;
+import world.background.Backgrounds;
+import world.background.SmallCastle;
 import world.enemy.Enemy;
 import world.enemy.Goomba;
 import util.mechanics.Pos;
@@ -46,7 +48,7 @@ public class MapLoader {
 		List<Block> blocks = new LinkedList<>();
 		List<Enemy> enemies = new LinkedList<>();
 		List<BlockCoin> coins = new LinkedList<>();
-		List<Background> backgrounds = new LinkedList<>();
+		List<Backgrounds> backgrounds = new LinkedList<>();
 		List<Item> items = new LinkedList<>();
 		Flagpole flagpole = null;
 
@@ -148,6 +150,8 @@ public class MapLoader {
 					case 'f':
 						flagpole = new Flagpole(new Pos(xcoord, ycoord));
 						break;
+					case 'q':
+						backgrounds.add(new SmallCastle(new Pos(xcoord, ycoord)));
 				}
 
 				long end = System.currentTimeMillis();

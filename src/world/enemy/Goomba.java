@@ -137,7 +137,7 @@ public class Goomba implements Enemy {
 	private void checkCollision() {
 
 		int offset = World.getInstance().getOffest();
-		CollisionResult collisionResult = World.getInstance().blockCollisions(getRect(offset), vector);
+		CollisionResult collisionResult = World.getInstance().blockCollisions(getRect(offset), vector, false);
 
 		pos.moveDown(collisionResult.getDy());
 		if ( Math.abs(collisionResult.getDx()) > 0 ) {

@@ -11,16 +11,17 @@ import java.awt.geom.Rectangle2D;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 public class CollisionOperator {
 
-	private Side getSide(Rectangle2D shape, Rectangle2D block, Vector vector) {
+	private Side getSide(Rectangle2D shape, Rectangle2D block, Vector vector, boolean isMario) {
 
 		int upDown = (int)(shape.getCenterY() - block.getCenterY());
 		int leftRight = (int)(shape.getCenterX() - block.getCenterX());
 
 		// When mario (or anything) is big his center is further from his top and bottom, this will account for that
-		double heightBias = shape.getHeight()/GameFrame.blockDimension();
+		double heightBias = isMario && Mario.getInstance().isBig() ? 2 : 1;
 		// Favor top allows mario and enemies to run around smoothly of the top of blocks without hitting top corners
 		int favorTop = (int)(5*GameFrame.pixelScale()/heightBias);
 		// Disfavor bottom allows mario to jump from below around a block directly above him easier (not hit his head)
@@ -41,7 +42,7 @@ public class CollisionOperator {
 		return Side.NONE;
 	}
 
-	public CollisionResult collision(List<Block> blocks, Rectangle2D inputRect, Vector vector, int offset) {
+	public CollisionResult collision(List<Block> blocks, Rectangle2D inputRect, Vector vector, int offset, boolean isMario) {
 
 		List<Block> topHit = null;
 		List<Block> bottomHit = null;
@@ -55,7 +56,7 @@ public class CollisionOperator {
 			if ( blockX > -gameWidth && blockX < gameWidth*2 ) {
 				if ( inputRect.intersects( block.getRect(offset) ) ) {
 
-					switch ( getSide(inputRect, block.getRect(offset), vector) ) {
+					switch ( getSide(inputRect, block.getRect(offset), vector, isMario) ) {
 						case TOP:
 							if ( topHit == null ) {topHit = new LinkedList<>();}
 							topHit.add(block);
@@ -91,9 +92,15 @@ public class CollisionOperator {
 			Block block = bottomHit.get(0);
 			result.setDy(block.getY() + block.getHeight() - inputRect.getY());
 
-			int inputCenter = (int) inputRect.getCenterX();
-			final Comparator<Block> comparator = (b1, b2) -> ( Integer.compare(Math.abs(b1.getCenter(offset).getX()-inputCenter), Math.abs(b2.getCenter(offset).getX()-inputCenter)));
-			bottomHit.stream().min(comparator).get().hit(Mario.getInstance().isBig());
+			if (isMario) {
+				int inputCenter = (int) inputRect.getCenterX();
+				final Comparator<Block> comparator = (b1, b2) -> ( Integer.compare(
+						Math.abs(b1.getCenter(offset).getX()-inputCenter),
+						Math.abs(b2.getCenter(offset).getX()-inputCenter)));
+				Optional<Block> closestBlock = bottomHit.stream().min(comparator);
+				if (closestBlock.isPresent())
+					closestBlock.get().hit(Mario.getInstance().isBig());
+			}
 		}
 		if ( leftHit != null && leftHit.size() > 0 ) {
 			result.setLeftHit(true);

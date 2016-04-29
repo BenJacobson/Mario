@@ -114,6 +114,15 @@ public class Images {
 	public static final Image bush_medium = initFrame("bush_medium.png");
 	public static final Image bush_large = initFrame("bush_large.png");
 
+	// Castle
+	public static final Image castle_arch = initFrame("castle_arch.png");
+	public static final Image castle_brick = initFrame("castle_brick.png");
+	public static final Image castle_entry = initFrame("castle_entry.png");
+	public static final Image castle_tier_closed = initFrame("castle_tier_closed.png");
+	public static final Image castle_tier_open = initFrame("castle_tier_open.png");
+	public static final Image castle_window_left = initFrame("castle_window_left.png");
+	public static final Image castle_window_right = initFrame("castle_window_right.png");
+
 	//flagpole
 	public static final Image flagpole_pole = initFrame("flagpole_pole.png");
 	public static final Image flagpole_ball = initFrame("flagpole_ball.png");

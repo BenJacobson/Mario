@@ -40,7 +40,7 @@ class Fireball {
 
 		// only update and move fireball if it is not already exploding
 		if ( state == State.FIRE1 || state == State.FIRE2 || state == State.FIRE3 || state == State.FIRE4 ) {
-			CollisionResult collisions = World.getInstance().blockCollisions(getRect(offset), vector);
+			CollisionResult collisions = World.getInstance().blockCollisions(getRect(offset), vector, false);
 			if (collisions.isTopHit()) { // bounce the fireball on the top of blocks
 				vector.hitY();
 				vector.jump(0.6);
