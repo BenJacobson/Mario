@@ -12,7 +12,7 @@ public class Block {
 
 	protected Pos pos;
 
-	protected Rectangle2D rect = new Rectangle2D.Double(0,0,0,0);
+	protected Rectangle2D rect = new Rectangle2D.Double();
 
 	protected Image image;
 
@@ -55,7 +55,7 @@ public class Block {
 
 	public void hit(boolean big) {
 		this.big = big;
-		AudioController.play("/sound/block_bump.wav");
+		AudioController.play("/sound/bump.wav");
 	}
 
 	public void reset() {}

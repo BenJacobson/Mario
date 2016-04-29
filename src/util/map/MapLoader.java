@@ -170,11 +170,12 @@ public class MapLoader {
 
 		for ( Map.Entry entry : blockBuildTimes.entrySet() ) {
 			double sum = 0;
-			List<Long> times = (List<Long>) entry.getValue();
-			for ( Long time : times ) {
-				sum += time;
+			List times = (List) entry.getValue();
+			for ( Object time : times ) {
+				sum += (Long)time;
 			}
-			System.out.printf("'%c' : %f\n", entry.getKey(), sum/times.size());
+			char c = (char)entry.getKey();
+			System.out.printf("'%c' : %f\n", c, sum/times.size());
 		}
 
 		return new MapBlocks(blocks, enemies, coins, backgrounds, items, flagpole);

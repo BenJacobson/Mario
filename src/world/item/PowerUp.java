@@ -14,15 +14,16 @@ import java.awt.geom.Rectangle2D;
 
 public class PowerUp implements Item {
 
-	Pos originalPos;
-	Pos pos;
-	Vector vector = new Vector();
-	Image imageMushroom = Images.mushroom;
-	Image imageFireFlower = Images.fireflower;
-	State state = State.READY;
-	int riseState;
-	int riseFrames = 40;
-	boolean mushroom = true;
+	private Pos originalPos;
+	private Pos pos;
+	private Vector vector = new Vector();
+	private Rectangle2D rect = new Rectangle2D.Double();
+	private Image imageMushroom = Images.mushroom;
+	private Image imageFireFlower = Images.fireflower;
+	private State state = State.READY;
+	private int riseState;
+	private int riseFrames = 40;
+	private boolean mushroom = true;
 
 	public PowerUp(Pos pos) {
 		this.pos = pos;
@@ -77,10 +78,11 @@ public class PowerUp implements Item {
 
 	public Rectangle2D getRect(int offset) {
 		if ( state == State.NORMAL ) {
-			return new Rectangle2D.Double(pos.getX() - offset, pos.getY(), imageMushroom.getWidth(null), imageMushroom.getHeight(null));
+			rect.setRect(pos.getX() - offset, pos.getY(), imageMushroom.getWidth(null), imageMushroom.getHeight(null));
 		} else {
-			return new Rectangle2D.Double(0,0,0,0);
+			rect.setRect(0,0,0,0);
 		}
+		return rect;
 	}
 
 	@Override

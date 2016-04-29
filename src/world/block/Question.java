@@ -74,7 +74,7 @@ public class Question extends Block {
 	@Override
 	public void hit(boolean big) {
 		this.big = big;
-		AudioController.play("/sound/block_bump.wav");
+		AudioController.play("/sound/bump.wav");
 		if ( state != State.USED ) {
 			if ( item instanceof BlockCoin ) doItem();
 			bounceState = 0;

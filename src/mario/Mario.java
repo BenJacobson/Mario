@@ -293,7 +293,7 @@ public class Mario {
 	private void handleEnemies() {
 		if (invincible>0)
 			return;
-		Boolean[] hits = World.getInstance().findMarioEnemyCollisions(getRect());
+		Boolean[] hits = World.getInstance().findMarioEnemyCollisions(getRect(), vector.getDy() > 0);
 		if (hits[0])
 			hit();
 		if (hits[1])
@@ -343,7 +343,12 @@ public class Mario {
 		CollisionResult collisionResult = World.getInstance().blockCollisions(getRect(), vector);
 
 		currentPos.moveDown(collisionResult.getDy());
-		currentPos.moveRight(collisionResult.getDx());
+		// Prevent the collision from shifting mario if he is hitting the bottom of things with his head
+		// It looks funny if mario hits the bottom of a row of blocks and gets shifted around
+		if ( !collisionResult.isBottomHit() ) {
+			currentPos.moveRight(collisionResult.getDx());
+		}
+
 
 		canJumpAgain = collisionResult.isTopHit();
 
@@ -359,7 +364,7 @@ public class Mario {
 		if (collisionResult.isTopHit() || collisionResult.isBottomHit()) {
 			vector.hitY();
 		}
-		if (collisionResult.isLeftHit() || collisionResult.isRightHit()) {
+		if ( (collisionResult.isLeftHit() && vector.getDx() > 0) || (collisionResult.isRightHit() && vector.getDx() < 0) ) {
 			vector.hitX();
 		}
 

@@ -58,6 +58,10 @@ public class Vector {
 		}
 	}
 
+	public void gravityNoTerminalVelocity() {
+		dy += genSpeed*3;
+	}
+
 	public void moveRight(boolean speedy) {
 		if ( dx < genSpeed*getSpeed(speedy) ) {
 			dx += genSpeed;
@@ -81,8 +85,7 @@ public class Vector {
 	public double getFast() {
 		double curDX = Math.abs(dx);
 		double maxSpeed = genSpeed*getSpeed(true);
-		double ratio = curDX / maxSpeed;
-		return ratio;
+		return curDX / maxSpeed;
 	}
 
 	public void reduceSpeed() {

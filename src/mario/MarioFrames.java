@@ -121,7 +121,7 @@ class MarioFrames {
 		};
 	}
 
-	public Image getFrame(Mario.PowerState powerState, Mario.FrameState frameState, boolean lastDirectionForward, boolean shoot) {
+	Image getFrame(Mario.PowerState powerState, Mario.FrameState frameState, boolean lastDirectionForward, boolean shoot) {
 		if ( shoot && powerState == Mario.PowerState.FIRE ) {
 			frameState = Mario.FrameState.RUN2;
 		}

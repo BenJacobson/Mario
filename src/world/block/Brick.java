@@ -19,6 +19,7 @@ public class Brick extends Block {
 	private int breakState = 0;
 	private BrokenPositions brokenPositions = new BrokenPositions();
 	private Image brokenImage, usedImage;
+	private final Rectangle2D emptyRect = new Rectangle2D.Double(0,0,0,0);
 
 	public Brick(Pos pos) {
 		super(pos);
@@ -70,7 +71,7 @@ public class Brick extends Block {
 
 	@Override
 	public Rectangle2D getRect(int offset) {
-		return blockState == BlockState.GONE || blockState == BlockState.BREAK ? new Rectangle2D.Double(0,0,0,0) : super.getRect(offset);
+		return blockState == BlockState.GONE || blockState == BlockState.BREAK ? emptyRect : super.getRect(offset);
 	}
 
 	@Override
@@ -78,7 +79,7 @@ public class Brick extends Block {
 		if ( blockState == BlockState.GONE ) {
 			return;
 		} else if ( imageState == ImageState.USED ) {
-			AudioController.play("/sound/block_bump.wav");
+			AudioController.play("/sound/bump.wav");
 		} else if ( item != null ) {
 			// if the block has more items, do it
 			if ( item.ready() ) {
@@ -90,7 +91,7 @@ public class Brick extends Block {
 				imageState = ImageState.USED;
 			}
 			bounceState = 0;
-			AudioController.play("/sound/block_bump.wav");
+			AudioController.play("/sound/bump.wav");
 		} else if ( big ) {
 			blockState = BlockState.BREAK;
 			breakState = 0;
@@ -99,7 +100,7 @@ public class Brick extends Block {
 		} else {
 			blockState = BlockState.BOUNCE;
 			bounceState = 0;
-			AudioController.play("/sound/block_bump.wav");
+			AudioController.play("/sound/bump.wav");
 		}
 		int offset = World.getInstance().getOffest();
 		World.getInstance().findEnemyDeadByBlock(this.getRect(offset));
@@ -125,12 +126,12 @@ public class Brick extends Block {
 
 	private class BrokenPositions {
 
-		Pos part1, part2, part3, part4;
-		Vector vector1 = new Vector(), vector2 = new Vector(), vector3 = new Vector(), vector4 = new Vector();
-		double dx = GameFrame.pixelScale();
-		double dy = -4*GameFrame.pixelScale();
+		private Pos part1, part2, part3, part4;
+		private Vector vector1 = new Vector(), vector2 = new Vector(), vector3 = new Vector(), vector4 = new Vector();
+		private double dx = 1.5*GameFrame.pixelScale();
+		private double dy = -4*GameFrame.pixelScale();
 
-		public void set(Pos startPos) {
+		private void set(Pos startPos) {
 			part1 = startPos.copy();
 			part2 = startPos.copy();
 			part3 = startPos.copy();
@@ -143,10 +144,10 @@ public class Brick extends Block {
 		}
 
 		private void update() {
-			vector1.gravity();
-			vector2.gravity();
-			vector3.gravity();
-			vector4.gravity();
+			vector1.gravityNoTerminalVelocity();
+			vector2.gravityNoTerminalVelocity();
+			vector3.gravityNoTerminalVelocity();
+			vector4.gravityNoTerminalVelocity();
 
 			part1.move(vector1);
 			part2.move(vector2);
@@ -158,7 +159,7 @@ public class Brick extends Block {
 			}
 		}
 
-		public Pos[] get() {
+		private Pos[] get() {
 			update();
 			return new Pos[] {part1, part2, part3, part4};
 		}

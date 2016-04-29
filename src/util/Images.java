@@ -89,6 +89,11 @@ public class Images {
 	public static final Image fireball3 = initFrame("fireball3.png");
 	public static final Image fireball4 = initFrame("fireball4.png");
 
+	// explosion
+	public static final Image explosion1 = initFrame("explosion1.png");
+	public static final Image explosion2 = initFrame("explosion2.png");
+	public static final Image explosion3 = initFrame("explosion3.png");
+
 	// goomba images
 	public static final Image goombaLeft = initFrame("enemy_goomba_left.png");
 	public static final Image goombaRight = initFrame("enemy_goomba_right.png");

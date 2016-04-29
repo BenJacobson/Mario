@@ -14,27 +14,28 @@ import java.util.List;
 
 public class CollisionOperator {
 
-	private Side getSide(Pos shape, Pos block, Vector vector) {
+	private Side getSide(Rectangle2D shape, Rectangle2D block, Vector vector) {
 
-		int upDown = shape.getY() - block.getY();
-		int leftRight = shape.getX() - block.getX();
+		int upDown = (int)(shape.getCenterY() - block.getCenterY());
+		int leftRight = (int)(shape.getCenterX() - block.getCenterX());
 
-		int favorUpDown = 5*GameFrame.pixelScale();
+		// When mario (or anything) is big his center is further from his top and bottom, this will account for that
+		double heightBias = shape.getHeight()/GameFrame.blockDimension();
+		// Favor top allows mario and enemies to run around smoothly of the top of blocks without hitting top corners
+		int favorTop = (int)(5*GameFrame.pixelScale()/heightBias);
+		// Disfavor bottom allows mario to jump from below around a block directly above him easier (not hit his head)
+		int disfavorBottom = (int)(3*GameFrame.pixelScale()*heightBias);
 
-		if ( Math.abs(upDown)+favorUpDown >= Math.abs(leftRight) ) {
-			// top or bottom hit
-			if ( upDown > 0 && vector.getDy() < 0 ) {
-				return Side.BOTTOM;
-			} else if ( upDown < 0 && vector.getDy() > 0 ) {
-				return Side.TOP;
-			}
-		} else {
-			// left of right hit
-			if ( leftRight > 0 && vector.getDx() < 0 ) {
-				return Side.RIGHT;
-			} else if ( leftRight < 0 && vector.getDx() > 0 ) {
-				return Side.LEFT;
-			}
+		// Comparing with mario's vector will make sure he does not stand on walls
+		// and allow him to jump up smoothly against walls
+		if ( Math.abs(upDown)+favorTop >= Math.abs(leftRight) && upDown < 0 && vector.getDy() > 0 ) {
+			return Side.TOP;
+		} else if (Math.abs(upDown)-disfavorBottom >= Math.abs(leftRight) && upDown > 0 && vector.getDy() < 0) {
+			return Side.BOTTOM;
+		} else if ( leftRight > 0 ) {
+			return Side.RIGHT;
+		} else if ( leftRight < 0 ) {
+			return Side.LEFT;
 		}
 
 		return Side.NONE;
@@ -54,7 +55,7 @@ public class CollisionOperator {
 			if ( blockX > -gameWidth && blockX < gameWidth*2 ) {
 				if ( inputRect.intersects( block.getRect(offset) ) ) {
 
-					switch ( getSide(new Pos((int)inputRect.getCenterX(), (int)inputRect.getCenterY()), block.getCenter(offset), vector) ) {
+					switch ( getSide(inputRect, block.getRect(offset), vector) ) {
 						case TOP:
 							if ( topHit == null ) {topHit = new LinkedList<>();}
 							topHit.add(block);

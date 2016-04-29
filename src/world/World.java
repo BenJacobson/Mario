@@ -164,17 +164,28 @@ public class World {
 		return powerUp;
 	}
 
-	public Boolean[] findMarioEnemyCollisions(Rectangle2D marioRect) {
+	public Boolean[] findMarioEnemyCollisions(Rectangle2D marioRect, boolean falling) {
 
 		boolean marioHit = false, enemyHit = false, alreadyHitEnemy = false;
 
 		for ( Enemy enemy : enemies ) {
 			if ( enemy.getRect(offset).intersects(marioRect) ) {
+				/*
 				Pos marioPos = new Pos(marioRect.getCenterX(), marioRect.getCenterY());
 				Pos enemyPos = new Pos(enemy.getRect(offset).getCenterX(), enemy.getRect(offset).getCenterY());
 				Side sideHit = getSide(marioPos, enemyPos);
 
 				if ( sideHit == Side.TOP ) {
+					if ( !alreadyHitEnemy ) {
+						enemy.hit();
+						alreadyHitEnemy = true;
+					}
+					enemyHit = true;
+				} else {
+					marioHit = true;
+				}
+				*/
+				if ( falling ) {
 					if ( !alreadyHitEnemy ) {
 						enemy.hit();
 						alreadyHitEnemy = true;
