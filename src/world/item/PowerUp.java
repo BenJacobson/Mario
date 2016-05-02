@@ -96,7 +96,6 @@ public class PowerUp implements Item {
 	public void end() {
 		World.getInstance().addPoints(1000, pos.copy());
 		state = State.EATEN;
-		AudioController.play("/sound/powerup_eaten.wav");
 	}
 
 	@Override

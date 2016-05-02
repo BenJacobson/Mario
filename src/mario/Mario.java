@@ -205,6 +205,7 @@ public class Mario {
 		if ( powerChange ) {
 			if ( --powerChangeState == 0 ) {
 				powerChange = false;
+				Stats.getInstance().resume();
 				if (lastPowerChangeDown) {
 					invincible = 100;
 				}
@@ -269,6 +270,8 @@ public class Mario {
 			powerChange = true;
 			powerChangeState = 50;
 			lastPowerChangeDown = false;
+			Stats.getInstance().pause();
+			AudioController.play("/sound/powerup_eaten.wav");
 		}
 	}
 
@@ -285,6 +288,7 @@ public class Mario {
 				powerChange = true;
 				powerChangeState = 50;
 				lastPowerChangeDown = true;
+				Stats.getInstance().pause();
 				AudioController.play("/sound/pipe-powerdown.wav");
 			}
 		}
@@ -301,7 +305,7 @@ public class Mario {
 	}
 
 	private void checkDead() {
-		if ( currentPos.getY() > 250 * GameFrame.pixelScale() || Stats.getInstance().getTime() < 1 ) {
+		if ( currentPos.getY() > 260 * GameFrame.pixelScale() || Stats.getInstance().getTime() < 1 ) {
 			dead();
 		}
 	}

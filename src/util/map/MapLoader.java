@@ -11,6 +11,7 @@ import util.mechanics.Pos;
 import window.GameFrame;
 import world.BlockCoin;
 import world.block.*;
+import world.enemy.Koopa;
 import world.item.Item;
 import world.item.PowerUp;
 
@@ -112,6 +113,9 @@ public class MapLoader {
 						break;
 					case 'e':
 						enemies.add(new Goomba(new Pos(xcoord, ycoord)));
+						break;
+					case 'a':
+						enemies.add(new Koopa(new Pos(xcoord, ycoord)));
 						break;
 					case 'c':
 						// coins.add();

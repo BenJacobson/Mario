@@ -100,6 +100,12 @@ public class Images {
 	public static final Image goombaSquished = initFrame("enemy_goomba_squished.png");
 	public static final Image goombaFlipped = initFrame("enemy_goomba_flipped.png");
 
+	// koopa images
+	public static final Image koopa_up  = initFrame("enemy_koopa_up.png");
+	public static final Image koopa_down  = initFrame("enemy_koopa_down.png");
+	public static final Image koopa_up_back  = initFrame("enemy_koopa_up_back.png");
+	public static final Image koopa_down_back  = initFrame("enemy_koopa_down_back.png");
+
 	// item images
 	public static final Image mushroom = initFrame("item_mushroom.png");
 	public static final Image fireflower = initFrame("item_fireflower.png");

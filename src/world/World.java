@@ -4,7 +4,6 @@ import util.map.MapBlocks;
 import world.background.Backgrounds;
 import world.enemy.Enemy;
 import util.mechanics.Pos;
-import util.mechanics.Side;
 import util.mechanics.Vector;
 import stats.Stats;
 import util.map.MapLoader;
@@ -106,6 +105,8 @@ public class World {
 
 		drawPoints(g2);
 
+		drawCoins(g2);
+
 		if ( flagpole != null ) flagpole.draw(g2, offset);
 
 		items.stream().forEach( item -> item.draw(g2, offset));
@@ -117,6 +118,12 @@ public class World {
 		enemies.stream()
 				.filter( enemy -> enemy.getX(offset) > -GameFrame.gameWidth()/2 && enemy.getX(offset) < GameFrame.gameWidth()*1.5 )
 				.forEach( enemy -> enemy.draw(g2, offset) );
+	}
+
+	private void drawCoins(Graphics2D g2) {
+		for ( BlockCoin coin : coins ) {
+			coin.draw(g2, offset);
+		}
 	}
 
 	private void drawPoints(Graphics2D g2) {
@@ -158,6 +165,8 @@ public class World {
 			if ( item.getRect(offset).intersects(marioRect) ) {
 				item.end();
 				powerUp = true;
+			} else if ( item.getRect(offset).getMinX() < 0 || item.getRect(offset).getMaxX() > GameFrame.gameWidth() ) {
+				item.end();
 			}
 		}
 
@@ -198,28 +207,6 @@ public class World {
 		}
 
 		return new Boolean[] { marioHit, enemyHit };
-	}
-
-	private Side getSide(Pos marioPos, Pos enemyPos) {
-
-		int upDown = marioPos.getY() - enemyPos.getY();
-		int leftRight = marioPos.getX() - enemyPos.getX();
-
-		if ( Math.abs(upDown) >= Math.abs(leftRight) ) {
-			// top or bottom hit
-			if ( upDown > 0 ) {
-				return Side.BOTTOM;
-			} else {
-				return Side.TOP;
-			}
-		} else {
-			// left of right hit
-			if ( leftRight > 0 ) {
-				return Side.RIGHT;
-			} else {
-				return Side.LEFT;
-			}
-		}
 	}
 
 	public CollisionResult blockCollisions(Rectangle2D inputRect, Vector vector, boolean isMario) {

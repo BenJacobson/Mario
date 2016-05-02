@@ -31,12 +31,13 @@ public class Goomba implements Enemy {
 	private boolean useLeftImage;
 	private int numberOfPasses = 0;
 	private int drawSquished = 0;
+
 	public Goomba(Pos pos) {
 		this.originalPos = pos;
 		this.pos = pos.copy();
-		vector.moveLeft(false);
-		vector.moveLeft(false);
-		vector.moveLeft(false);
+		for ( int i = 0; i < 3; i++ ) {
+			vector.moveLeft(false);
+		}
 	}
 
 
@@ -140,8 +141,9 @@ public class Goomba implements Enemy {
 		CollisionResult collisionResult = World.getInstance().blockCollisions(getRect(offset), vector, false);
 
 		pos.moveDown(collisionResult.getDy());
-		if ( Math.abs(collisionResult.getDx()) > 0 ) {
-			pos.moveRight(collisionResult.getDx());
+		pos.moveRight(collisionResult.getDx());
+		if ( (collisionResult.isLeftHit() && vector.getDx() > 0) ||
+				(collisionResult.isRightHit() && vector.getDx() < 0) ) {
 			reverse();
 		}
 	}
