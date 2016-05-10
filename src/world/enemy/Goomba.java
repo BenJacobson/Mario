@@ -91,7 +91,7 @@ public class Goomba implements Enemy {
 	}
 
 	@Override
-	public void hit() {
+	public void hit(boolean leftHit) {
 		state = State.SQUISHED;
 		drawSquished = 0;
 		AudioController.play("/sound/stomp_enemy.wav");

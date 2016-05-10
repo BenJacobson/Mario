@@ -15,33 +15,43 @@ public class Koopa implements Enemy {
 	private Pos originalPos;
 	private Pos pos;
 	private Vector vector = new Vector();
-	private Image[] frames = { Images.koopa_down, Images.koopa_up, Images.koopa_down_back, Images.koopa_up_back };
+	private Image[] frames = { Images.koopa_down, Images.koopa_up, Images.koopa_down_back, Images.koopa_up_back,
+			Images.koopa_shell, Images.koopa_shell_legs };
 	private Rectangle2D rect = new Rectangle2D.Double();
 
 	private boolean forward = false;
 	private int numberOfPasses = 0;
-	private State state = State.UP;
+	private boolean  up = true;
+	private State state = State.WALK;
 
 	private final int blockDimension = GameFrame.blockDimension();
 
 	public Koopa(Pos pos) {
 		this.originalPos = pos;
 		this.pos = originalPos.copy();
-		for ( int i = 0; i < 3; i++ ) {
-			vector.moveLeft(false);
-		}
+		speedUp(3, true);
 	}
 
 	@Override
 	public void draw(Graphics2D g2, int offset) {
 		update();
-		Image frame = getFrame();
-		g2.drawImage(frame, getX(offset), getY() - blockDimension, null);
+		switch(state) {
+			case WALK:
+				int index = (forward ? 0 : 2) + (up ? 1 : 0);
+				g2.drawImage(frames[index], getX(offset), getY() - blockDimension, null);
+				break;
+			case STOP:
+			case SLIDE:
+				g2.drawImage(frames[4], getX(offset), getY(), null);
+				break;
+			case LEGS:
+				g2.drawImage(frames[5], getX(offset), getY(), null);
+				break;
+		}
 	}
 
-	private Image getFrame() {
-		int index = (forward ? 0 : 2) + (state == State.DOWN ? 0 : 1);
-		return frames[index];
+	public boolean isStopped() {
+		return state == State.STOP;
 	}
 
 	private void update() {
@@ -55,11 +65,7 @@ public class Koopa implements Enemy {
 		int passesBetweenFrames = 10;
 		if (numberOfPasses++ > passesBetweenFrames) {
 			numberOfPasses = 0;
-			if ( state == State.UP ) {
-				state = State.DOWN;
-			}else {
-				state = State.UP;
-			}
+			up = !up;
 		}
 	}
 
@@ -99,8 +105,23 @@ public class Koopa implements Enemy {
 	}
 
 	@Override
-	public void hit() {
-		System.out.println("Koopa hit!");
+	public void hit(boolean leftHit) {
+		if ( state == State.WALK || state == State.SLIDE ) {
+			state = State.STOP;
+			vector.hitX();
+		} else if ( state == State.STOP ) {
+			state = State.SLIDE;
+			speedUp(12, leftHit);
+		}
+	}
+
+	private void speedUp(int times, boolean left) {
+		for ( int i = 0; i < times; i++ ) {
+			vector.moveRight(false);
+		}
+		if ( left ) {
+			vector.reverse();
+		}
 	}
 
 	@Override
@@ -110,7 +131,8 @@ public class Koopa implements Enemy {
 
 	@Override
 	public void reset() {
-		state = State.UP;
+		state = State.WALK;
+		forward = false;
 		this.pos = originalPos.copy();
 		vector.stop();
 		for ( int i = 0; i < 3; i++ ) {
@@ -119,6 +141,6 @@ public class Koopa implements Enemy {
 	}
 
 	private enum State {
-		UP, DOWN, STOP, SLIDE, LEGS
+		WALK, STOP, SLIDE, LEGS
 	}
 }

@@ -10,6 +10,7 @@ import util.map.MapLoader;
 import window.GameFrame;
 import world.block.Block;
 import world.collision.*;
+import world.enemy.Koopa;
 import world.item.Item;
 
 import java.awt.*;
@@ -175,7 +176,7 @@ public class World {
 
 	public Boolean[] findMarioEnemyCollisions(Rectangle2D marioRect, boolean falling) {
 
-		boolean marioHit = false, enemyHit = false, alreadyHitEnemy = false;
+		boolean marioHit = false, enemyHit = false;
 
 		for ( Enemy enemy : enemies ) {
 			if ( enemy.getRect(offset).intersects(marioRect) ) {
@@ -194,11 +195,14 @@ public class World {
 					marioHit = true;
 				}
 				*/
+
+				boolean leftHit = marioRect.getCenterX() > enemy.getRect(offset).getCenterX();
+
 				if ( falling ) {
-					if ( !alreadyHitEnemy ) {
-						enemy.hit();
-						alreadyHitEnemy = true;
-					}
+					enemy.hit(leftHit);
+					enemyHit = true;
+				} else if ( enemy instanceof Koopa && ((Koopa)enemy).isStopped() ) {
+					enemy.hit(leftHit);
 					enemyHit = true;
 				} else {
 					marioHit = true;

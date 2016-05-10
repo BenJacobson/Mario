@@ -12,7 +12,7 @@ public interface Enemy {
 	Rectangle2D getRect(int offset);
 
 	void reverse();
-	void hit();
+	void hit(boolean leftHit);
 	void flip();
 	void reset();
 }
