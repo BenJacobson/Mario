@@ -1,14 +1,12 @@
 package window;
 
-import mario.Mario;
 import util.AudioController;
 import util.Images;
+import util.input.GameController;
 import world.World;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.util.*;
 import java.util.List;
 import java.util.Timer;
@@ -57,17 +55,7 @@ public class GameFrame extends JFrame {
 
 	private void setKeyListener() {
 		requestFocus();
-		this.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				Mario.getInstance().setKey(e.getKeyCode());
-			}
-
-			@Override
-			public void keyReleased(KeyEvent e) {
-				Mario.getInstance().unsetKey(e.getKeyCode());
-			}
-		});
+		this.addKeyListener(GameController.getInstance());
 	}
 
 	private void setLocation() {
@@ -100,6 +88,7 @@ public class GameFrame extends JFrame {
 	}
 
 	private class TaskExecutor extends TimerTask {
+		@Override
 		public void run() {
 			periodicTaskList.stream().parallel().forEach(PeriodicTask::run);
 		}

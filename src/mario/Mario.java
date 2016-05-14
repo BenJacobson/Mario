@@ -1,5 +1,6 @@
 package mario;
 
+import util.input.GameController;
 import util.mechanics.Pos;
 import util.mechanics.Vector;
 import stats.Stats;
@@ -62,13 +63,9 @@ public class Mario {
 	private final MarioFrames marioFrames = new MarioFrames();
 	private List<Fireball> fireballs = new ArrayList<>();
 
-	private final int D_LEFT = 37;
-	private final int D_RIGHT = 39;
-	private final int BUTTON_A = 32;
-	private final int BUTTON_B = 88;
-
 	private Mario() {
 		GameFrame.addPeriodicTask(this::move);
+		addControllerEvents();
 	}
 
 	private void setRunFrame() {
@@ -156,48 +153,6 @@ public class Mario {
 	private void drawFireballs(Graphics2D g2) {
 		fireballs.forEach( fireball -> fireball.draw(g2, World.getInstance().getOffest()));
 		fireballs = fireballs.stream().filter(fireball -> !fireball.isDone()).collect(Collectors.toList());
-	}
-
-	public void setKey(int action) {
-		if (isPaused()) {
-			return;
-		}
-		if (action == D_LEFT) {
-			movingLeft = true;
-			movingRight = false;
-			if (canJumpAgain) lastDirectionForward = false;
-		} else if (action == D_RIGHT) {
-			movingRight = true;
-			movingLeft = false;
-			if (canJumpAgain) lastDirectionForward = true;
-		} else if (action == BUTTON_B) {
-			if (canJumpAgain) {
-				running = true;
-			}
-			if ( powerState == PowerState.FIRE && canShootAgain ) {
-				canShootAgain = false;
-				shoot = true;
-			}
-		} else if (action == BUTTON_A) {
-			if (vector.getDy() == 0 && canJumpAgain && !jumpHeld) {
-				jump = true;
-				jumpHeld = true;
-				jumpHeldState = 0;
-			}
-		}
-	}
-
-	public void unsetKey(int action) {
-		if (action == D_LEFT) {
-			movingLeft = false;
-		} else if (action == D_RIGHT) {
-			movingRight = false;
-		} else if (action == BUTTON_B) {
-			canShootAgain = true;
-			running = false;
-		} else if (action == BUTTON_A) {
-			jumpHeld = false;
-		}
 	}
 
 	private void move() {
@@ -454,6 +409,95 @@ public class Mario {
 			jumpHeldState++;
 		}
 	}
+
+	/////////////////////////////////////////////////////////
+	// Controller Events
+	/////////////////////////////////////////////////////////
+	private void addControllerEvents() {
+		addAButtonListener();
+		addBButtonListener();
+		addLeftButtonListener();
+		addRightButtonListener();
+	}
+
+	private void addRightButtonListener() {
+		GameController.getInstance().addRightButtonListener(new GameController.ControllerEvent() {
+			@Override
+			public void set() {
+				if ( !isPaused() ) {
+					movingRight = true;
+					movingLeft = false;
+					if (canJumpAgain) lastDirectionForward = true;
+				}
+			}
+
+			@Override
+			public void unset() {
+				movingRight = false;
+			}
+		});
+	}
+
+	private void addLeftButtonListener() {
+		GameController.getInstance().addLeftButtonListener(new GameController.ControllerEvent() {
+			@Override
+			public void set() {
+				if ( !isPaused() ) {
+					movingLeft = true;
+					movingRight = false;
+					if (canJumpAgain) lastDirectionForward = false;
+				}
+			}
+
+			@Override
+			public void unset() {
+				movingLeft = false;
+			}
+		});
+	}
+
+	private void addBButtonListener() {
+		GameController.getInstance().addBButtonListener(new GameController.ControllerEvent() {
+			@Override
+			public void set() {
+				if ( isPaused() ) {
+					return;
+				}
+				if (canJumpAgain) {
+					running = true;
+				}
+				if ( powerState == PowerState.FIRE && canShootAgain ) {
+					canShootAgain = false;
+					shoot = true;
+				}
+			}
+
+			@Override
+			public void unset() {
+				canShootAgain = true;
+				running = false;
+			}
+		});
+	}
+
+	private void addAButtonListener() {
+		GameController.getInstance().addAButtonListener(new GameController.ControllerEvent() {
+			@Override
+			public void set() {
+				if ( !isPaused() && vector.getDy() == 0 && canJumpAgain && !jumpHeld) {
+					jump = true;
+					jumpHeld = true;
+					jumpHeldState = 0;
+				}
+			}
+
+			@Override
+			public void unset() {
+				jumpHeld = false;
+			}
+		});
+	}
+	/////////////////////////////////////////////////////////////////////
 
 	enum FrameState {
 		STAND, JUMP, RUN1, RUN2, RUN3, RUN4, TURN, DEAD
