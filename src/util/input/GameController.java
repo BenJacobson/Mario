@@ -8,6 +8,8 @@ import window.GameFrame;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.*;
+import java.lang.reflect.Field;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -215,6 +217,20 @@ public class GameController extends KeyAdapter {
 	}
 	
 	private boolean hasGamepad() {
+		// Load libraries
+		try {
+			loadDLL("jinput-dx8_64.dll");
+			loadDLL("jinput-raw_64.dll");
+			System.setProperty( "java.library.path", "./controller/" );
+			Field fieldSysPath = ClassLoader.class.getDeclaredField( "sys_paths" );
+			fieldSysPath.setAccessible( true );
+			fieldSysPath.set( null, null );
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+			return false;
+		}
+		// Connect to controller
 		Controller[] controllers = ControllerEnvironment.getDefaultEnvironment().getControllers();
 		for (Controller c : controllers) {
 			if (c.getName().toLowerCase().contains("gamepad")) {
@@ -227,20 +243,26 @@ public class GameController extends KeyAdapter {
 		return false;
 	}
 
-	private void extractDLL(String name) {
-		try {
-			InputStream instream = GameController.class.getResourceAsStream("/jinput/" + name);
-			byte[] buffer = new byte[instream.available()];
-			instream.read(buffer);
-			instream.close();
-
-			File targetFile = new File(name);
-			OutputStream outStream = new FileOutputStream(targetFile);
-			outStream.write(buffer);
-			outStream.close();
-		} catch (IOException e) {
-			System.out.println(e.getMessage());
+	private void loadDLL(String name) throws Exception {
+		// If the file already exists, return
+		File targetFile = new File("./controller/" + name);
+		if ( targetFile.exists() ) {
+			return;
 		}
+		// make the file
+		targetFile.getParentFile().mkdirs();
+		targetFile.createNewFile();
+
+		// Read the file from the JAR to the destination file
+		InputStream inStream = GameController.class.getResourceAsStream("/jinput/" + name);
+		OutputStream outStream = new FileOutputStream(targetFile);
+		int read = 0;
+		byte[] bytes = new byte[1024];
+		while ((read = inStream.read(bytes)) != -1) {
+			outStream.write(bytes, 0, read);
+		}
+		inStream.close();
+		outStream.close();
 	}
 
 	private void useGamepad() {
