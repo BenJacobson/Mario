@@ -55,7 +55,10 @@ public class GameFrame extends JFrame {
 
 	private void setKeyListener() {
 		requestFocus();
-		this.addKeyListener(GameController.getInstance());
+		GameController gameController = GameController.getInstance();
+		if ( !gameController.usingGamepad() ) {
+			this.addKeyListener(gameController);
+		}
 	}
 
 	private void setLocation() {

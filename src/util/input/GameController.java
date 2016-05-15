@@ -23,6 +23,8 @@ public class GameController extends KeyAdapter {
 		return instance;
 	}
 
+	private Mode mode;
+
 	private Controller controller;
 	private Component[] components;
 
@@ -56,6 +58,9 @@ public class GameController extends KeyAdapter {
 	private GameController() {
 		if ( hasGamepad() ) {
 			useGamepad();
+			mode = Mode.GAMEPAD;
+		} else {
+			mode = Mode.KEYBOARD;
 		}
 	}
 	
@@ -101,9 +106,11 @@ public class GameController extends KeyAdapter {
 
 	private void handleA(Button pollState) {
 		if ( Button_A == Button.SET && pollState == Button.UNSET ) {
+			System.out.println("Release");
 			Button_A = Button.UNSET;
 			buttonAListeners.forEach(ControllerEvent::unset);
 		} else if ( Button_A == Button.UNSET && pollState == Button.SET ) {
+			System.out.println("Set");
 			Button_A = Button.SET;
 			buttonAListeners.forEach(ControllerEvent::set);
 		}
@@ -216,14 +223,21 @@ public class GameController extends KeyAdapter {
 	}
 	
 	private boolean hasGamepad() {
+		// only works with windows at the present time
+		if ( !System.getProperty("os.name").toLowerCase().contains("windows") ) {
+			return false;
+		}
 		// Load libraries
 		try {
-			loadDLL("jinput-dx8_64.dll");
-			loadDLL("jinput-raw_64.dll");
+			// Set the system library path so that it can find the dll
 			System.setProperty( "java.library.path", "./controller/" );
 			Field fieldSysPath = ClassLoader.class.getDeclaredField( "sys_paths" );
 			fieldSysPath.setAccessible( true );
 			fieldSysPath.set( null, null );
+			// Load the library for 64 or 32 arch
+			String arch = System.getProperty("sun.arch.data.model").contains("64") ? "_64" : "";
+			loadDLL("jinput-dx8"  + arch);
+			loadDLL("jinput-raw" + arch);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
@@ -244,7 +258,7 @@ public class GameController extends KeyAdapter {
 
 	private void loadDLL(String name) throws Exception {
 		// If the file already exists, return
-		File targetFile = new File("./controller/" + name);
+		File targetFile = new File("./controller/" + name + ".dll");
 		if ( targetFile.exists() ) {
 			return;
 		}
@@ -253,7 +267,7 @@ public class GameController extends KeyAdapter {
 		targetFile.createNewFile();
 
 		// Read the file from the JAR to the destination file
-		InputStream inStream = GameController.class.getResourceAsStream("/jinput/" + name);
+		InputStream inStream = GameController.class.getResourceAsStream("/jinput/" + name + ".dll");
 		OutputStream outStream = new FileOutputStream(targetFile);
 		int read = 0;
 		byte[] bytes = new byte[1024];
@@ -262,6 +276,9 @@ public class GameController extends KeyAdapter {
 		}
 		inStream.close();
 		outStream.close();
+
+		// Load the library
+		System.loadLibrary(name);
 	}
 
 	private void useGamepad() {
@@ -308,7 +325,11 @@ public class GameController extends KeyAdapter {
 				break;
 		}
 	}
-	
+
+	public boolean usingGamepad() {
+		return mode == Mode.GAMEPAD;
+	}
+
 	public interface ControllerEvent {
 		void set();
 		void unset();
@@ -316,5 +337,9 @@ public class GameController extends KeyAdapter {
 
 	private enum Button {
 		SET, UNSET
+	}
+
+	private enum Mode {
+		GAMEPAD, KEYBOARD
 	}
 }
