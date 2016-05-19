@@ -114,7 +114,7 @@ public class MapLoader {
 					case 'e':
 						enemies.add(new Goomba(new Pos(xcoord, ycoord)));
 						break;
-					case 'a':
+					case 'k':
 						enemies.add(new Koopa(new Pos(xcoord, ycoord)));
 						break;
 					case 'c':

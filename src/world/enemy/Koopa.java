@@ -1,5 +1,7 @@
 package world.enemy;
 
+import mario.Mario;
+import util.AudioController;
 import util.Images;
 import util.mechanics.Pos;
 import util.mechanics.Vector;
@@ -10,18 +12,14 @@ import world.collision.CollisionResult;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 
-public class Koopa implements Enemy {
+public class Koopa extends GenericEnemy {
 
-	private Pos originalPos;
-	private Pos pos;
-	private Vector vector = new Vector();
 	private Image[] frames = { Images.koopa_down, Images.koopa_up, Images.koopa_down_back, Images.koopa_up_back,
-			Images.koopa_shell, Images.koopa_shell_legs };
-	private Rectangle2D rect = new Rectangle2D.Double();
+			Images.koopa_shell, Images.koopa_shell_legs, Images.koopa_flipped };
 
 	private boolean forward = false;
 	private int numberOfPasses = 0;
-	private boolean  up = true;
+	private boolean up = true;
 	private State state = State.WALK;
 
 	private final int blockDimension = GameFrame.blockDimension();
@@ -47,6 +45,9 @@ public class Koopa implements Enemy {
 			case LEGS:
 				g2.drawImage(frames[5], getX(offset), getY(), null);
 				break;
+			case FLIPPED:
+				g2.drawImage(frames[6], getX(offset), getY(), null);
+				break;
 		}
 	}
 
@@ -55,10 +56,19 @@ public class Koopa implements Enemy {
 	}
 
 	private void update() {
+		if (Mario.getInstance().isPaused() ) {
+			return;
+		}
 		vector.gravity();
 		pos.move(vector);
 		checkCollision();
 		updateFrame();
+
+		if ( state == State.FLIPPED ) {
+			if ( this.getY() > GameFrame.gameHeight() + GameFrame.blockDimension() ) {
+				state = State.DEAD;
+			}
+		}
 	}
 
 	private void updateFrame() {
@@ -84,24 +94,13 @@ public class Koopa implements Enemy {
 	}
 
 	@Override
-	public int getX(int offset) {
-		return pos.getX() - offset;
-	}
-
-	@Override
-	public int getY() {
-		return pos.getY();
-	}
-
-	@Override
 	public Rectangle2D getRect(int offset) {
-		rect.setRect(getX(offset), getY(), blockDimension, blockDimension);
+		if ( state == State.DEAD || state == State.FLIPPED ) {
+			rect.setRect(0,0,0,0);
+		} else {
+			rect.setRect(getX(offset), getY(), blockDimension, blockDimension);
+		}
 		return rect;
-	}
-
-	@Override
-	public void reverse() {
-		vector.reverse();
 	}
 
 	@Override
@@ -111,22 +110,27 @@ public class Koopa implements Enemy {
 			vector.hitX();
 		} else if ( state == State.STOP ) {
 			state = State.SLIDE;
-			speedUp(12, leftHit);
+			speedUp(25, leftHit);
 		}
+		AudioController.play("/sound/stomp_enemy.wav");
 	}
 
-	private void speedUp(int times, boolean left) {
-		for ( int i = 0; i < times; i++ ) {
-			vector.moveRight(false);
-		}
-		if ( left ) {
-			vector.reverse();
+	@Override
+	public void reverse() {
+		super.reverse();
+		if ( state == State.SLIDE ) {
+			AudioController.play("/sound/kick.wav");
 		}
 	}
 
 	@Override
 	public void flip() {
-		System.out.println("Koopa flipped!");
+		state = State.FLIPPED;
+		vector.jump();
+		boolean movingLeft = vector.getDx() < 0;
+		speedUp(8, movingLeft);
+		AudioController.play("/sound/kick.wav");
+		World.getInstance().addPoints(100, pos.copy());
 	}
 
 	@Override
@@ -135,12 +139,15 @@ public class Koopa implements Enemy {
 		forward = false;
 		this.pos = originalPos.copy();
 		vector.stop();
-		for ( int i = 0; i < 3; i++ ) {
-			vector.moveLeft(false);
-		}
+		speedUp(3, !forward);
+	}
+
+	@Override
+	public boolean isDeadly() {
+		return state == State.SLIDE;
 	}
 
 	private enum State {
-		WALK, STOP, SLIDE, LEGS
+		WALK, STOP, SLIDE, LEGS, FLIPPED, DEAD
 	}
 }

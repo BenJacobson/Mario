@@ -21,6 +21,7 @@ public class Stats {
 	private int coins = 0;
 	private long startTime = System.currentTimeMillis();
 	private long pauseTime;
+	private String name = "";
 	private State state = State.NORMAL;
 	private Font font = new Font(Font.MONOSPACED, Font.BOLD, 10*GameFrame.pixelScale());
 
@@ -42,7 +43,7 @@ public class Stats {
 		g2.drawString(String.format("×%02d",coins), width*11/32, y + line2);
 
 		g2.drawString("WORLD", width*9/16, y);
-		g2.drawString(" 1-1", width*9/16, y + line2);
+		g2.drawString(name, width*9/16, y + line2);
 
 		g2.drawString("TIME", width*13/16, y);
 		g2.drawString(String.format(" %03d",getTime()), width*13/16, y + line2);
@@ -107,6 +108,10 @@ public class Stats {
 
 	public void addPoints(int amount) {
 		score += amount;
+	}
+
+	public void setName(String newName) {
+		name = " " + newName;
 	}
 
 	private enum State {

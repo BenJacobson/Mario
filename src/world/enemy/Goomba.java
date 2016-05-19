@@ -13,18 +13,12 @@ import world.collision.CollisionResult;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 
-public class Goomba implements Enemy {
-
-	private final Pos originalPos;
-	private Pos pos;
-	private Vector vector = new Vector();
-	private Rectangle2D rect = new Rectangle2D.Double();
+public class Goomba extends GenericEnemy {
 
 	private final Image imageLeft = Images.goombaLeft;
 	private final Image imageRight = Images.goombaRight;
 	private final Image imageSquished = Images.goombaSquished;
 	private final Image imageFlipped = Images.goombaFlipped;
-
 
 	private State state = State.ALIVE;
 
@@ -66,16 +60,6 @@ public class Goomba implements Enemy {
 	}
 
 	@Override
-	public int getX(int offset) {
-		return pos.getX() - offset;
-	}
-
-	@Override
-	public int getY() {
-		return pos.getY();
-	}
-
-	@Override
 	public Rectangle2D getRect(int offset) {
 		if ( state == State.ALIVE ) {
 			rect.setRect(pos.getX() - offset, pos.getY(), imageLeft.getWidth(null), imageLeft.getHeight(null));
@@ -83,11 +67,6 @@ public class Goomba implements Enemy {
 			rect.setRect(0,0,0,0);
 		}
 		return rect;
-	}
-
-	@Override
-	public void reverse() {
-		vector.reverse();
 	}
 
 	@Override
@@ -101,17 +80,9 @@ public class Goomba implements Enemy {
 	@Override
 	public void flip() {
 		state = State.FLIPPED;
-
 		vector.jump();
-		if ( vector.getDx() > 0 ) {
-			for ( int i = 0; i < 8; i++ ) {
-				vector.moveRight(false);
-			}
-		} else {
-			for ( int i = 0; i < 8; i++ ) {
-				vector.moveLeft(false);
-			}
-		}
+		boolean movingLeft = vector.getDx() < 0;
+		speedUp(8, movingLeft);
 		AudioController.play("/sound/kick.wav");
 		World.getInstance().addPoints(100,pos.copy());
 	}
@@ -121,9 +92,7 @@ public class Goomba implements Enemy {
 		state = State.ALIVE;
 		this.pos = originalPos.copy();
 		vector.stop();
-		for ( int i = 0; i < 3; i++ ) {
-			vector.moveLeft(false);
-		}
+		speedUp(3, true);
 	}
 
 	private void update() {

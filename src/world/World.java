@@ -48,6 +48,7 @@ public class World {
 	private List<Points> points = new ArrayList<>();
 
 	public void loadMap(String mapName) {
+		Stats.getInstance().setName(mapName);
 		MapBlocks mapBlocks = MapLoader.loadMap(mapName);
 		blocks = mapBlocks.getBlocks();
 		enemies = mapBlocks.getEnemies();
@@ -151,9 +152,20 @@ public class World {
 			Enemy enemy = enemies.get(i);
 			for ( int j = i+1; j < enemies.size(); j++ ) {
 				Enemy other = enemies.get(j);
+				// find the enemies that are overlapping
 				if ( enemy.getRect(offset).intersects(other.getRect(offset)) ) {
-					enemy.reverse();
-					other.reverse();
+					// These ones bounce off each other
+					if ((enemy.isDeadly() && other.isDeadly()) || (!enemy.isDeadly() && !other.isDeadly())) {
+						// only bounce if going opposite directions
+						if ( enemy.directionRight() != other.directionRight() ) {
+							enemy.reverse();
+							other.reverse();
+						}
+					} else if (enemy.isDeadly()) { // one kills the other
+						other.flip();
+					} else if (other.isDeadly()) { // one kills the other
+						enemy.flip();
+					}
 				}
 			}
 		}
@@ -166,7 +178,7 @@ public class World {
 			if ( item.getRect(offset).intersects(marioRect) ) {
 				item.end();
 				powerUp = true;
-			} else if ( item.getRect(offset).getMinX() < 0 || item.getRect(offset).getMaxX() > GameFrame.gameWidth() ) {
+			} else if ( item.getRect(offset).getMaxX() < 0 || item.getRect(offset).getMinX() > GameFrame.gameWidth() ) {
 				item.end();
 			}
 		}
@@ -180,24 +192,7 @@ public class World {
 
 		for ( Enemy enemy : enemies ) {
 			if ( enemy.getRect(offset).intersects(marioRect) ) {
-				/*
-				Pos marioPos = new Pos(marioRect.getCenterX(), marioRect.getCenterY());
-				Pos enemyPos = new Pos(enemy.getRect(offset).getCenterX(), enemy.getRect(offset).getCenterY());
-				Side sideHit = getSide(marioPos, enemyPos);
-
-				if ( sideHit == Side.TOP ) {
-					if ( !alreadyHitEnemy ) {
-						enemy.hit();
-						alreadyHitEnemy = true;
-					}
-					enemyHit = true;
-				} else {
-					marioHit = true;
-				}
-				*/
-
 				boolean leftHit = marioRect.getCenterX() > enemy.getRect(offset).getCenterX();
-
 				if ( falling ) {
 					enemy.hit(leftHit);
 					enemyHit = true;

@@ -15,4 +15,6 @@ public interface Enemy {
 	void hit(boolean leftHit);
 	void flip();
 	void reset();
+	boolean directionRight();
+	boolean isDeadly();
 }

@@ -107,6 +107,7 @@ public class Images {
 	public static final Image koopa_down_back  = initFrame("enemy_koopa_down_back.png");
 	public static final Image koopa_shell = initFrame("enemy_koopa_shell.png");
 	public static final Image koopa_shell_legs = initFrame("enemy_koopa_shell_legs.png");
+	public static final Image koopa_flipped = initFrame("enemy_koopa_flipped.png");
 
 	// item images
 	public static final Image mushroom = initFrame("item_mushroom.png");
