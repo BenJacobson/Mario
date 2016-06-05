@@ -44,6 +44,7 @@ public class Mario {
 	private boolean shoot = false;
 	private boolean lastPowerChangeDown = false;
 	private boolean powerChange = false;
+	private boolean hitEnemyLastFrame = false;
 
 	private int numberOfPasses = 0;
 	private int jumpHeldState = 0;
@@ -157,7 +158,7 @@ public class Mario {
 
 	private void move() {
 
-		if ( powerChange ) {
+		if ( powerChange ) { // everything pauses and mario flashes as he grows big or shrinks small
 			if ( --powerChangeState == 0 ) {
 				powerChange = false;
 				Stats.getInstance().resume();
@@ -165,7 +166,7 @@ public class Mario {
 					invincible = 100;
 				}
 			}
-		} else if (frameState != FrameState.DEAD) {
+		} else if (frameState != FrameState.DEAD) { // normal mario movements and collisions handled
 
 			handleJump();
 
@@ -183,7 +184,7 @@ public class Mario {
 
 			checkDead();
 
-		} else {
+		} else { // mario is dead, allow time for the death sequence before respawn or game over
 
 			if (deadState++ > 200) {
 				reset();
@@ -195,6 +196,10 @@ public class Mario {
 		}
 	}
 
+	/*
+	this function shoots Mario's fireballs when he is big
+	it
+	 */
 	private void handleShoot() {
 		if ( shoot && oneShotAgo > waitShootShort && twoShotsAgo > waitShootLong ) {
 			twoShotsAgo = oneShotAgo;
@@ -231,14 +236,14 @@ public class Mario {
 	}
 
 	public boolean isBig() {
-		return !(powerState == PowerState.SMALL);
+		return powerState != PowerState.SMALL;
 	}
 
 	private void hit() {
-		if (invincible <= 0) { // not invincible
-			if (powerState == PowerState.SMALL) {
+		if (invincible <= 0) { // if not invincible
+			if (powerState == PowerState.SMALL) { // if you get hit when small,you die
 				dead();
-			} else {
+			} else { // if you get hit when big or fire, you become small
 				powerState = PowerState.SMALL;
 				powerChange = true;
 				powerChangeState = 50;
@@ -252,11 +257,21 @@ public class Mario {
 	private void handleEnemies() {
 		if (invincible>0)
 			return;
+
 		Boolean[] hits = World.getInstance().findMarioEnemyCollisions(getRect(), vector.getDy() > 0);
-		if (hits[0])
+		boolean enemyHitMario = hits[0];
+		boolean marioJumpsOnEnemy = hits[1];
+
+		if (!hitEnemyLastFrame && enemyHitMario) {
 			hit();
-		if (hits[1])
-			vector.jump(0.6);
+			hitEnemyLastFrame = true;
+		} else {
+			hitEnemyLastFrame = false;
+		}
+		if (marioJumpsOnEnemy) {
+			double bounceHeight = 0.6;
+			vector.jump(bounceHeight);
+		}
 	}
 
 	private void checkDead() {

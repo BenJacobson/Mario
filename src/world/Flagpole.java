@@ -8,10 +8,10 @@ import java.awt.*;
 
 public class Flagpole {
 
-	Pos pos;
-	Image pole = Images.flagpole_pole;
-	Image ball = Images.flagpole_ball;
-	Image flag = Images.flagpole_flag;
+	private Pos pos;
+	private Image pole = Images.flagpole_pole;
+	private Image ball = Images.flagpole_ball;
+	private Image flag = Images.flagpole_flag;
 
 	public Flagpole(Pos pos) {
 		this.pos = pos;

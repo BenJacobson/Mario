@@ -106,11 +106,9 @@ public class GameController extends KeyAdapter {
 
 	private void handleA(Button pollState) {
 		if ( Button_A == Button.SET && pollState == Button.UNSET ) {
-			System.out.println("Release");
 			Button_A = Button.UNSET;
 			buttonAListeners.forEach(ControllerEvent::unset);
 		} else if ( Button_A == Button.UNSET && pollState == Button.SET ) {
-			System.out.println("Set");
 			Button_A = Button.SET;
 			buttonAListeners.forEach(ControllerEvent::set);
 		}

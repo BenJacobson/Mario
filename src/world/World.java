@@ -36,7 +36,9 @@ public class World {
 	private final int halfway = 1300*GameFrame.pixelScale();
 	private boolean madeHalfway = false;
 
-	private Color backgroundColor = new Color(86, 151, 255);
+	private static  final Color blueBackground = new Color(86, 151, 255);
+	private static  final Color blackBackground = Color.BLACK;
+	private Color backgroundColor = blueBackground;
 
 	private List<Block> blocks;
 	private List<Enemy> enemies;
@@ -156,8 +158,8 @@ public class World {
 				if ( enemy.getRect(offset).intersects(other.getRect(offset)) ) {
 					// These ones bounce off each other
 					if ((enemy.isDeadly() && other.isDeadly()) || (!enemy.isDeadly() && !other.isDeadly())) {
-						// only bounce if going opposite directions
-						if ( enemy.directionRight() != other.directionRight() ) {
+						// only bounce hitting each other, not leaving ech other
+						if ( enemy.directionRight() == (enemy.getX(offset) > other.getX(offset)) ) {
 							enemy.reverse();
 							other.reverse();
 						}
@@ -193,10 +195,10 @@ public class World {
 		for ( Enemy enemy : enemies ) {
 			if ( enemy.getRect(offset).intersects(marioRect) ) {
 				boolean leftHit = marioRect.getCenterX() > enemy.getRect(offset).getCenterX();
-				if ( falling ) {
+				if ( !enemyHit && falling ) {
 					enemy.hit(leftHit);
 					enemyHit = true;
-				} else if ( enemy instanceof Koopa && ((Koopa)enemy).isStopped() ) {
+				} else if ( !enemyHit && enemy instanceof Koopa && ((Koopa)enemy).isStopped() ) {
 					enemy.hit(leftHit);
 					enemyHit = true;
 				} else {
@@ -205,7 +207,8 @@ public class World {
 			}
 		}
 
-		return new Boolean[] { marioHit, enemyHit };
+		// don't let mario be hit if he hit an enemy this frame
+		return new Boolean[] { !enemyHit && marioHit, enemyHit };
 	}
 
 	public CollisionResult blockCollisions(Rectangle2D inputRect, Vector vector, boolean isMario) {

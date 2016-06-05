@@ -8,16 +8,12 @@ import java.awt.*;
 import java.awt.geom.Rectangle2D;
 
 
-public class Block {
+public abstract class Block {
 
 	protected Pos pos;
-
-	protected Rectangle2D rect = new Rectangle2D.Double();
-
+	private Rectangle2D rect = new Rectangle2D.Double();
 	protected Image image;
-
 	protected Item item = null;
-
 	protected boolean big;
 
 	protected Block(Pos pos) {

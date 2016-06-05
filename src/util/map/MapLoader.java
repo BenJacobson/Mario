@@ -24,24 +24,23 @@ public class MapLoader {
 
 		String mapFile = mapName + ".dat";
 		String mapPath = "/map/";
-		Scanner mapScan = new Scanner(new BufferedInputStream(MapLoader.class.getResourceAsStream(mapPath + mapFile)));
-
+		Scanner mapScan = null;
 		List<char[]> linesList = new LinkedList<>();
 
-		while ( mapScan.hasNextLine() ) {
-			char[] line = mapScan.nextLine().toCharArray();
-			linesList.add(line);
+		try {
+			mapScan = new Scanner(new BufferedInputStream(MapLoader.class.getResourceAsStream(mapPath + mapFile)));
+			while (mapScan.hasNextLine()) {
+				char[] line = mapScan.nextLine().toCharArray();
+				linesList.add(line);
+			}
+		} finally {
+			if ( mapScan != null ) {
+				mapScan.close();
+			}
 		}
 
-		char[][] map = new char[linesList.size()][];
-		int index = linesList.size() - 1;
-
-		for ( char[] line : linesList ) {
-			map[index] = line;
-			index--;
-		}
-
-		return map;
+		Collections.reverse(linesList);
+		return linesList.toArray(new char[linesList.size()][]);
 	}
 
 	public static MapBlocks loadMap(String mapName) {
